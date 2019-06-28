@@ -3,6 +3,9 @@
 
 #include <iostream>
 
+// start it from 1, 0 is reserved to be a NULL value
+unsigned long GameState::nextID = 1;
+
 GameState::GameState(sf::RenderWindow& window) :
     BaseState(window),
     mHighScore(0),

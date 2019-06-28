@@ -165,17 +165,23 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="BaseComponent.h" />
     <ClInclude Include="BaseState.h" />
     <ClInclude Include="Constants.h" />
     <ClInclude Include="GameState.h" />
+    <ClInclude Include="Message.h" />
+    <ClInclude Include="MessageHandler.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="States.h" />
     <ClInclude Include="World.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Arkanoid.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="BaseComponent.cpp" />
     <ClCompile Include="BaseState.cpp" />
     <ClCompile Include="GameState.cpp" />
+    <ClCompile Include="Message.cpp" />
+    <ClCompile Include="MessageHandler.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
