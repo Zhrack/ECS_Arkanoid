@@ -25,10 +25,10 @@
     <Filter Include="Source Files\States">
       <UniqueIdentifier>{b1db60c8-2bcc-4e4c-8d01-781aa35ec14a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Utils">
+    <Filter Include="Header Files\Messaging">
       <UniqueIdentifier>{697c45b1-c583-4cfa-ac9b-f76aea838bfb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Utils">
+    <Filter Include="Source Files\Messaging">
       <UniqueIdentifier>{d7087f75-11c7-48ce-9578-f39473de2b0e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -55,10 +55,13 @@
       <Filter>Header Files\States</Filter>
     </ClInclude>
     <ClInclude Include="MessageHandler.h">
-      <Filter>Header Files\Utils</Filter>
+      <Filter>Header Files\Messaging</Filter>
     </ClInclude>
     <ClInclude Include="Message.h">
-      <Filter>Header Files\Utils</Filter>
+      <Filter>Header Files\Messaging</Filter>
+    </ClInclude>
+    <ClInclude Include="MessageTypes.h">
+      <Filter>Header Files\Messaging</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -81,10 +84,7 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="MessageHandler.cpp">
-      <Filter>Source Files\Utils</Filter>
-    </ClCompile>
-    <ClCompile Include="Message.cpp">
-      <Filter>Source Files\Utils</Filter>
+      <Filter>Source Files\Messaging</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

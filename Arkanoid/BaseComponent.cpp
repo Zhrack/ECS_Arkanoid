@@ -20,5 +20,5 @@ unsigned long BaseComponent::getEntityID() const
 void BaseComponent::handleMessage(Message & msg)
 {
     // this is the default implementation if not needed
-    msg;
+    msg; // to silence C4100
 }

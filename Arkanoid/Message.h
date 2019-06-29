@@ -2,26 +2,26 @@
 #define MESSAGE_H
 
 #include "pch.h"
-
-enum MessageType {
-    MSG_NULL = 0,
-
-};
+#include "MessageTypes.h"
 
 struct Message {
     unsigned long mSenderID;
-
-    unsigned long mReceiverID;
 
     MessageType mType;
 
     void* mExtraInfo;
 
-    Message(unsigned long sender, unsigned long receiver, MessageType type, void* extra = nullptr) :
+    Message() :
+        mSenderID(0),
+        mType(MessageType::MSG_NULL),
+        mExtraInfo(nullptr)
+    {
+    }
+
+    Message(unsigned long sender, MessageType type, void * extra) :
         mSenderID(sender),
-        mReceiverID(receiver),
         mType(type),
-        mExtraInfo(extra) 
+        mExtraInfo(extra)
     {
     }
 

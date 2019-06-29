@@ -35,8 +35,14 @@ protected:
     /// <summary>
     /// Gets the next message in the queue.
     /// </summary>
-    /// <returns></returns>
-    Message getNext();
+    /// <param name="msg">The MSG.</param>
+    /// <returns>true if a message is present, false if the queue is empty.</returns>
+    bool getNext(Message& msg);
+
+    /// <summary>
+    /// Pulls messages from the queue and calls handleMessage.
+    /// </summary>
+    void pullMessages();
 
     bool isEmpty() const;
 

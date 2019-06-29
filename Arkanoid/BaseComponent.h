@@ -13,6 +13,9 @@ public:
     BaseComponent(unsigned long entityID);
     virtual ~BaseComponent();
 
+    /// <summary>
+    /// Update for this component.
+    /// </summary>
     virtual void update() = 0;
 
     inline unsigned long getEntityID() const;
