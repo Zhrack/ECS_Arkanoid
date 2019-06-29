@@ -1,13 +1,15 @@
 #include "pch.h"
 #include "PlayerInputComponent.h"
 
+#include "GameState.h"
+
 #include <iostream>
-#include <SFML/Window.hpp>
 
 
 PlayerInputComponent::PlayerInputComponent(EntityID entityID, GameState* game) :
     BaseComponent(entityID, game)
 {
+    mWindow = mGame->getWindow();
 }
 
 
@@ -18,7 +20,13 @@ PlayerInputComponent::~PlayerInputComponent()
 void PlayerInputComponent::update()
 {
     //this->pullMessages();
+    sf::Event event;
+    while (mWindow->pollEvent(event))
+    {
+        if (event.type == sf::Event::Closed)
+            mWindow->close();
 
+    }
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
     {

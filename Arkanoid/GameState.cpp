@@ -57,17 +57,7 @@ void GameState::update(int elapsed)
 {
     elapsed;
     // handle inputs
-    sf::Event event;
-    while (mWindow->pollEvent(event))
-    {
-        if (event.type == sf::Event::Closed)
-            mWindow->close();
 
-        Message msg(0, MessageType::MSG_INPUT_EVENT, (void*)&event);
-        mPlayerInputComp->receive(msg);
-
-
-    }
 
     // update
     mPlayerInputComp->update();

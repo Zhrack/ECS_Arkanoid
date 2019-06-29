@@ -2,6 +2,9 @@
 #define PLAYER_INPUT_COMPONENT_H
 
 #include "BaseComponent.h"
+
+#include <SFML/Graphics.hpp>
+
 class PlayerInputComponent :
     public BaseComponent
 {
@@ -11,6 +14,9 @@ public:
 
     // Inherited via BaseComponent
     virtual void update() override;
+
+private:
+    sf::RenderWindow* mWindow;
 };
 
 

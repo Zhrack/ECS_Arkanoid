@@ -23,8 +23,9 @@ RenderComponent::~RenderComponent()
 void RenderComponent::update()
 {
     // update transform
-
-
+    mShape.setPosition(mTranform->getPosition());
+    mShape.setRotation(mTranform->getRotation());
+    mShape.setScale(mTranform->getScale());
 
     mGame->getWindow()->draw(mShape);
 }
