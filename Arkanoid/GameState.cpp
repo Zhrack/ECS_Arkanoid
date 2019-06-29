@@ -21,11 +21,10 @@ GameState::GameState(sf::RenderWindow* window) :
     using UniquePtrVector = std::vector<BaseComponent*>;
 
     // register types
-    mCompMap.insert({
-        {CompType::PLAYER_INPUT, UniquePtrVector()},
-        {CompType::TRANSFORM, UniquePtrVector()},
-        {CompType::RENDER, UniquePtrVector()},
-    });
+    for (size_t i = 0; i < CompType::COUNT; ++i)
+    {
+        mCompMap.insert({ CompType(i), UniquePtrVector()});
+    }
 
 }
 
@@ -111,6 +110,14 @@ void GameState::removeComponent(CompType type, EntityID entityID)
 
         vec.pop_back();
 
+    }
+}
+
+void GameState::removeEntity(EntityID entityID)
+{
+    for (size_t i = 0; i < CompType::COUNT; i++)
+    {
+        removeComponent(CompType(i), entityID);
     }
 }
 

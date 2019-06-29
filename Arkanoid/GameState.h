@@ -60,7 +60,7 @@ public:
 
     void removeComponent(CompType type, EntityID entityID);
 
-
+    void removeEntity(EntityID entityID);
 
 private:
     // general game data
