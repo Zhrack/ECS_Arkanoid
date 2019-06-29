@@ -13,8 +13,6 @@ class RectRenderComponent :
     public BaseComponent
 {
 public:
-    RectRenderComponent(EntityID entityID, GameState* game);
-
     /// <summary>
     /// Initializes a new instance of the <see cref="RectRenderComponent"/> class.
     /// </summary>
