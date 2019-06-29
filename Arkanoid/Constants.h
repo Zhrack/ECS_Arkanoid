@@ -9,4 +9,7 @@ namespace Constants {
 }
 
 
+using EntityID = unsigned long;
+
+
 #endif // !CONSTANTS_H

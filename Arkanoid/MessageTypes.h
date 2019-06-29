@@ -6,7 +6,7 @@
 /// </summary>
 enum MessageType {
     MSG_NULL = 0,
-
+    MSG_INPUT_EVENT
 };
 
 // Following, structs to be sent with specific message types are defined here.

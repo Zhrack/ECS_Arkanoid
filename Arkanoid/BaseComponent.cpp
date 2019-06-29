@@ -2,7 +2,7 @@
 #include "BaseComponent.h"
 
 
-BaseComponent::BaseComponent(unsigned long entityID) :
+BaseComponent::BaseComponent(EntityID entityID) :
     mEntityID(entityID)
 {
 }
@@ -12,7 +12,7 @@ BaseComponent::~BaseComponent()
 {
 }
 
-unsigned long BaseComponent::getEntityID() const
+EntityID BaseComponent::getEntityID() const
 {
     return mEntityID;
 }

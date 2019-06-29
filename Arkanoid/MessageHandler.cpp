@@ -12,7 +12,7 @@ MessageHandler::~MessageHandler()
 {
 }
 
-void MessageHandler::receive(Message&& msg, SendType sendType)
+void MessageHandler::receive(Message& msg, SendType sendType)
 {
     switch (sendType)
     {

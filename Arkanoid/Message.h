@@ -18,7 +18,7 @@ struct Message {
     {
     }
 
-    Message(unsigned long sender, MessageType type, void * extra) :
+    Message(unsigned long sender, MessageType type, void * extra = nullptr) :
         mSenderID(sender),
         mType(type),
         mExtraInfo(extra)

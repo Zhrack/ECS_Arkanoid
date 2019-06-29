@@ -23,7 +23,7 @@ public:
     /// </summary>
     /// <param name="msg">The MSG.</param>
     /// <param name="sendType">Whether it enqueues the message or handle immediatly in the caller thread.</param>
-    void receive(Message&& msg, SendType sendType = SendType::ENQUEUE);
+    void receive(Message& msg, SendType sendType = SendType::ENQUEUE);
 
 protected:
     /// <summary>

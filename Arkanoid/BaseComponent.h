@@ -3,6 +3,8 @@
 
 #include "MessageHandler.h"
 
+//class GameState;
+
 /// <summary>
 /// Base class for components.
 /// </summary>
@@ -10,7 +12,7 @@
 class BaseComponent : public MessageHandler
 {
 public:
-    BaseComponent(unsigned long entityID);
+    BaseComponent(EntityID entityID);
     virtual ~BaseComponent();
 
     /// <summary>
@@ -18,13 +20,16 @@ public:
     /// </summary>
     virtual void update() = 0;
 
-    inline unsigned long getEntityID() const;
+    EntityID getEntityID() const;
 
 protected:
-    unsigned long mEntityID;
+    EntityID mEntityID;
 
     // Inherited via MessageHandler
     virtual void handleMessage(Message & msg) override;
+
+
+    //friend GameState;
 };
 #endif // !BASE_COMPONENT_H
 
