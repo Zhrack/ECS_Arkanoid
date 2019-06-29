@@ -20,8 +20,9 @@ RenderComponent::~RenderComponent()
 {
 }
 
-void RenderComponent::update()
+void RenderComponent::update(float elapsed)
 {
+    elapsed;
     // update transform
     mShape.setPosition(mTranform->getPosition());
     mShape.setRotation(mTranform->getRotation());

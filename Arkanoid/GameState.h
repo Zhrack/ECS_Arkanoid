@@ -33,7 +33,7 @@ public:
 
     // Inherited via BaseState
     virtual void enter() override;
-    virtual void update(int elapsed) override;
+    virtual void update(float elapsed) override;
     virtual void exit() override;
 
     EntityID createEntity();
@@ -49,6 +49,12 @@ public:
 
     std::vector<BaseComponent*>& getComponentList(CompType type);
 
+    /// <summary>
+    /// Gets the requested component. The template parameter is used to downcast directly to the right derived type.
+    /// </summary>
+    /// <param name="type">The component enum.</param>
+    /// <param name="entityID">The entity identifier.</param>
+    /// <returns></returns>
     template<class T>
     T* getComponent(CompType type, EntityID entityID);
 

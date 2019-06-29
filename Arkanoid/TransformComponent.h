@@ -13,7 +13,7 @@ public:
     virtual ~TransformComponent();
 
     // Inherited via BaseComponent
-    virtual void update() override;
+    virtual void update(float elapsed) override;
 
     sf::RectangleShape getShape() const;
 

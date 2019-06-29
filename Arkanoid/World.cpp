@@ -3,7 +3,6 @@
 
 #include "GameState.h"
 
-
 World::World() :
     mWindow(sf::VideoMode(Constants::SCREEN_WIDTH, Constants::SCREEN_HEIGHT), "Arkanoid"),
     mCurrentState(nullptr)
@@ -27,7 +26,7 @@ void World::loop()
     
     while (mWindow.isOpen())
     {
-        auto elapsed = mClock.restart().asMilliseconds();
+        auto elapsed = mClock.restart().asSeconds();
 
         // update state
         mCurrentState->update(elapsed);

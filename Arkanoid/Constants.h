@@ -6,6 +6,8 @@ namespace Constants {
     static int SCREEN_HEIGHT = 768;
 
     static int NUM_LIVES = 3;
+
+    static float PADDLE_VELOCITY = 500.0f;
 }
 
 

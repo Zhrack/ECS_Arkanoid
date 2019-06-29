@@ -53,14 +53,14 @@ void GameState::enter()
     addComponent<RenderComponent>(CompType::RENDER, entityID);
 }
 
-void GameState::update(int elapsed)
+void GameState::update(float elapsed)
 {
     elapsed;
     // handle inputs
 
 
     // update
-    mPlayerInputComp->update();
+    mPlayerInputComp->update(elapsed);
     // late update for collision detection and other "physics" stuff
 
     // render step
@@ -70,7 +70,7 @@ void GameState::update(int elapsed)
     auto renderVector = getComponentList(CompType::RENDER);
     for (auto e : renderVector)
     {
-        e->update();
+        e->update(elapsed);
     }
 
     mWindow->display();

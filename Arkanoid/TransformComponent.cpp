@@ -13,8 +13,9 @@ TransformComponent::~TransformComponent()
 {
 }
 
-void TransformComponent::update()
+void TransformComponent::update(float elapsed)
 {
+    elapsed;
     // do nothing
 }
 

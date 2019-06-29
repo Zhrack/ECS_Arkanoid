@@ -5,6 +5,8 @@
 
 #include <SFML/Graphics.hpp>
 
+class TransformComponent;
+
 class PlayerInputComponent :
     public BaseComponent
 {
@@ -13,10 +15,11 @@ public:
     virtual ~PlayerInputComponent();
 
     // Inherited via BaseComponent
-    virtual void update() override;
+    virtual void update(float elapsed) override;
 
 private:
     sf::RenderWindow* mWindow;
+    TransformComponent* mTranform;
 };
 
 

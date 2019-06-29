@@ -17,7 +17,7 @@ public:
     virtual ~RenderComponent();
 
     // Inherited via BaseComponent
-    virtual void update() override;
+    virtual void update(float elapsed) override;
 
 private:
     sf::RectangleShape mShape;

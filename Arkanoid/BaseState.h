@@ -22,7 +22,7 @@ public:
     /// <summary>
     /// Called every step.
     /// </summary>
-    virtual void update(int elapsed) = 0;
+    virtual void update(float elapsed) = 0;
     /// <summary>
     /// Called at state exit to clean up any work.
     /// </summary>

@@ -20,7 +20,7 @@ public:
     /// <summary>
     /// Update for this component.
     /// </summary>
-    virtual void update() = 0;
+    virtual void update(float elapsed) = 0;
 
     EntityID getEntityID() const;
 

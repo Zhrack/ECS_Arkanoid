@@ -2,6 +2,7 @@
 #include "PlayerInputComponent.h"
 
 #include "GameState.h"
+#include "TransformComponent.h"
 
 #include <iostream>
 
@@ -10,6 +11,8 @@ PlayerInputComponent::PlayerInputComponent(EntityID entityID, GameState* game) :
     BaseComponent(entityID, game)
 {
     mWindow = mGame->getWindow();
+
+    mTranform = mGame->getComponent<TransformComponent>(CompType::TRANSFORM, getEntityID());
 }
 
 
@@ -17,7 +20,7 @@ PlayerInputComponent::~PlayerInputComponent()
 {
 }
 
-void PlayerInputComponent::update()
+void PlayerInputComponent::update(float elapsed)
 {
     //this->pullMessages();
     sf::Event event;
@@ -30,7 +33,10 @@ void PlayerInputComponent::update()
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
     {
-        // left key is pressed: move our character
-        std::cout << "CIAO " << std::endl;
+        mTranform->move(sf::Vector2f(-Constants::PADDLE_VELOCITY, 0) * elapsed);
+    }
+    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+    {
+        mTranform->move(sf::Vector2f(Constants::PADDLE_VELOCITY, 0) * elapsed);
     }
 }
