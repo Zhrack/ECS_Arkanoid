@@ -72,7 +72,7 @@
     <ClInclude Include="TransformComponent.h">
       <Filter>Header Files\Components</Filter>
     </ClInclude>
-    <ClInclude Include="RenderComponent.h">
+    <ClInclude Include="RectRenderComponent.h">
       <Filter>Header Files\Components</Filter>
     </ClInclude>
   </ItemGroup>
@@ -104,7 +104,7 @@
     <ClCompile Include="TransformComponent.cpp">
       <Filter>Source Files\Components</Filter>
     </ClCompile>
-    <ClCompile Include="RenderComponent.cpp">
+    <ClCompile Include="RectRenderComponent.cpp">
       <Filter>Source Files\Components</Filter>
     </ClCompile>
   </ItemGroup>

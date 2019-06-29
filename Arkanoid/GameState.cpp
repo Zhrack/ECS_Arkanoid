@@ -3,7 +3,7 @@
 
 #include "PlayerInputComponent.h"
 #include "TransformComponent.h"
-#include "RenderComponent.h"
+#include "RectRenderComponent.h"
 
 #include <iostream>
 
@@ -49,7 +49,13 @@ void GameState::enter()
     //auto entityID2 = this->createEntity();
 
     mPlayerInputComp = addComponent<PlayerInputComponent>(CompType::PLAYER_INPUT, entityID);
-    addComponent<RenderComponent>(CompType::RENDER, entityID);
+    addComponent<RectRenderComponent>(CompType::RENDER, entityID, sf::Vector2f(50, 50), sf::Color::Green);
+
+    // create some bricks in a grid
+    for (size_t i = 0; i < 20; i++)
+    {
+
+    }
 }
 
 void GameState::update(float elapsed)

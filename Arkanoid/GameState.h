@@ -18,6 +18,7 @@ std::unordered_map<
 >;
 
 class PlayerInputComponent;
+class RectRenderComponent;
 
 /// <summary>
 /// State that manages the actual game
@@ -39,13 +40,13 @@ public:
     EntityID createEntity();
 
     /// <summary>
-    /// Template funciton that adds a new component.
+    /// Variadic template funciton that adds a new component.
     /// </summary>
     /// <param name="type">The type ID of the component.</param>
     /// <param name="entityID">The entity identifier.</param>
     /// <returns></returns>
-    template<class T>
-    T* addComponent(CompType type, EntityID entityID);
+    template<class T, class... Args>
+    inline T* addComponent(CompType type, EntityID entityID, Args... args);
 
     std::vector<BaseComponent*>& getComponentList(CompType type);
 
@@ -86,14 +87,14 @@ private:
 
 #endif // !GAME_STATE_H
 
-template<class T>
-inline T* GameState::addComponent(CompType type, EntityID entityID)
+template<class T, class... Args>
+inline T* GameState::addComponent(CompType type, EntityID entityID, Args... args)
 {
     static_assert(std::is_base_of<BaseComponent, T>::value, "T must derive from BaseComponent");
 
     if (mCompMap.count(type) > 0)
     {
-        auto ptr = new T(entityID, this);
+        auto ptr = new T(entityID, this, args...);
         mCompMap[type].push_back(ptr);
         return ptr;
     }
