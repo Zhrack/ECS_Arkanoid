@@ -55,7 +55,10 @@ public:
     template<class T>
     T* getComponent(CompType type, EntityID entityID);
 
+    void removeComponent(CompType type, EntityID entityID);
+
 private:
+    // general game data
     long mHighScore;
     long mCurrentScore;
     int mRemainingLives;
@@ -115,21 +118,13 @@ inline T * GameState::getComponent(CompType type, EntityID entityID)
     {
         auto& vec = mCompMap[type];
 
-        //auto res = std::find_if(vec.begin(), vec.end(), 
-        //    [entityID](BaseComponent* e) {
+        auto res = std::find_if(vec.begin(), vec.end(), 
+            [entityID](BaseComponent* e) {
 
-        //    return e->getEntityID() == entityID;
-        //});
+            return e->getEntityID() == entityID;
+        });
 
-        //return res == vec.end() ? nullptr : dynamic_cast<T*>(*res);
-
-        for (auto e : vec)
-        {
-            if (e->getEntityID() == entityID)
-            {
-                return dynamic_cast<T*>(e);
-            }
-        }
+        return res == vec.end() ? nullptr : dynamic_cast<T*>(*res);
     }
 
     return nullptr;

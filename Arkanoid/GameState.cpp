@@ -86,6 +86,29 @@ EntityID GameState::createEntity()
     return createID();
 }
 
+void GameState::removeComponent(CompType type, EntityID entityID)
+{
+    if (mCompMap.count(type) > 0)
+    {
+        auto& vec = mCompMap[type];
+
+        auto res = std::find_if(vec.begin(), vec.end(),
+            [entityID](BaseComponent* e) {
+
+            return e->getEntityID() == entityID;
+        });
+
+
+        // swap with last element
+        auto last = vec.back();
+        vec[vec.size() - 1] = *res;
+        vec[res - vec.begin()] = last;
+
+        vec.pop_back();
+
+    }
+}
+
 EntityID GameState::createID() const
 {
     return this->nextID++;
