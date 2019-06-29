@@ -6,13 +6,11 @@ class PlayerInputComponent :
     public BaseComponent
 {
 public:
-    PlayerInputComponent(unsigned long entityID);
+    PlayerInputComponent(EntityID entityID, GameState* game);
     virtual ~PlayerInputComponent();
 
     // Inherited via BaseComponent
     virtual void update() override;
-    // Inherited via MessageHandler
-    virtual void handleMessage(Message & msg) override;
 };
 
 

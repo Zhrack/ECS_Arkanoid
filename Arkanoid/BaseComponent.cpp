@@ -2,8 +2,9 @@
 #include "BaseComponent.h"
 
 
-BaseComponent::BaseComponent(EntityID entityID) :
-    mEntityID(entityID)
+BaseComponent::BaseComponent(EntityID entityID, GameState* game) :
+    mEntityID(entityID),
+    mGame(game)
 {
 }
 

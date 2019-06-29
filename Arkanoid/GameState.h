@@ -25,11 +25,10 @@ class PlayerInputComponent;
 /// <seealso cref="BaseState" />
 /// <seealso cref="std::enable_shared_from_this{GameState}" />
 class GameState :
-    public BaseState,
-    public std::enable_shared_from_this<GameState>
+    public BaseState
 {
 public:
-    GameState(sf::RenderWindow& window);
+    GameState(sf::RenderWindow* window);
     virtual ~GameState();
 
     // Inherited via BaseState
@@ -37,7 +36,6 @@ public:
     virtual void update(int elapsed) override;
     virtual void exit() override;
 
-    //TODO: createEntity, addComponent, getComponent, removeComponent
     EntityID createEntity();
 
     /// <summary>
@@ -49,13 +47,14 @@ public:
     template<class T>
     T* addComponent(CompType type, EntityID entityID);
 
-    template<class T>
-    std::vector<T>& getComponentList(CompType type);
+    std::vector<BaseComponent*>& getComponentList(CompType type);
 
     template<class T>
     T* getComponent(CompType type, EntityID entityID);
 
     void removeComponent(CompType type, EntityID entityID);
+
+
 
 private:
     // general game data
@@ -88,25 +87,12 @@ inline T* GameState::addComponent(CompType type, EntityID entityID)
 
     if (mCompMap.count(type) > 0)
     {
-        auto ptr = new T(entityID);
+        auto ptr = new T(entityID, this);
         mCompMap[type].push_back(ptr);
         return ptr;
     }
 
     return nullptr;
-}
-
-template<class T>
-inline std::vector<T>& GameState::getComponentList(CompType type)
-{
-    static_assert(std::is_base_of<BaseComponent, T>::value, "T must derive from BaseComponent");
-
-    if (mCompMap.count(type) > 0)
-    {
-        return mCompMap[type];
-    }
-
-    return std::vector<T>(0);
 }
 
 template<class T>

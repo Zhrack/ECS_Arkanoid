@@ -5,8 +5,8 @@
 #include <SFML/Window.hpp>
 
 
-PlayerInputComponent::PlayerInputComponent(unsigned long entityID) : 
-    BaseComponent(entityID)
+PlayerInputComponent::PlayerInputComponent(EntityID entityID, GameState* game) :
+    BaseComponent(entityID, game)
 {
 }
 
@@ -17,19 +17,12 @@ PlayerInputComponent::~PlayerInputComponent()
 
 void PlayerInputComponent::update()
 {
-    this->pullMessages();
-}
+    //this->pullMessages();
 
-void PlayerInputComponent::handleMessage(Message & msg)
-{
-    switch (msg.mType)
+
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
     {
-    case MSG_INPUT_EVENT:
-        std::cout << "Received a MSG_INPUT_EVENT from entity " << msg.mSenderID << std::endl;
-
-        std::cout << "Extra " << static_cast<sf::Event*>(msg.mExtraInfo)->type << std::endl;
-        break;
-    default:
-        break;
+        // left key is pressed: move our character
+        std::cout << "CIAO " << std::endl;
     }
 }

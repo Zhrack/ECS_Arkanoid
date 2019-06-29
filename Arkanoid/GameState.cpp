@@ -2,13 +2,15 @@
 #include "GameState.h"
 
 #include "PlayerInputComponent.h"
+#include "TransformComponent.h"
+#include "RenderComponent.h"
 
 #include <iostream>
 
 // start it from 1, 0 is reserved to be a NULL value
 unsigned long GameState::nextID = 1;
 
-GameState::GameState(sf::RenderWindow& window) :
+GameState::GameState(sf::RenderWindow* window) :
     BaseState(window),
     mHighScore(0),
     mCurrentScore(0),
@@ -16,6 +18,15 @@ GameState::GameState(sf::RenderWindow& window) :
     mCompMap(),
     mPlayerInputComp(nullptr)
 {
+    using UniquePtrVector = std::vector<BaseComponent*>;
+
+    // register types
+    mCompMap.insert({
+        {CompType::PLAYER_INPUT, UniquePtrVector()},
+        {CompType::TRANSFORM, UniquePtrVector()},
+        {CompType::RENDER, UniquePtrVector()},
+    });
+
 }
 
 
@@ -35,20 +46,11 @@ void GameState::enter()
 {
     std::cout << "GameState::enter" << std::endl;
 
-    using CompPair = std::pair<CompType, std::vector<BaseComponent*>>;
-    using UniquePtrVector = std::vector<BaseComponent*>;
-
-    // initialize vectors
-    mCompMap.insert({ 
-        {CompType::PLAYER_INPUT, UniquePtrVector()},
-    });
-
     auto entityID = this->createEntity();
     //auto entityID2 = this->createEntity();
 
     mPlayerInputComp = addComponent<PlayerInputComponent>(CompType::PLAYER_INPUT, entityID);
-    //auto comp = addComponent<PlayerInputComponent>(CompType::PLAYER_INPUT, entityID2);
-    
+    addComponent<RenderComponent>(CompType::RENDER, entityID);
 }
 
 void GameState::update(int elapsed)
@@ -56,24 +58,32 @@ void GameState::update(int elapsed)
     elapsed;
     // handle inputs
     sf::Event event;
-    while (mWindow.pollEvent(event))
+    while (mWindow->pollEvent(event))
     {
         if (event.type == sf::Event::Closed)
-            mWindow.close();
+            mWindow->close();
 
         Message msg(0, MessageType::MSG_INPUT_EVENT, (void*)&event);
         mPlayerInputComp->receive(msg);
 
-        mPlayerInputComp->update();
+
     }
 
     // update
-
+    mPlayerInputComp->update();
     // late update for collision detection and other "physics" stuff
 
     // render step
-    mWindow.clear();
-    mWindow.display();
+    mWindow->clear();
+
+    // call all renderComponents
+    auto renderVector = getComponentList(CompType::RENDER);
+    for (auto e : renderVector)
+    {
+        e->update();
+    }
+
+    mWindow->display();
 }
 
 void GameState::exit()
@@ -83,7 +93,12 @@ void GameState::exit()
 
 EntityID GameState::createEntity()
 {
-    return createID();
+    auto id = createID();
+    
+    // TransformComponent is always added
+    addComponent<TransformComponent>(CompType::TRANSFORM, id);
+
+    return id;
 }
 
 void GameState::removeComponent(CompType type, EntityID entityID)
@@ -107,6 +122,13 @@ void GameState::removeComponent(CompType type, EntityID entityID)
         vec.pop_back();
 
     }
+}
+
+std::vector<BaseComponent*>& GameState::getComponentList(CompType type)
+{
+    //static_assert(std::is_base_of<BaseComponent, T>::value, "T must derive from BaseComponent");
+
+    return mCompMap[type];
 }
 
 EntityID GameState::createID() const

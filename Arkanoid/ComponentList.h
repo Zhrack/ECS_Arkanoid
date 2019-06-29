@@ -2,7 +2,9 @@
 #define COMPONENT_LIST_H
 
 enum CompType {
-    PLAYER_INPUT = 0
+    PLAYER_INPUT = 0,
+    TRANSFORM,
+    RENDER
 };
 
 #endif // !COMPONENT_LIST_H

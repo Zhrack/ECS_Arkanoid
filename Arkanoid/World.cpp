@@ -18,7 +18,7 @@ World::~World()
 void World::initialize()
 {
     // set starting state
-    this->changeState(new GameState(mWindow));
+    this->changeState(new GameState(&mWindow));
 }
 
 void World::loop()

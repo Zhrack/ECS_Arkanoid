@@ -2,9 +2,9 @@
 #define STATES_H
 
 enum State {
-    NULL = 0,
-    MENU,
-    GAME
+    STATE_NULL = 0,
+    STATE_MENU,
+    STATE_GAME
 };
 
 #endif // !STATES_H

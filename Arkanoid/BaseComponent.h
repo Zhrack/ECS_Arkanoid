@@ -2,8 +2,10 @@
 #define BASE_COMPONENT_H
 
 #include "MessageHandler.h"
+#include <iostream>
+#include <memory>
 
-//class GameState;
+class GameState;
 
 /// <summary>
 /// Base class for components.
@@ -12,7 +14,7 @@
 class BaseComponent : public MessageHandler
 {
 public:
-    BaseComponent(EntityID entityID);
+    BaseComponent(EntityID entityID, GameState* game);
     virtual ~BaseComponent();
 
     /// <summary>
@@ -25,11 +27,11 @@ public:
 protected:
     EntityID mEntityID;
 
+    GameState* mGame;
+
+protected:
     // Inherited via MessageHandler
     virtual void handleMessage(Message & msg) override;
-
-
-    //friend GameState;
 };
 #endif // !BASE_COMPONENT_H
 
