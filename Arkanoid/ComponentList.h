@@ -6,6 +6,7 @@ enum CompType {
     TRANSFORM,
     RENDER,
     BOX_COLLIDER,
+    BALL,
 
     COUNT // keep last, to know number of components types
 };

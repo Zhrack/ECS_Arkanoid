@@ -165,6 +165,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="BallBehaviorComponent.h" />
     <ClInclude Include="BaseComponent.h" />
     <ClInclude Include="BaseState.h" />
     <ClInclude Include="BoxColliderComponent.h" />
@@ -183,8 +184,10 @@
     <ClInclude Include="World.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BallBehaviorComponent.cpp" />
     <ClCompile Include="BoxColliderComponent.cpp" />
     <ClCompile Include="ColliderComponent.cpp" />
+    <ClCompile Include="Constants.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="BaseComponent.cpp" />
     <ClCompile Include="BaseState.cpp" />

@@ -1,19 +1,18 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
-namespace Constants {
-    static int SCREEN_WIDTH = 1024;
-    static int SCREEN_HEIGHT = 768;
-
-    static int NUM_LIVES = 3;
-
-    static float PADDLE_VELOCITY = 500.0f;
-    static float PADDLE_SIZE_X = 80.0f;
-    static float PADDLE_SIZE_Y = 30.0f;
-}
-
 
 using EntityID = unsigned long;
 
+struct Constants {
+    static const int SCREEN_WIDTH;
+    static const int SCREEN_HEIGHT;
+
+    static const int NUM_LIVES;
+
+    static const float PADDLE_VELOCITY;
+    static const float PADDLE_SIZE_X;
+    static const float PADDLE_SIZE_Y;
+};
 
 #endif // !CONSTANTS_H

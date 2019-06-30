@@ -5,6 +5,7 @@
 #include "TransformComponent.h"
 #include "RectRenderComponent.h"
 #include "BoxColliderComponent.h"
+#include "BallBehaviorComponent.h"
 
 #include <iostream>
 
@@ -54,6 +55,12 @@ void GameState::enter()
     mPlayerInputComp = addComponent<PlayerInputComponent>(CompType::PLAYER_INPUT, entityID);
     addComponent<RectRenderComponent>(CompType::RENDER, entityID, sf::Vector2f(Constants::PADDLE_SIZE_X, Constants::PADDLE_SIZE_Y), sf::Color::Green);
 
+    auto ballID = this->createEntity();
+
+    addComponent<BoxColliderComponent>(CompType::BOX_COLLIDER, ballID, sf::Vector2f(Constants::PADDLE_SIZE_X, Constants::PADDLE_SIZE_Y));
+    mBallBehavior = addComponent<BallBehaviorComponent>(CompType::BALL, ballID, sf::Vector2f(200.0f, 200.0f));
+    addComponent<RectRenderComponent>(CompType::RENDER, ballID, sf::Vector2f(Constants::PADDLE_SIZE_X, Constants::PADDLE_SIZE_Y), sf::Color::Red);
+
     // create some bricks in a grid
     //for (size_t i = 0; i < 20; i++)
     //{
@@ -66,7 +73,7 @@ void GameState::update(float elapsed)
     // update
     mPlayerInputComp->update(elapsed);
     // late update for collision detection and other "physics" stuff
-
+    mBallBehavior->update(elapsed);
     // render step
     mWindow->clear();
 

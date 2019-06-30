@@ -19,6 +19,7 @@ std::unordered_map<
 
 class PlayerInputComponent;
 class RectRenderComponent;
+class BallBehaviorComponent;
 
 /// <summary>
 /// State that manages the actual game
@@ -82,6 +83,8 @@ private:
     ComponentMap mCompMap;
 
     PlayerInputComponent* mPlayerInputComp;
+
+    BallBehaviorComponent* mBallBehavior;
 };
 
 
