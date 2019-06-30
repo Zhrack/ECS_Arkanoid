@@ -35,7 +35,8 @@ void PlayerInputComponent::update(float elapsed)
 
     }
 
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) ||
+        sf::Keyboard::isKeyPressed(sf::Keyboard::A))
     {
         mTransform->move(sf::Vector2f(-Constants::PADDLE_VELOCITY, 0) * elapsed);
 
@@ -44,15 +45,17 @@ void PlayerInputComponent::update(float elapsed)
             mTransform->setPosition(sf::Vector2f(0, Constants::SCREEN_HEIGHT - mCollider->getSize().y));
         }
     }
-    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) ||
+            sf::Keyboard::isKeyPressed(sf::Keyboard::D))
     {
         mTransform->move(sf::Vector2f(Constants::PADDLE_VELOCITY, 0) * elapsed);
 
         if (mTransform->getPosition().x > Constants::SCREEN_WIDTH - mCollider->getSize().x)
         {
+            auto collSize = mCollider->getSize();
             mTransform->setPosition(
-                sf::Vector2f(Constants::SCREEN_WIDTH - mCollider->getSize().x, 
-                Constants::SCREEN_HEIGHT - mCollider->getSize().y));
+                sf::Vector2f(Constants::SCREEN_WIDTH - collSize.x,
+                Constants::SCREEN_HEIGHT - collSize.y));
         }
     }
 }
