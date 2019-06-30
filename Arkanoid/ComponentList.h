@@ -5,6 +5,7 @@ enum CompType {
     PLAYER_INPUT = 0,
     TRANSFORM,
     RENDER,
+    BOX_COLLIDER,
 
     COUNT // keep last, to know number of components types
 };

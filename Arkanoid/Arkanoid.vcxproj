@@ -167,6 +167,8 @@
   <ItemGroup>
     <ClInclude Include="BaseComponent.h" />
     <ClInclude Include="BaseState.h" />
+    <ClInclude Include="BoxColliderComponent.h" />
+    <ClInclude Include="ColliderComponent.h" />
     <ClInclude Include="ComponentList.h" />
     <ClInclude Include="Constants.h" />
     <ClInclude Include="GameState.h" />
@@ -181,6 +183,8 @@
     <ClInclude Include="World.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BoxColliderComponent.cpp" />
+    <ClCompile Include="ColliderComponent.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="BaseComponent.cpp" />
     <ClCompile Include="BaseState.cpp" />

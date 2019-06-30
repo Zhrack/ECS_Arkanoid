@@ -5,6 +5,7 @@
 
 #include <SFML/Graphics.hpp>
 
+class BoxColliderComponent;
 class TransformComponent;
 
 class PlayerInputComponent :
@@ -19,7 +20,8 @@ public:
 
 private:
     sf::RenderWindow* mWindow;
-    TransformComponent* mTranform;
+    BoxColliderComponent* mCollider;
+    TransformComponent* mTransform;
 };
 
 

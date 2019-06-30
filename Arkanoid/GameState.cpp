@@ -4,6 +4,7 @@
 #include "PlayerInputComponent.h"
 #include "TransformComponent.h"
 #include "RectRenderComponent.h"
+#include "BoxColliderComponent.h"
 
 #include <iostream>
 
@@ -48,22 +49,20 @@ void GameState::enter()
     auto entityID = this->createEntity();
     //auto entityID2 = this->createEntity();
 
+
+    addComponent<BoxColliderComponent>(CompType::BOX_COLLIDER, entityID, sf::Vector2f(Constants::PADDLE_SIZE_X, Constants::PADDLE_SIZE_Y));
     mPlayerInputComp = addComponent<PlayerInputComponent>(CompType::PLAYER_INPUT, entityID);
-    addComponent<RectRenderComponent>(CompType::RENDER, entityID, sf::Vector2f(50, 50), sf::Color::Green);
+    addComponent<RectRenderComponent>(CompType::RENDER, entityID, sf::Vector2f(Constants::PADDLE_SIZE_X, Constants::PADDLE_SIZE_Y), sf::Color::Green);
 
     // create some bricks in a grid
-    for (size_t i = 0; i < 20; i++)
-    {
+    //for (size_t i = 0; i < 20; i++)
+    //{
 
-    }
+    //}
 }
 
 void GameState::update(float elapsed)
 {
-    elapsed;
-    // handle inputs
-
-
     // update
     mPlayerInputComp->update(elapsed);
     // late update for collision detection and other "physics" stuff

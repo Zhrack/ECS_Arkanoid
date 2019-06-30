@@ -8,6 +8,8 @@ namespace Constants {
     static int NUM_LIVES = 3;
 
     static float PADDLE_VELOCITY = 500.0f;
+    static float PADDLE_SIZE_X = 80.0f;
+    static float PADDLE_SIZE_Y = 30.0f;
 }
 
 
