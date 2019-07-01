@@ -8,6 +8,8 @@ enum CompType {
     TRANSFORM,
 
     RECT_RENDER,
+    CIRCLE_RENDER,
+    SPRITE_RENDER,
 
     BOX_COLLIDER,
     CIRCLE_COLLIDER,

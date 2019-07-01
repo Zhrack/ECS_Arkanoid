@@ -4,6 +4,8 @@
 #include "PlayerInputComponent.h"
 #include "TransformComponent.h"
 #include "RectRenderComponent.h"
+#include "CircleRenderComponent.h"
+#include "SpriteRenderComponent.h"
 #include "BoxColliderComponent.h"
 #include "CircleColliderComponent.h"
 #include "BallBehaviorComponent.h"
@@ -60,7 +62,7 @@ void GameState::enter()
 
     addComponent<CircleColliderComponent>(CompType::CIRCLE_COLLIDER, ballID, Constants::PADDLE_SIZE_X);
     mBallBehavior = addComponent<BallBehaviorComponent>(CompType::BALL, ballID, sf::Vector2f(200.0f, 200.0f));
-    addComponent<RectRenderComponent>(CompType::RECT_RENDER, ballID, sf::Vector2f(Constants::PADDLE_SIZE_X, Constants::PADDLE_SIZE_Y), sf::Color::Red);
+    addComponent<CircleRenderComponent>(CompType::CIRCLE_RENDER, ballID, 50.f, sf::Color::Red);
 
     // create some bricks in a grid
     //for (size_t i = 0; i < 20; i++)
@@ -86,7 +88,14 @@ void GameState::update(float elapsed)
     mWindow->clear();
 
     // call all renderComponents
-    auto& renderVector = getComponentList(CompType::RECT_RENDER);
+    auto renderVector = getComponentList(CompType::RECT_RENDER);
+    auto circleRenderVector = getComponentList(CompType::CIRCLE_RENDER);
+    auto spriteRenderVector = getComponentList(CompType::SPRITE_RENDER);
+
+
+    renderVector.insert(renderVector.end(), circleRenderVector.begin(), circleRenderVector.end());
+    renderVector.insert(renderVector.end(), spriteRenderVector.begin(), spriteRenderVector.end());
+
     for (auto e : renderVector)
     {
         e->update(elapsed);

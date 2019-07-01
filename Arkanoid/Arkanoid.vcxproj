@@ -170,6 +170,7 @@
     <ClInclude Include="BaseState.h" />
     <ClInclude Include="BoxColliderComponent.h" />
     <ClInclude Include="CircleColliderComponent.h" />
+    <ClInclude Include="CircleRenderComponent.h" />
     <ClInclude Include="ColliderComponent.h" />
     <ClInclude Include="CollisionDetector.h" />
     <ClInclude Include="ComponentList.h" />
@@ -181,6 +182,8 @@
     <ClInclude Include="pch.h" />
     <ClInclude Include="PlayerInputComponent.h" />
     <ClInclude Include="RectRenderComponent.h" />
+    <ClInclude Include="RenderComponent.h" />
+    <ClInclude Include="SpriteRenderComponent.h" />
     <ClInclude Include="States.h" />
     <ClInclude Include="TransformComponent.h" />
     <ClInclude Include="World.h" />
@@ -189,6 +192,7 @@
     <ClCompile Include="BallBehaviorComponent.cpp" />
     <ClCompile Include="BoxColliderComponent.cpp" />
     <ClCompile Include="CircleColliderComponent.cpp" />
+    <ClCompile Include="CircleRenderComponent.cpp" />
     <ClCompile Include="ColliderComponent.cpp" />
     <ClCompile Include="CollisionDetector.cpp" />
     <ClCompile Include="Constants.cpp" />
@@ -205,6 +209,8 @@
     </ClCompile>
     <ClCompile Include="PlayerInputComponent.cpp" />
     <ClCompile Include="RectRenderComponent.cpp" />
+    <ClCompile Include="RenderComponent.cpp" />
+    <ClCompile Include="SpriteRenderComponent.cpp" />
     <ClCompile Include="TransformComponent.cpp" />
     <ClCompile Include="World.cpp" />
   </ItemGroup>

@@ -1,16 +1,14 @@
-#ifndef RENDER_COMPONENT_H
-#define RENDER_COMPONENT_H
+#ifndef RECT_RENDER_COMPONENT_H
+#define RECT_RENDER_COMPONENT_H
 
 
-#include "BaseComponent.h"
-
-#include <SFML/Graphics.hpp>
+#include "RenderComponent.h"
 
 class GameState;
 class TransformComponent;
 
 class RectRenderComponent :
-    public BaseComponent
+    public RenderComponent
 {
 public:
     /// <summary>
@@ -42,8 +40,7 @@ public:
 
 private:
     sf::RectangleShape mShape;
-    TransformComponent* mTranform;
 };
 
 
-#endif // !RENDER_COMPONENT_H
+#endif // !RECT_RENDER_COMPONENT_H

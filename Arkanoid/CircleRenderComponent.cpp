@@ -1,35 +1,35 @@
 #include "pch.h"
-#include "RectRenderComponent.h"
+#include "CircleRenderComponent.h"
 
 #include "GameState.h"
 #include "TransformComponent.h"
 
-RectRenderComponent::RectRenderComponent(EntityID entityID, GameState * game, 
-    const sf::Vector2f & size, const sf::Color & fillColor, 
+CircleRenderComponent::CircleRenderComponent(EntityID entityID, GameState * game,
+    float radius, const sf::Color & fillColor,
     const sf::Color & outlineColor, float outlineTickness) :
     RenderComponent(entityID, game),
-    mShape(sf::Vector2f(0, 0))
+    mShape(radius)
 {
     mShape.setFillColor(fillColor);
-    mShape.setSize(size);
     mShape.setOutlineColor(outlineColor);
     mShape.setOutlineThickness(outlineTickness);
 }
 
-RectRenderComponent::RectRenderComponent(EntityID entityID, GameState * game,
-    sf::Texture * const texture, const sf::IntRect & textureRect) :
+CircleRenderComponent::CircleRenderComponent(EntityID entityID, GameState * game,
+    float radius, sf::Texture * const texture, const sf::IntRect & textureRect) :
     RenderComponent(entityID, game),
-    mShape(sf::Vector2f(0, 0))
+    mShape(radius)
 {
     mShape.setTexture(texture);
     mShape.setTextureRect(textureRect);
 }
 
-RectRenderComponent::~RectRenderComponent()
+
+CircleRenderComponent::~CircleRenderComponent()
 {
 }
 
-void RectRenderComponent::update(float elapsed)
+void CircleRenderComponent::update(float elapsed)
 {
     elapsed;
     // update transform
