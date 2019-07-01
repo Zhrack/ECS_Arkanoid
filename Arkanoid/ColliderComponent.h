@@ -5,6 +5,10 @@
 
 #include <SFML/Graphics.hpp>
 
+#include "MessageTypes.h"
+
+#include <functional>
+
 class TransformComponent;
 
 /// <summary>
@@ -18,9 +22,21 @@ public:
     ColliderComponent(EntityID entityID, GameState* game);
     virtual ~ColliderComponent();
 
+    TransformComponent* getTransform() const;
+
+    void setOnCollision(std::function<void(const CollisionData&)>& callback);
+
+protected:
+    virtual void handleMessage(Message & msg) override;
+
 protected:
     sf::RenderWindow* mWindow;
     TransformComponent* mTranform;
+
+    /// <summary>
+    /// Callback for collision events
+    /// </summary>
+    std::function<void(const CollisionData&)> mOnCollision;
 };
 
 

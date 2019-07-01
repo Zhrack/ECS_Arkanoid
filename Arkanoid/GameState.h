@@ -5,6 +5,7 @@
 
 #include "ComponentList.h"
 #include "BaseComponent.h"
+#include "CollisionDetector.h"
 
 #include <unordered_map>
 #include <vector>
@@ -85,6 +86,8 @@ private:
     PlayerInputComponent* mPlayerInputComp;
 
     BallBehaviorComponent* mBallBehavior;
+
+    CollisionDetector mCollisionDetector;
 };
 
 

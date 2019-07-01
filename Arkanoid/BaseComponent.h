@@ -24,10 +24,20 @@ public:
 
     EntityID getEntityID() const;
 
+    bool isZombie() const;
+    void setZombie();
+
+    GameState* getGameState() const;
+
 protected:
     EntityID mEntityID;
 
     GameState* mGame;
+
+    /// <summary>
+    /// Zombie flag to check if this component is slated for removal
+    /// </summary>
+    bool mZombie;
 
 protected:
     // Inherited via MessageHandler

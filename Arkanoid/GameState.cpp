@@ -5,6 +5,7 @@
 #include "TransformComponent.h"
 #include "RectRenderComponent.h"
 #include "BoxColliderComponent.h"
+#include "CircleColliderComponent.h"
 #include "BallBehaviorComponent.h"
 
 #include <iostream>
@@ -53,13 +54,13 @@ void GameState::enter()
 
     addComponent<BoxColliderComponent>(CompType::BOX_COLLIDER, entityID, sf::Vector2f(Constants::PADDLE_SIZE_X, Constants::PADDLE_SIZE_Y));
     mPlayerInputComp = addComponent<PlayerInputComponent>(CompType::PLAYER_INPUT, entityID);
-    addComponent<RectRenderComponent>(CompType::RENDER, entityID, sf::Vector2f(Constants::PADDLE_SIZE_X, Constants::PADDLE_SIZE_Y), sf::Color::Green);
+    addComponent<RectRenderComponent>(CompType::RECT_RENDER, entityID, sf::Vector2f(Constants::PADDLE_SIZE_X, Constants::PADDLE_SIZE_Y), sf::Color::Green);
 
     auto ballID = this->createEntity();
 
-    addComponent<BoxColliderComponent>(CompType::BOX_COLLIDER, ballID, sf::Vector2f(Constants::PADDLE_SIZE_X, Constants::PADDLE_SIZE_Y));
+    addComponent<CircleColliderComponent>(CompType::CIRCLE_COLLIDER, ballID, Constants::PADDLE_SIZE_X);
     mBallBehavior = addComponent<BallBehaviorComponent>(CompType::BALL, ballID, sf::Vector2f(200.0f, 200.0f));
-    addComponent<RectRenderComponent>(CompType::RENDER, ballID, sf::Vector2f(Constants::PADDLE_SIZE_X, Constants::PADDLE_SIZE_Y), sf::Color::Red);
+    addComponent<RectRenderComponent>(CompType::RECT_RENDER, ballID, sf::Vector2f(Constants::PADDLE_SIZE_X, Constants::PADDLE_SIZE_Y), sf::Color::Red);
 
     // create some bricks in a grid
     //for (size_t i = 0; i < 20; i++)
@@ -72,13 +73,20 @@ void GameState::update(float elapsed)
 {
     // update
     mPlayerInputComp->update(elapsed);
-    // late update for collision detection and other "physics" stuff
     mBallBehavior->update(elapsed);
+    // late update for collision detection and other "physics" stuff
+
+    // make copies of colliders
+    auto boxColliders = getComponentList(CompType::BOX_COLLIDER);
+    auto circleColliders = getComponentList(CompType::CIRCLE_COLLIDER);
+    boxColliders.insert(boxColliders.end(), circleColliders.begin(), circleColliders.end());
+
+    mCollisionDetector.checkCollisions(boxColliders);
     // render step
     mWindow->clear();
 
     // call all renderComponents
-    auto renderVector = getComponentList(CompType::RENDER);
+    auto& renderVector = getComponentList(CompType::RECT_RENDER);
     for (auto e : renderVector)
     {
         e->update(elapsed);

@@ -169,7 +169,9 @@
     <ClInclude Include="BaseComponent.h" />
     <ClInclude Include="BaseState.h" />
     <ClInclude Include="BoxColliderComponent.h" />
+    <ClInclude Include="CircleColliderComponent.h" />
     <ClInclude Include="ColliderComponent.h" />
+    <ClInclude Include="CollisionDetector.h" />
     <ClInclude Include="ComponentList.h" />
     <ClInclude Include="Constants.h" />
     <ClInclude Include="GameState.h" />
@@ -186,7 +188,9 @@
   <ItemGroup>
     <ClCompile Include="BallBehaviorComponent.cpp" />
     <ClCompile Include="BoxColliderComponent.cpp" />
+    <ClCompile Include="CircleColliderComponent.cpp" />
     <ClCompile Include="ColliderComponent.cpp" />
+    <ClCompile Include="CollisionDetector.cpp" />
     <ClCompile Include="Constants.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="BaseComponent.cpp" />

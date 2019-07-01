@@ -4,7 +4,8 @@
 
 BaseComponent::BaseComponent(EntityID entityID, GameState* game) :
     mEntityID(entityID),
-    mGame(game)
+    mGame(game),
+    mZombie(false)
 {
 }
 
@@ -16,6 +17,21 @@ BaseComponent::~BaseComponent()
 EntityID BaseComponent::getEntityID() const
 {
     return mEntityID;
+}
+
+bool BaseComponent::isZombie() const
+{
+    return mZombie;
+}
+
+void BaseComponent::setZombie()
+{
+    mZombie = true;
+}
+
+GameState * BaseComponent::getGameState() const
+{
+    return mGame;
 }
 
 void BaseComponent::handleMessage(Message & msg)

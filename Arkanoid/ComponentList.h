@@ -3,10 +3,14 @@
 
 enum CompType {
     PLAYER_INPUT = 0,
-    TRANSFORM,
-    RENDER,
-    BOX_COLLIDER,
     BALL,
+
+    TRANSFORM,
+
+    RECT_RENDER,
+
+    BOX_COLLIDER,
+    CIRCLE_COLLIDER,
 
     COUNT // keep last, to know number of components types
 };

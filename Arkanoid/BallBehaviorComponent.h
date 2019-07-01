@@ -6,7 +6,7 @@
 #include <SFML/Graphics.hpp>
 
 class TransformComponent;
-class BoxColliderComponent;
+class CircleColliderComponent;
 
 class BallBehaviorComponent :
     public BaseComponent
@@ -18,11 +18,13 @@ public:
     // Inherited via BaseComponent
     virtual void update(float elapsed) override;
 
+    void onCollisionCb(const CollisionData& data);
+
 private:
     sf::Vector2f mVelocity;
     sf::RenderWindow* mWindow;
     TransformComponent* mTransform;
-    BoxColliderComponent* mCollider;
+    CircleColliderComponent* mCollider;
 };
 
 
