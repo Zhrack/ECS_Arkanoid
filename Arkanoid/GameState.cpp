@@ -64,7 +64,8 @@ void GameState::enter()
 
 
     addComponent<BoxColliderComponent>(CompType::BOX_COLLIDER, entityID, paddleSize);
-    mPlayerInputComp = addComponent<PlayerInputComponent>(CompType::PLAYER_INPUT, entityID);
+    mPlayerInputComp = addComponent<PlayerInputComponent>(CompType::PLAYER_INPUT, entityID, 
+        sf::Vector2f((float)mTree.get<int>("SCREEN_WIDTH") / 2.f, (float)(mTree.get<int>("SCREEN_HEIGHT") - mTree.get<int>("PADDLE_SIZE_Y"))));
     addComponent<RectRenderComponent>(CompType::RECT_RENDER, entityID, paddleSize, sf::Color::Green);
 
     auto ballID = this->createEntity(EntityType::TAG_BALL);
@@ -76,7 +77,7 @@ void GameState::enter()
     auto brickID = this->createEntity(EntityType::TAG_BRICK);
 
     addComponent<BoxColliderComponent>(CompType::BOX_COLLIDER, brickID, paddleSize);
-    addComponent<BrickBehaviorComponent>(CompType::BRICK, brickID, 1);
+    addComponent<BrickBehaviorComponent>(CompType::BRICK, brickID, sf::Vector2f(500.f, 500.f));
     addComponent<RectRenderComponent>(CompType::RECT_RENDER, brickID, paddleSize, sf::Color::Blue);
 
     // create some bricks in a grid
@@ -235,6 +236,18 @@ EntityType GameState::getEntityType(EntityID entityID)
         return mEntityMap[entityID];
     }
     return EntityType::TAG_NONE;
+}
+
+void GameState::increaseScore(long points)
+{
+    mCurrentScore += points;
+
+    if (mCurrentScore > mHighScore)
+    {
+        mHighScore = mCurrentScore;
+    }
+
+    std::cout << "SCORE: " << mCurrentScore << std::endl;
 }
 
 std::vector<BaseComponent*>& GameState::getComponentList(CompType type)

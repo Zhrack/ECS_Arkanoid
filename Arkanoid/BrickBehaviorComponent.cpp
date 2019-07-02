@@ -5,7 +5,7 @@
 #include "BoxColliderComponent.h"
 #include "TransformComponent.h"
 
-BrickBehaviorComponent::BrickBehaviorComponent(EntityID entityID, GameState* game, int hp) :
+BrickBehaviorComponent::BrickBehaviorComponent(EntityID entityID, GameState* game, sf::Vector2f pos, int hp) :
     BaseComponent(entityID, game),
     mHP(hp)
 {
@@ -16,7 +16,7 @@ BrickBehaviorComponent::BrickBehaviorComponent(EntityID entityID, GameState* gam
 
     mCollider->setOnCollision(cb);
 
-    mTransform->setPosition(500, 500);
+    mTransform->setPosition(pos);
 }
 
 
@@ -34,11 +34,19 @@ void BrickBehaviorComponent::onCollisionCb(const CollisionData & data)
     auto otherID = data.otherCollider->getEntityID();
     if (mGame->getEntityType(otherID) == EntityType::TAG_BALL)
     {
+        auto points = mGame->config().get<long>("BRICK_POINTS");
+
         mHP--;
 
         if (mHP == 0)
         {
+            mGame->increaseScore(points);
             mGame->destroyEntity(mEntityID);
+        }
+        else
+        {
+            // floor number through truncation
+            mGame->increaseScore((long)std::floor(points * 0.5));
         }
     }
 }

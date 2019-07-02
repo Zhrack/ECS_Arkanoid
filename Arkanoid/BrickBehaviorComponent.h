@@ -10,7 +10,7 @@ class BrickBehaviorComponent :
     public BaseComponent
 {
 public:
-    BrickBehaviorComponent(EntityID entityID, GameState* game, int hp = 1);
+    BrickBehaviorComponent(EntityID entityID, GameState* game, sf::Vector2f pos, int hp = 1);
     virtual ~BrickBehaviorComponent();
 
     // Inherited via BaseComponent

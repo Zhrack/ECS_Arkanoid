@@ -12,7 +12,7 @@ class PlayerInputComponent :
     public BaseComponent
 {
 public:
-    PlayerInputComponent(EntityID entityID, GameState* game);
+    PlayerInputComponent(EntityID entityID, GameState* game, sf::Vector2f pos);
     virtual ~PlayerInputComponent();
 
     // Inherited via BaseComponent

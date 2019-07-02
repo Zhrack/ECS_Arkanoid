@@ -8,7 +8,7 @@
 #include <iostream>
 
 
-PlayerInputComponent::PlayerInputComponent(EntityID entityID, GameState* game) :
+PlayerInputComponent::PlayerInputComponent(EntityID entityID, GameState* game, sf::Vector2f pos) :
     BaseComponent(entityID, game),
     mVel(0.f, 0.f),
     mAccel(0.f, 0.f)
@@ -19,8 +19,6 @@ PlayerInputComponent::PlayerInputComponent(EntityID entityID, GameState* game) :
     mTransform = mGame->getComponent<TransformComponent>(CompType::TRANSFORM, getEntityID());
 
     auto& config = mGame->config();
-
-    sf::Vector2f pos((float)config.get<int>("SCREEN_WIDTH") / 2, (float)config.get<int>("SCREEN_HEIGHT") - mCollider->getSize().y);
 
     mTransform->setPosition(pos);
 

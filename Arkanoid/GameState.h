@@ -75,6 +75,8 @@ public:
 
     EntityType getEntityType(EntityID entityID);
 
+    void increaseScore(long points);
+
 private:
     void removeEntity(EntityID entityID);
 
