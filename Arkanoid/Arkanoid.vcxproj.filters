@@ -33,9 +33,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="pch.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="World.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -96,11 +93,14 @@
     <ClInclude Include="CircleRenderComponent.h">
       <Filter>Header Files\Components</Filter>
     </ClInclude>
+    <ClInclude Include="BrickBehaviorComponent.h">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="EntityTypes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="pch.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="World.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -150,6 +150,9 @@
       <Filter>Source Files\Components</Filter>
     </ClCompile>
     <ClCompile Include="CircleRenderComponent.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="BrickBehaviorComponent.cpp">
       <Filter>Source Files\Components</Filter>
     </ClCompile>
   </ItemGroup>

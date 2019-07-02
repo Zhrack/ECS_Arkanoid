@@ -1,4 +1,4 @@
-#include "pch.h"
+
 #include "CircleRenderComponent.h"
 
 #include "GameState.h"

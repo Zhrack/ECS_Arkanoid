@@ -4,6 +4,7 @@
 enum CompType {
     PLAYER_INPUT = 0,
     BALL,
+    BRICK,
 
     TRANSFORM,
 

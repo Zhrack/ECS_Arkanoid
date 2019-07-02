@@ -1,4 +1,4 @@
-#include "pch.h"
+
 #include "BoxColliderComponent.h"
 
 #include "TransformComponent.h"

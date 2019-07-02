@@ -21,7 +21,7 @@ enum MessageType {
 
 struct CollisionData
 {
-    BaseComponent* other;
+    BaseComponent* otherCollider;
     CompType otherType;
     sf::Vector2f amount;
 };

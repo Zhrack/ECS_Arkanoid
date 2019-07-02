@@ -1,4 +1,4 @@
-#include "pch.h"
+
 #include "GameState.h"
 
 #include "PlayerInputComponent.h"
@@ -9,6 +9,7 @@
 #include "BoxColliderComponent.h"
 #include "CircleColliderComponent.h"
 #include "BallBehaviorComponent.h"
+#include "BrickBehaviorComponent.h"
 
 #include <iostream>
 
@@ -21,6 +22,8 @@ GameState::GameState(sf::RenderWindow* window, pt::ptree& tree) :
     mCurrentScore(0),
     mRemainingLives(),
     mCompMap(),
+    mEntityMap(),
+    mZombieEntities(),
     mPlayerInputComp(nullptr),
     mTree(tree)
 {
@@ -37,6 +40,7 @@ GameState::GameState(sf::RenderWindow* window, pt::ptree& tree) :
 
 GameState::~GameState()
 {
+    cleanupZombies();
     for (auto it = mCompMap.begin(); it != mCompMap.end(); ++it)
     {
         for (unsigned int i = 0; i < it->second.size(); i++)
@@ -53,7 +57,7 @@ void GameState::enter()
 
     mRemainingLives = mTree.get<int>("NUM_LIVES");
 
-    auto entityID = this->createEntity();
+    auto entityID = this->createEntity(EntityType::TAG_PLAYER);
     //auto entityID2 = this->createEntity();
 
     sf::Vector2f paddleSize(mTree.get<float>("PADDLE_SIZE_X"), mTree.get<float>("PADDLE_SIZE_Y"));
@@ -63,11 +67,17 @@ void GameState::enter()
     mPlayerInputComp = addComponent<PlayerInputComponent>(CompType::PLAYER_INPUT, entityID);
     addComponent<RectRenderComponent>(CompType::RECT_RENDER, entityID, paddleSize, sf::Color::Green);
 
-    auto ballID = this->createEntity();
+    auto ballID = this->createEntity(EntityType::TAG_BALL);
 
     addComponent<CircleColliderComponent>(CompType::CIRCLE_COLLIDER, ballID, mTree.get<float>("BALL_RADIUS"));
     mBallBehavior = addComponent<BallBehaviorComponent>(CompType::BALL, ballID, sf::Vector2f(mTree.get<float>("BALL_MAX_VELOCITY"), mTree.get<float>("BALL_MAX_VELOCITY")));
     addComponent<CircleRenderComponent>(CompType::CIRCLE_RENDER, ballID, mTree.get<float>("BALL_RADIUS"), sf::Color::Red);
+
+    auto brickID = this->createEntity(EntityType::TAG_BRICK);
+
+    addComponent<BoxColliderComponent>(CompType::BOX_COLLIDER, brickID, paddleSize);
+    addComponent<BrickBehaviorComponent>(CompType::BRICK, brickID, 1);
+    addComponent<RectRenderComponent>(CompType::RECT_RENDER, brickID, paddleSize, sf::Color::Blue);
 
     // create some bricks in a grid
     //for (size_t i = 0; i < 20; i++)
@@ -119,10 +129,16 @@ void GameState::update(float elapsed)
 
     for (auto e : renderVector)
     {
-        e->update(elapsed);
+        if (!e->isZombie())
+        {
+            e->update(elapsed);
+        }
     }
 
     mWindow->display();
+
+    // do some cleanup
+    cleanupZombies();
 }
 
 void GameState::exit()
@@ -130,14 +146,44 @@ void GameState::exit()
     std::cout << "GameState::exit" << std::endl;
 }
 
-EntityID GameState::createEntity()
+EntityID GameState::createEntity(EntityType type)
 {
     auto id = createID();
     
     // TransformComponent is always added
     addComponent<TransformComponent>(CompType::TRANSFORM, id);
 
+    mEntityMap[id] = type;
+
     return id;
+}
+
+void GameState::destroyEntity(EntityID entityID)
+{
+    // search if it has been already marked for removal
+    auto res = std::find_if(mZombieEntities.begin(), mZombieEntities.end(),
+        [entityID](EntityID e) {
+
+        return e == entityID;
+    });
+
+    if (res != mZombieEntities.end())
+    {
+        return;
+    }
+    // tag all its components as zombies
+    for (auto it = mCompMap.begin(); it != mCompMap.end(); ++it)
+    {
+        for (unsigned int i = 0; i < it->second.size(); i++)
+        {
+            if (it->second[i]->getEntityID() == entityID)
+            {
+                it->second[i]->setZombie();
+            }
+        }
+    }
+
+    mZombieEntities.push_back(entityID);
 }
 
 void GameState::removeComponent(CompType type, EntityID entityID)
@@ -146,20 +192,21 @@ void GameState::removeComponent(CompType type, EntityID entityID)
     {
         auto& vec = mCompMap[type];
 
-        auto res = std::find_if(vec.begin(), vec.end(),
-            [entityID](BaseComponent* e) {
+        size_t i = 0;
+        for (; i < vec.size(); i++)
+        {
+            if (vec[i]->getEntityID() == entityID)
+            {
+                break;
+            }
+        }
 
-            return e->getEntityID() == entityID;
-        });
+        if (i == vec.size()) return;
 
 
         // swap with last element
-        auto last = vec.back();
-        vec[vec.size() - 1] = *res;
-        vec[res - vec.begin()] = last;
-
+        std::iter_swap(vec.begin() + i, vec.end() - 1);
         vec.pop_back();
-
     }
 }
 
@@ -169,6 +216,25 @@ void GameState::removeEntity(EntityID entityID)
     {
         removeComponent(CompType(i), entityID);
     }
+
+    mEntityMap.erase(entityID);
+}
+
+void GameState::cleanupZombies()
+{
+    for (auto id : mZombieEntities)
+    {
+        removeEntity(id);
+    }
+}
+
+EntityType GameState::getEntityType(EntityID entityID)
+{
+    if (mEntityMap.count(entityID) > 0)
+    {
+        return mEntityMap[entityID];
+    }
+    return EntityType::TAG_NONE;
 }
 
 std::vector<BaseComponent*>& GameState::getComponentList(CompType type)

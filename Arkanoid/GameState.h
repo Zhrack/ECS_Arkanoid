@@ -4,6 +4,7 @@
 #include "BaseState.h"
 
 #include "ComponentList.h"
+#include "EntityTypes.h"
 #include "BaseComponent.h"
 #include "CollisionDetector.h"
 
@@ -44,7 +45,7 @@ public:
     virtual void update(float elapsed) override;
     virtual void exit() override;
 
-    EntityID createEntity();
+    EntityID createEntity(EntityType type);
 
     /// <summary>
     /// Variadic template funciton that adds a new component.
@@ -68,9 +69,19 @@ public:
     template<class T>
     T* getComponent(CompType type, EntityID entityID);
 
+    void destroyEntity(EntityID entityID);
+
     void removeComponent(CompType type, EntityID entityID);
 
+    EntityType getEntityType(EntityID entityID);
+
+private:
     void removeEntity(EntityID entityID);
+
+    /// <summary>
+    /// What a cool name!
+    /// </summary>
+    void cleanupZombies();
 
 private:
     // general game data
@@ -89,6 +100,13 @@ private:
     /// Contains all components organized by type.
     /// </summary>
     ComponentMap mCompMap;
+
+    /// <summary>
+    /// To map every entity to a specific game type
+    /// </summary>
+    std::unordered_map<EntityID, EntityType> mEntityMap;
+
+    std::vector<EntityID> mZombieEntities;
 
     PlayerInputComponent* mPlayerInputComp;
 

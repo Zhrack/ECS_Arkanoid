@@ -1,4 +1,4 @@
-#include "pch.h"
+
 #include "BallBehaviorComponent.h"
 
 #include "GameState.h"
@@ -47,7 +47,7 @@ void BallBehaviorComponent::update(float elapsed)
 
 void BallBehaviorComponent::onCollisionCb(const CollisionData & data)
 {
-    std::cout << "Ball collision with entity " << data.other->getEntityID() << std::endl;
+    std::cout << "Ball collision with entity " << data.otherCollider->getEntityID() << std::endl;
 
     //TransformComponent* otherTransform = mGame->getComponent<TransformComponent>(CompType::TRANSFORM, data.other->getEntityID());
 
