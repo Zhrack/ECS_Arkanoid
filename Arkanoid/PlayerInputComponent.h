@@ -22,6 +22,9 @@ private:
     sf::RenderWindow* mWindow;
     BoxColliderComponent* mCollider;
     TransformComponent* mTransform;
+
+    sf::Vector2f mVel;
+    sf::Vector2f mAccel;
 };
 
 

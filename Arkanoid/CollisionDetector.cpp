@@ -168,8 +168,16 @@ bool AABBvsCircle(BaseComponent * box, BaseComponent * c, sf::Vector2f& amount)
     float distSq = (cPoint.x - posCircle.x) * (cPoint.x - posCircle.x) + 
                     (cPoint.y - posCircle.y) * (cPoint.y - posCircle.y);
 
+
+
     if(distSq < radiusSq)
     {
+        sf::Vector2f penetrationDir = (cPoint - posCircle);
+        float penetrationDirLength = std::sqrtf(1.0f / (penetrationDir.x * penetrationDir.x +
+            penetrationDir.y * penetrationDir.y));
+        penetrationDir /= penetrationDirLength;
+
+        amount = penetrationDir * std::sqrtf(radiusSq - distSq);
         return true;
     }
 
