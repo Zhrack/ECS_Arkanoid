@@ -65,9 +65,9 @@ void GameState::enter()
 
     auto ballID = this->createEntity();
 
-    addComponent<CircleColliderComponent>(CompType::CIRCLE_COLLIDER, ballID, paddleSize.x);
-    mBallBehavior = addComponent<BallBehaviorComponent>(CompType::BALL, ballID, sf::Vector2f(200.0f, 200.0f));
-    addComponent<CircleRenderComponent>(CompType::CIRCLE_RENDER, ballID, 50.f, sf::Color::Red);
+    addComponent<CircleColliderComponent>(CompType::CIRCLE_COLLIDER, ballID, mTree.get<float>("BALL_RADIUS"));
+    mBallBehavior = addComponent<BallBehaviorComponent>(CompType::BALL, ballID, sf::Vector2f(mTree.get<float>("BALL_MAX_VELOCITY"), mTree.get<float>("BALL_MAX_VELOCITY")));
+    addComponent<CircleRenderComponent>(CompType::CIRCLE_RENDER, ballID, mTree.get<float>("BALL_RADIUS"), sf::Color::Red);
 
     // create some bricks in a grid
     //for (size_t i = 0; i < 20; i++)
@@ -78,6 +78,21 @@ void GameState::enter()
 
 void GameState::update(float elapsed)
 {
+    sf::Event event;
+    while (mWindow->pollEvent(event))
+    {
+        switch (event.type)
+        {
+        case sf::Event::Closed:
+            mWindow->close();
+            break;
+        case sf::Event::KeyPressed:
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+            {
+                mWindow->close();
+            }
+        }
+    }
     // update
     mPlayerInputComp->update(elapsed);
     mBallBehavior->update(elapsed);
@@ -98,6 +113,7 @@ void GameState::update(float elapsed)
     auto spriteRenderVector = getComponentList(CompType::SPRITE_RENDER);
 
 
+    // here if needed, sorting of rendererComponents could be made
     renderVector.insert(renderVector.end(), circleRenderVector.begin(), circleRenderVector.end());
     renderVector.insert(renderVector.end(), spriteRenderVector.begin(), spriteRenderVector.end());
 

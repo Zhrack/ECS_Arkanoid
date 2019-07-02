@@ -28,6 +28,7 @@ private:
     float mPaddleMaxAccel;
     sf::Vector2f mPaddleSize;
     float mPaddleMaxVel;
+    float mPaddleFriction;
 };
 
 

@@ -28,16 +28,18 @@ BallBehaviorComponent::~BallBehaviorComponent()
 void BallBehaviorComponent::update(float elapsed)
 {
     sf::Vector2i screenSize(mGame->config().get<int>("SCREEN_WIDTH"), mGame->config().get<int>("SCREEN_HEIGHT"));
-    mTransform->setPosition(mTransform->getPosition() + mVelocity * elapsed);
+    mTransform->move(mVelocity * elapsed);
+
+    float radius = mCollider->getRadius();
 
     if (mTransform->getPosition().x < 0 ||
-        mTransform->getPosition().x > screenSize.x - mCollider->getRadius())
+        mTransform->getPosition().x + radius > screenSize.x - mCollider->getRadius())
     {
         mVelocity.x = -mVelocity.x;
     }
 
     if (mTransform->getPosition().y < 0 ||
-        mTransform->getPosition().y > screenSize.y - mCollider->getRadius())
+        mTransform->getPosition().y + radius > screenSize.y - mCollider->getRadius())
     {
         mVelocity.y = -mVelocity.y;
     }
@@ -47,7 +49,9 @@ void BallBehaviorComponent::onCollisionCb(const CollisionData & data)
 {
     std::cout << "Ball collision with entity " << data.other->getEntityID() << std::endl;
 
-    mTransform->move(data.amount);
+    //TransformComponent* otherTransform = mGame->getComponent<TransformComponent>(CompType::TRANSFORM, data.other->getEntityID());
+
+    mTransform->move(-data.amount);
 
     if (data.amount.x != 0)
     {

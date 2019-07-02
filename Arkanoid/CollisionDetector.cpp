@@ -134,31 +134,31 @@ bool AABBvsCircle(BaseComponent * box, BaseComponent * c, sf::Vector2f& amount)
     sf::Vector2f posCircle = circle->getTransform()->getPosition();
 
     sf::Vector2f sizeBox = b->getSize();
-    float radiusSq = circle->getRadius();
-    radiusSq *= radiusSq;
+    float radius = circle->getRadius();
+    float radiusSq = radius * radius;
 
     sf::Vector2f cPoint;
 
-    if (posCircle.x < posBox.x)//left of B
+    if (posCircle.x + radius < posBox.x)//left of B
     {
-        cPoint.x = posBox.x;
+        cPoint.x = posBox.x - radius;
     }
-    else if (posCircle.x > posBox.x + sizeBox.x)//right of B
+    else if (posCircle.x - radius > posBox.x + sizeBox.x)//right of B
     {
-        cPoint.x = posBox.x + sizeBox.x;
+        cPoint.x = posBox.x + sizeBox.x + radius;
     }
     else//inside B
     {
         cPoint.x = posCircle.x;
     }
 
-    if (posCircle.y < posBox.y)//up of B
+    if (posCircle.y + radius < posBox.y)//up of B
     {
-        cPoint.y = posBox.y;
+        cPoint.y = posBox.y - radius;
     }
-    else if (posCircle.y > posBox.y + sizeBox.y)
+    else if (posCircle.y - radius > posBox.y + sizeBox.y)
     {
-        cPoint.y = posBox.y + sizeBox.y;
+        cPoint.y = posBox.y + sizeBox.y + radius;
     }
     else
     {
@@ -173,8 +173,8 @@ bool AABBvsCircle(BaseComponent * box, BaseComponent * c, sf::Vector2f& amount)
     if(distSq < radiusSq)
     {
         sf::Vector2f penetrationDir = (cPoint - posCircle);
-        float penetrationDirLength = std::sqrtf(1.0f / (penetrationDir.x * penetrationDir.x +
-            penetrationDir.y * penetrationDir.y));
+        float penetrationDirLength = (penetrationDir.x * penetrationDir.x +
+            penetrationDir.y * penetrationDir.y); 
         penetrationDir /= penetrationDirLength;
 
         amount = penetrationDir * std::sqrtf(radiusSq - distSq);

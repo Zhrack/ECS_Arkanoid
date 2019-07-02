@@ -27,6 +27,7 @@ PlayerInputComponent::PlayerInputComponent(EntityID entityID, GameState* game) :
     mPaddleMaxAccel = config.get<float>("PADDLE_MAX_ACCEL");
     mPaddleSize = sf::Vector2f(config.get<float>("PADDLE_SIZE_X"), config.get<float>("PADDLE_SIZE_Y"));
     mPaddleMaxVel = config.get<float>("PADDLE_MAX_VELOCITY");
+    mPaddleFriction = config.get<float>("PADDLE_FRICTION");
 }
 
 
@@ -37,66 +38,35 @@ PlayerInputComponent::~PlayerInputComponent()
 void PlayerInputComponent::update(float elapsed)
 {
     //this->pullMessages();
-    sf::Event event;
-    while (mWindow->pollEvent(event))
-    {
-        switch (event.type)
-        {
-        case sf::Event::Closed:
-            mWindow->close();
-            break;
-        case sf::Event::KeyPressed:
-            if (event.key.code == sf::Keyboard::Left ||
-                event.key.code == sf::Keyboard::A)
-            {
-                mAccel.x = -mPaddleMaxAccel;
-            }
-            else if (event.key.code == sf::Keyboard::Right ||
-                event.key.code == sf::Keyboard::D)
-            {
-                mAccel.x = mPaddleMaxAccel;
-            }
-            break;
-
-        case sf::Event::KeyReleased:
-            if (event.key.code == sf::Keyboard::Left ||
-                event.key.code == sf::Keyboard::A ||
-                event.key.code == sf::Keyboard::Right ||
-                event.key.code == sf::Keyboard::D)
-            {
-                mAccel.x = 0;
-            }
-            break;
-        }
-    }
+    
 
     sf::Vector2i screenSize(mGame->config().get<int>("SCREEN_WIDTH"), mGame->config().get<int>("SCREEN_HEIGHT"));
 
-    //if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) ||
-    //    sf::Keyboard::isKeyPressed(sf::Keyboard::A))
-    //{
-    //    mAccel.x = - Constants::PADDLE_ACCEL;
+    //mVel.x += mAccel.x;
 
-    //}
-    //else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) ||
-    //        sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+    //if (mVel.x != 0)
     //{
-    //    mAccel.x = Constants::PADDLE_ACCEL;
-    //}
+    //    // friction
+    //    //if(mAccel.x == 0)
+    //        mVel.x = mVel.x > 0 ? mVel.x - mPaddleFriction : mVel.x + mPaddleFriction;
 
-
-    mVel.x += mAccel.x;
-    //if (mAccel.x != 0.f)
-    //{
-    //    if (mVel.x > 0.f)
+    //    // clamp velocity
+    //    if (mVel.x > mPaddleMaxVel)
     //    {
-    //        mVel.x = std::min(mVel.x, Constants::PADDLE_VELOCITY);
+    //        mVel.x = mPaddleMaxVel;
     //    }
-    //    else
+    //    else if (mVel.x < -mPaddleMaxVel)
     //    {
-    //        mVel.x = std::max(mVel.x, Constants::PADDLE_VELOCITY);
+    //        mVel.x = -mPaddleMaxVel;
     //    }
     //}
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left))
+        mVel.x = -mPaddleMaxVel;
+
+    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right))
+        mVel.x = mPaddleMaxVel;
+    else
+        mVel.x = 0;
     
     mTransform->move(mVel * elapsed);
 
