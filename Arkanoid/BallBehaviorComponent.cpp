@@ -27,16 +27,17 @@ BallBehaviorComponent::~BallBehaviorComponent()
 
 void BallBehaviorComponent::update(float elapsed)
 {
+    sf::Vector2i screenSize(mGame->config().get<int>("SCREEN_WIDTH"), mGame->config().get<int>("SCREEN_HEIGHT"));
     mTransform->setPosition(mTransform->getPosition() + mVelocity * elapsed);
 
     if (mTransform->getPosition().x < 0 ||
-        mTransform->getPosition().x > Constants::SCREEN_WIDTH - mCollider->getRadius())
+        mTransform->getPosition().x > screenSize.x - mCollider->getRadius())
     {
         mVelocity.x = -mVelocity.x;
     }
 
     if (mTransform->getPosition().y < 0 ||
-        mTransform->getPosition().y > Constants::SCREEN_HEIGHT - mCollider->getRadius())
+        mTransform->getPosition().y > screenSize.y - mCollider->getRadius())
     {
         mVelocity.y = -mVelocity.y;
     }

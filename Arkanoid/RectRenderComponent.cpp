@@ -5,7 +5,7 @@
 #include "TransformComponent.h"
 
 RectRenderComponent::RectRenderComponent(EntityID entityID, GameState * game, 
-    const sf::Vector2f & size, const sf::Color & fillColor, 
+    const sf::Vector2f & size, const sf::Color & fillColor,
     const sf::Color & outlineColor, float outlineTickness) :
     RenderComponent(entityID, game),
     mShape(sf::Vector2f(0, 0))

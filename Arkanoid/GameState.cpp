@@ -15,13 +15,14 @@
 // start it from 1, 0 is reserved to be a NULL value
 unsigned long GameState::nextID = 1;
 
-GameState::GameState(sf::RenderWindow* window) :
+GameState::GameState(sf::RenderWindow* window, pt::ptree& tree) :
     BaseState(window),
     mHighScore(0),
     mCurrentScore(0),
-    mRemainingLives(Constants::NUM_LIVES),
+    mRemainingLives(),
     mCompMap(),
-    mPlayerInputComp(nullptr)
+    mPlayerInputComp(nullptr),
+    mTree(tree)
 {
     using UniquePtrVector = std::vector<BaseComponent*>;
 
@@ -50,24 +51,21 @@ void GameState::enter()
 {
     std::cout << "GameState::enter" << std::endl;
 
-    if (!mConfigMngr.loadFile("settings.json"))
-    {
-        std::cout << "Error reading settings.json file!" << std::endl;
-    }
-
-    std::cout << mConfigMngr.get<int>("SCREEN_WIDTH");
+    mRemainingLives = mTree.get<int>("NUM_LIVES");
 
     auto entityID = this->createEntity();
     //auto entityID2 = this->createEntity();
 
+    sf::Vector2f paddleSize(mTree.get<float>("PADDLE_SIZE_X"), mTree.get<float>("PADDLE_SIZE_Y"));
 
-    addComponent<BoxColliderComponent>(CompType::BOX_COLLIDER, entityID, sf::Vector2f(Constants::PADDLE_SIZE_X, Constants::PADDLE_SIZE_Y));
+
+    addComponent<BoxColliderComponent>(CompType::BOX_COLLIDER, entityID, paddleSize);
     mPlayerInputComp = addComponent<PlayerInputComponent>(CompType::PLAYER_INPUT, entityID);
-    addComponent<RectRenderComponent>(CompType::RECT_RENDER, entityID, sf::Vector2f(Constants::PADDLE_SIZE_X, Constants::PADDLE_SIZE_Y), sf::Color::Green);
+    addComponent<RectRenderComponent>(CompType::RECT_RENDER, entityID, paddleSize, sf::Color::Green);
 
     auto ballID = this->createEntity();
 
-    addComponent<CircleColliderComponent>(CompType::CIRCLE_COLLIDER, ballID, Constants::PADDLE_SIZE_X);
+    addComponent<CircleColliderComponent>(CompType::CIRCLE_COLLIDER, ballID, paddleSize.x);
     mBallBehavior = addComponent<BallBehaviorComponent>(CompType::BALL, ballID, sf::Vector2f(200.0f, 200.0f));
     addComponent<CircleRenderComponent>(CompType::CIRCLE_RENDER, ballID, 50.f, sf::Color::Red);
 
@@ -162,6 +160,11 @@ std::vector<BaseComponent*>& GameState::getComponentList(CompType type)
     //static_assert(std::is_base_of<BaseComponent, T>::value, "T must derive from BaseComponent");
 
     return mCompMap[type];
+}
+
+pt::ptree & GameState::config()
+{
+    return mTree;
 }
 
 EntityID GameState::createID() const

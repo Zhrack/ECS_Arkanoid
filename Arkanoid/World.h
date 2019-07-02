@@ -4,8 +4,14 @@
 #include "BaseState.h"
 
 #include <memory>
+#include <string>
+
+#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/json_parser.hpp>
 
 #include <SFML/Graphics.hpp>
+
+namespace pt = boost::property_tree;
 
 /// <summary>
 /// Wrapper class for everything.
@@ -34,6 +40,8 @@ public:
     /// <param name="newState">The new state.</param>
     void changeState(BaseState* newState);
 
+    bool loadFile(const std::string& filename);
+
 private:
     std::unique_ptr<BaseState> mCurrentState;
 
@@ -45,7 +53,9 @@ private:
     /// <summary>
     /// The SFML window of the game.
     /// </summary>
-    sf::RenderWindow mWindow;
+    std::unique_ptr<sf::RenderWindow> mWindow;
+
+    pt::ptree mTree;
 };
 
 #endif // !WORLD_H

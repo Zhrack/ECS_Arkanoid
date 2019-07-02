@@ -6,12 +6,14 @@
 #include "ComponentList.h"
 #include "BaseComponent.h"
 #include "CollisionDetector.h"
-#include "ConfigManager.h"
 
 #include <unordered_map>
 #include <vector>
 #include <memory>
 #include <algorithm>
+
+#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/json_parser.hpp>
 
 using ComponentMap = 
 std::unordered_map<
@@ -23,6 +25,8 @@ class PlayerInputComponent;
 class RectRenderComponent;
 class BallBehaviorComponent;
 
+namespace pt = boost::property_tree;
+
 /// <summary>
 /// State that manages the actual game
 /// </summary>
@@ -32,7 +36,7 @@ class GameState :
     public BaseState
 {
 public:
-    GameState(sf::RenderWindow* window);
+    GameState(sf::RenderWindow* window, pt::ptree& tree);
     virtual ~GameState();
 
     // Inherited via BaseState
@@ -52,6 +56,8 @@ public:
     inline T* addComponent(CompType type, EntityID entityID, Args... args);
 
     std::vector<BaseComponent*>& getComponentList(CompType type);
+
+    pt::ptree& config();
 
     /// <summary>
     /// Gets the requested component. The template parameter is used to downcast directly to the right derived type.
@@ -90,7 +96,7 @@ private:
 
     CollisionDetector mCollisionDetector;
 
-    ConfigManager mConfigMngr;
+    pt::ptree& mTree;
 };
 
 

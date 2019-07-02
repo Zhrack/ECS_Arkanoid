@@ -5,6 +5,8 @@
 #include <iostream>
 #include <memory>
 
+using EntityID = unsigned long;
+
 class GameState;
 
 /// <summary>

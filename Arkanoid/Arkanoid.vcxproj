@@ -174,8 +174,6 @@
     <ClInclude Include="ColliderComponent.h" />
     <ClInclude Include="CollisionDetector.h" />
     <ClInclude Include="ComponentList.h" />
-    <ClInclude Include="ConfigManager.h" />
-    <ClInclude Include="Constants.h" />
     <ClInclude Include="GameState.h" />
     <ClInclude Include="Message.h" />
     <ClInclude Include="MessageHandler.h" />
@@ -196,8 +194,6 @@
     <ClCompile Include="CircleRenderComponent.cpp" />
     <ClCompile Include="ColliderComponent.cpp" />
     <ClCompile Include="CollisionDetector.cpp" />
-    <ClCompile Include="ConfigManager.cpp" />
-    <ClCompile Include="Constants.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="BaseComponent.cpp" />
     <ClCompile Include="BaseState.cpp" />
