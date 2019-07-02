@@ -6,6 +6,7 @@
 #include "ComponentList.h"
 #include "BaseComponent.h"
 #include "CollisionDetector.h"
+#include "ConfigManager.h"
 
 #include <unordered_map>
 #include <vector>
@@ -88,6 +89,8 @@ private:
     BallBehaviorComponent* mBallBehavior;
 
     CollisionDetector mCollisionDetector;
+
+    ConfigManager mConfigMngr;
 };
 
 

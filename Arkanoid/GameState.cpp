@@ -50,6 +50,13 @@ void GameState::enter()
 {
     std::cout << "GameState::enter" << std::endl;
 
+    if (!mConfigMngr.loadFile("settings.json"))
+    {
+        std::cout << "Error reading settings.json file!" << std::endl;
+    }
+
+    std::cout << mConfigMngr.get<int>("SCREEN_WIDTH");
+
     auto entityID = this->createEntity();
     //auto entityID2 = this->createEntity();
 
