@@ -29,3 +29,8 @@ const sf::Vector2f& BoxColliderComponent::getSize() const
 {
     return mShape.getSize();
 }
+
+sf::FloatRect BoxColliderComponent::getBounds()
+{
+    return mShape.getGlobalBounds();
+}

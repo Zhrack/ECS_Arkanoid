@@ -65,7 +65,7 @@ void GameState::enter()
 
     addComponent<BoxColliderComponent>(CompType::BOX_COLLIDER, entityID, paddleSize);
     mPlayerInputComp = addComponent<PlayerInputComponent>(CompType::PLAYER_INPUT, entityID, 
-        sf::Vector2f((float)mTree.get<int>("SCREEN_WIDTH") / 2.f, (float)(mTree.get<int>("SCREEN_HEIGHT") - mTree.get<int>("PADDLE_SIZE_Y"))));
+        sf::Vector2f((float)mTree.get<int>("SCREEN_WIDTH") / 2.f, (float)(mTree.get<int>("SCREEN_HEIGHT") - mTree.get<int>("PADDLE_SIZE_Y") - 200)));
     addComponent<RectRenderComponent>(CompType::RECT_RENDER, entityID, paddleSize, sf::Color::Green);
 
     auto ballID = this->createEntity(EntityType::TAG_BALL);
@@ -74,17 +74,21 @@ void GameState::enter()
     mBallBehavior = addComponent<BallBehaviorComponent>(CompType::BALL, ballID, sf::Vector2f(mTree.get<float>("BALL_MAX_VELOCITY"), mTree.get<float>("BALL_MAX_VELOCITY")));
     addComponent<CircleRenderComponent>(CompType::CIRCLE_RENDER, ballID, mTree.get<float>("BALL_RADIUS"), sf::Color::Red);
 
-    auto brickID = this->createEntity(EntityType::TAG_BRICK);
 
-    addComponent<BoxColliderComponent>(CompType::BOX_COLLIDER, brickID, paddleSize);
-    addComponent<BrickBehaviorComponent>(CompType::BRICK, brickID, sf::Vector2f(500.f, 500.f));
-    addComponent<RectRenderComponent>(CompType::RECT_RENDER, brickID, paddleSize, sf::Color::Blue);
 
     // create some bricks in a grid
-    //for (size_t i = 0; i < 20; i++)
-    //{
+    sf::Vector2f offset(200.f, 100.f);
+    for (size_t i = 0; i < 4; i++)
+    {
+        for (size_t j = 0; j < 4; j++)
+        {
+            auto brickID = this->createEntity(EntityType::TAG_BRICK);
 
-    //}
+            addComponent<BoxColliderComponent>(CompType::BOX_COLLIDER, brickID, paddleSize);
+            addComponent<BrickBehaviorComponent>(CompType::BRICK, brickID, sf::Vector2f(paddleSize.x * i, paddleSize.y * j) + offset);
+            addComponent<RectRenderComponent>(CompType::RECT_RENDER, brickID, paddleSize, sf::Color::Blue, sf::Color::Magenta, 1.f);
+        }
+    }
 }
 
 void GameState::update(float elapsed)

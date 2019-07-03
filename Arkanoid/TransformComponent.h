@@ -5,6 +5,11 @@
 
 #include <SFML/Graphics.hpp>
 
+/// <summary>
+/// Transform Compnent.
+/// </summary>
+/// <seealso cref="BaseComponent" />
+/// <seealso cref="sf::Transformable" />
 class TransformComponent :
     public BaseComponent,
     public sf::Transformable

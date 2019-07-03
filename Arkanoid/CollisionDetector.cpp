@@ -85,42 +85,72 @@ bool AABBvsAABB(BaseComponent * box1, BaseComponent * box2, sf::Vector2f& amount
     BoxColliderComponent* b1 = static_cast<BoxColliderComponent*>(box1);
     BoxColliderComponent* b2 = static_cast<BoxColliderComponent*>(box2);
 
-    sf::Vector2f pos1 = b1->getTransform()->getPosition();
-    sf::Vector2f pos2 = b2->getTransform()->getPosition();
-
-    sf::Vector2f size1 = b1->getSize();
-    sf::Vector2f size2 = b2->getSize();
-
-    if (!(  pos1.x < pos2.x + size2.x &&
-            pos1.x + size1.x > pos2.x &&
-            pos1.y < pos2.y + size2.y &&
-            pos1.y + size1.y > pos2.y))
+    sf::FloatRect rect1 = b1->getBounds();
+    sf::FloatRect rect2 = b2->getBounds();
+    sf::FloatRect intBox;
+    if (rect1.intersects(rect2, intBox))
     {
-        return false;
+        sf::Vector2f resolveVec;
+        // search the direction vector to resolve the collision
+        if (intBox.left == rect2.left) // left
+        {
+            resolveVec.x = -1.f * intBox.width;
+        }
+        if (intBox.top == rect2.top) // up
+        {
+            resolveVec.y = -1.f * intBox.height;
+        }
+        if (intBox.left + intBox.width == rect2.left + rect2.width) // right
+        {
+            resolveVec.x = 1.f * intBox.width;
+        }
+        if (intBox.top + intBox.height == rect2.left + rect2.height) // bottom
+        {
+            resolveVec.y = 1.f * intBox.height;
+        }
+
+        amount = resolveVec;
+        return true;
     }
 
-    float x1, x2, y1, y2;
+    return false;
 
-    if (pos1.x + size1.x > pos2.x) {
-        x1 = pos1.x + size1.x - pos2.x;
-    }
+    //sf::Vector2f pos1 = b1->getTransform()->getPosition();
+    //sf::Vector2f pos2 = b2->getTransform()->getPosition();
 
-    if (pos1.x < pos2.x + size2.x) {
-        x2 = pos2.x + size2.x - pos1.x;
-    }
+    //sf::Vector2f size1 = b1->getSize();
+    //sf::Vector2f size2 = b2->getSize();
 
-    if (pos1.y + size1.y > pos2.y) {
-        y1 = pos1.y + size1.y - pos2.y;
-    }
+    //if (!(  pos1.x < pos2.x + size2.x &&
+    //        pos1.x + size1.x > pos2.x &&
+    //        pos1.y < pos2.y + size2.y &&
+    //        pos1.y + size1.y > pos2.y))
+    //{
+    //    return false;
+    //}
 
-    if (pos1.y < pos2.y + size2.y) {
-        y2 = pos2.y + size2.y - pos1.y;
-    }
+    //float x1, x2, y1, y2;
 
-    amount.x = std::min(x1, x2);
-    amount.y = std::min(y1, y2);
+    //if (pos1.x + size1.x > pos2.x) {
+    //    x1 = pos1.x + size1.x - pos2.x;
+    //}
 
-    return true;
+    //if (pos1.x < pos2.x + size2.x) {
+    //    x2 = pos2.x + size2.x - pos1.x;
+    //}
+
+    //if (pos1.y + size1.y > pos2.y) {
+    //    y1 = pos1.y + size1.y - pos2.y;
+    //}
+
+    //if (pos1.y < pos2.y + size2.y) {
+    //    y2 = pos2.y + size2.y - pos1.y;
+    //}
+
+    //amount.x = std::min(x1, x2);
+    //amount.y = std::min(y1, y2);
+
+    //return true;
 }
 
 bool AABBvsCircle(BaseComponent * box, BaseComponent * c, sf::Vector2f& amount)
@@ -137,50 +167,69 @@ bool AABBvsCircle(BaseComponent * box, BaseComponent * c, sf::Vector2f& amount)
     float radius = circle->getRadius();
     float radiusSq = radius * radius;
 
+    posCircle.x += radius;
+    posCircle.y += radius;
+
     sf::Vector2f cPoint;
 
-    if (posCircle.x + radius < posBox.x)//left of B
-    {
-        cPoint.x = posBox.x - radius;
-    }
-    else if (posCircle.x - radius > posBox.x + sizeBox.x)//right of B
-    {
-        cPoint.x = posBox.x + sizeBox.x + radius;
-    }
-    else//inside B
-    {
-        cPoint.x = posCircle.x;
-    }
+    //if (posCircle.x + radius < posBox.x)//left of B
+    //{
+    //    cPoint.x = posBox.x - radius;
+    //}
+    //else if (posCircle.x - radius > posBox.x + sizeBox.x)//right of B
+    //{
+    //    cPoint.x = posBox.x + sizeBox.x + radius;
+    //}
+    //else//inside B
+    //{
+    //    cPoint.x = posCircle.x;
+    //}
 
-    if (posCircle.y + radius < posBox.y)//up of B
-    {
-        cPoint.y = posBox.y - radius;
-    }
-    else if (posCircle.y - radius > posBox.y + sizeBox.y)
-    {
-        cPoint.y = posBox.y + sizeBox.y + radius;
-    }
-    else
-    {
-        cPoint.y = posCircle.y;
-    }
-
-    float distSq = (cPoint.x - posCircle.x) * (cPoint.x - posCircle.x) + 
-                    (cPoint.y - posCircle.y) * (cPoint.y - posCircle.y);
+    //if (posCircle.y + radius < posBox.y)//up of B
+    //{
+    //    cPoint.y = posBox.y - radius;
+    //}
+    //else if (posCircle.y - radius > posBox.y + sizeBox.y)
+    //{
+    //    cPoint.y = posBox.y + sizeBox.y + radius;
+    //}
+    //else
+    //{
+    //    cPoint.y = posCircle.y;
+    //}
 
 
+    //float distSq = (cPoint.x - posCircle.x) * (cPoint.x - posCircle.x) + 
+    //                (cPoint.y - posCircle.y) * (cPoint.y - posCircle.y);
 
-    if(distSq < radiusSq)
+
+
+    //if(distSq < radiusSq)
+    //{
+    //    sf::Vector2f penetrationDir = (cPoint - posCircle);
+    //    float penetrationDirLength = (penetrationDir.x * penetrationDir.x +
+    //        penetrationDir.y * penetrationDir.y); 
+    //    penetrationDir /= penetrationDirLength;
+
+    //    amount = penetrationDir * std::sqrtf(radiusSq - distSq);
+    //    return true;
+    //}
+
+    //return false;
+
+    cPoint.x = posCircle.x - std::max(posBox.x, std::min(posCircle.x, posBox.x + sizeBox.x));
+    cPoint.y = posCircle.y - std::max(posBox.y, std::min(posCircle.y, posBox.y + sizeBox.y));
+
+    if (cPoint.x * cPoint.x + cPoint.y * cPoint.y < radiusSq)
     {
-        sf::Vector2f penetrationDir = (cPoint - posCircle);
-        float penetrationDirLength = (penetrationDir.x * penetrationDir.x +
-            penetrationDir.y * penetrationDir.y); 
-        penetrationDir /= penetrationDirLength;
+        //sf::Vector2f penetrationDir = (cPoint - posCircle);
+        //float penetrationDirLength = (penetrationDir.x * penetrationDir.x +
+        //    penetrationDir.y * penetrationDir.y);
+        //penetrationDir /= penetrationDirLength;
 
-        amount = penetrationDir * std::sqrtf(radiusSq - distSq);
+        amount = cPoint;// *std::sqrtf(radiusSq - distSq);
         return true;
     }
-
     return false;
 }
 

@@ -3,6 +3,8 @@
 
 #include "ColliderComponent.h"
 
+#include "CollisionDetector.h"
+
 #include <SFML/Graphics.hpp>
 
 
@@ -19,8 +21,12 @@ public:
     void setSize(const sf::Vector2f& size);
     const sf::Vector2f& getSize() const;
 
+    sf::FloatRect getBounds();
+
 private:
     sf::RectangleShape mShape;
+
+    friend CollisionDetector;
 };
 
 

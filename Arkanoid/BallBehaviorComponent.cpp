@@ -3,6 +3,7 @@
 
 #include "GameState.h"
 #include "CircleColliderComponent.h"
+
 #include "TransformComponent.h"
 
 
@@ -42,7 +43,7 @@ void BallBehaviorComponent::update(float elapsed)
         mTransform->getPosition().y + radius > screenSize.y - mCollider->getRadius())
     {
         mVelocity.y = -mVelocity.y;
-    }
+    } 
 }
 
 void BallBehaviorComponent::onCollisionCb(const CollisionData & data)
@@ -51,7 +52,7 @@ void BallBehaviorComponent::onCollisionCb(const CollisionData & data)
 
     //TransformComponent* otherTransform = mGame->getComponent<TransformComponent>(CompType::TRANSFORM, data.other->getEntityID());
 
-    mTransform->move(-data.amount);
+    mTransform->move(data.amount);
 
     if (data.amount.x != 0)
     {

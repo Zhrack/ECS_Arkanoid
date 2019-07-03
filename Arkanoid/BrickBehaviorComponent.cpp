@@ -45,8 +45,7 @@ void BrickBehaviorComponent::onCollisionCb(const CollisionData & data)
         }
         else
         {
-            // floor number through truncation
-            mGame->increaseScore((long)std::floor(points * 0.5));
+            mGame->increaseScore((long)std::floor(points * 0.5f));
         }
     }
 }
