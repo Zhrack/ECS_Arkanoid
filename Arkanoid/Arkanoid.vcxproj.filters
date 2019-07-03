@@ -31,6 +31,24 @@
     <Filter Include="Source Files\Messaging">
       <UniqueIdentifier>{d7087f75-11c7-48ce-9578-f39473de2b0e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Components\Rendering">
+      <UniqueIdentifier>{6ca05a30-4e6c-4253-9f0e-fda973a1160c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Components\Colliders">
+      <UniqueIdentifier>{8df6c1d2-ff58-4e84-bf89-426b52720069}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Components\Behaviors">
+      <UniqueIdentifier>{bf513cb6-fd8f-4e91-9f02-25cd9d4f49af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Components\Colliders">
+      <UniqueIdentifier>{5b1cfd07-2dac-4b75-970e-4ecac9f22b2a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Components\Rendering">
+      <UniqueIdentifier>{5fb4b900-c520-4921-aff1-8bf9f1fa3131}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Components\Behaviors">
+      <UniqueIdentifier>{28e733da-54ea-4142-8318-1ecad027660f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="World.h">
@@ -57,47 +75,47 @@
     <ClInclude Include="MessageTypes.h">
       <Filter>Header Files\Messaging</Filter>
     </ClInclude>
-    <ClInclude Include="PlayerInputComponent.h">
-      <Filter>Header Files\Components</Filter>
-    </ClInclude>
     <ClInclude Include="ComponentList.h">
       <Filter>Header Files\Components</Filter>
     </ClInclude>
     <ClInclude Include="TransformComponent.h">
       <Filter>Header Files\Components</Filter>
     </ClInclude>
-    <ClInclude Include="RectRenderComponent.h">
-      <Filter>Header Files\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="ColliderComponent.h">
-      <Filter>Header Files\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="BoxColliderComponent.h">
-      <Filter>Header Files\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="BallBehaviorComponent.h">
-      <Filter>Header Files\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="CircleColliderComponent.h">
-      <Filter>Header Files\Components</Filter>
-    </ClInclude>
     <ClInclude Include="CollisionDetector.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SpriteRenderComponent.h">
-      <Filter>Header Files\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="RenderComponent.h">
-      <Filter>Header Files\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="CircleRenderComponent.h">
-      <Filter>Header Files\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="BrickBehaviorComponent.h">
-      <Filter>Header Files\Components</Filter>
-    </ClInclude>
     <ClInclude Include="EntityTypes.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CircleRenderComponent.h">
+      <Filter>Header Files\Components\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="RectRenderComponent.h">
+      <Filter>Header Files\Components\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderComponent.h">
+      <Filter>Header Files\Components\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteRenderComponent.h">
+      <Filter>Header Files\Components\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="BoxColliderComponent.h">
+      <Filter>Header Files\Components\Colliders</Filter>
+    </ClInclude>
+    <ClInclude Include="CircleColliderComponent.h">
+      <Filter>Header Files\Components\Colliders</Filter>
+    </ClInclude>
+    <ClInclude Include="ColliderComponent.h">
+      <Filter>Header Files\Components\Colliders</Filter>
+    </ClInclude>
+    <ClInclude Include="BallBehaviorComponent.h">
+      <Filter>Header Files\Components\Behaviors</Filter>
+    </ClInclude>
+    <ClInclude Include="BrickBehaviorComponent.h">
+      <Filter>Header Files\Components\Behaviors</Filter>
+    </ClInclude>
+    <ClInclude Include="PaddleBehaviorComponent.h">
+      <Filter>Header Files\Components\Behaviors</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -119,41 +137,41 @@
     <ClCompile Include="MessageHandler.cpp">
       <Filter>Source Files\Messaging</Filter>
     </ClCompile>
-    <ClCompile Include="PlayerInputComponent.cpp">
-      <Filter>Source Files\Components</Filter>
-    </ClCompile>
     <ClCompile Include="TransformComponent.cpp">
-      <Filter>Source Files\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="RectRenderComponent.cpp">
-      <Filter>Source Files\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="ColliderComponent.cpp">
-      <Filter>Source Files\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="BallBehaviorComponent.cpp">
-      <Filter>Source Files\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="BoxColliderComponent.cpp">
-      <Filter>Source Files\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="CircleColliderComponent.cpp">
       <Filter>Source Files\Components</Filter>
     </ClCompile>
     <ClCompile Include="CollisionDetector.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="RenderComponent.cpp">
-      <Filter>Source Files\Components</Filter>
-    </ClCompile>
     <ClCompile Include="SpriteRenderComponent.cpp">
       <Filter>Source Files\Components</Filter>
     </ClCompile>
-    <ClCompile Include="CircleRenderComponent.cpp">
-      <Filter>Source Files\Components</Filter>
+    <ClCompile Include="BallBehaviorComponent.cpp">
+      <Filter>Source Files\Components\Behaviors</Filter>
     </ClCompile>
     <ClCompile Include="BrickBehaviorComponent.cpp">
-      <Filter>Source Files\Components</Filter>
+      <Filter>Source Files\Components\Behaviors</Filter>
+    </ClCompile>
+    <ClCompile Include="BoxColliderComponent.cpp">
+      <Filter>Source Files\Components\Colliders</Filter>
+    </ClCompile>
+    <ClCompile Include="CircleColliderComponent.cpp">
+      <Filter>Source Files\Components\Colliders</Filter>
+    </ClCompile>
+    <ClCompile Include="ColliderComponent.cpp">
+      <Filter>Source Files\Components\Colliders</Filter>
+    </ClCompile>
+    <ClCompile Include="CircleRenderComponent.cpp">
+      <Filter>Source Files\Components\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="RectRenderComponent.cpp">
+      <Filter>Source Files\Components\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderComponent.cpp">
+      <Filter>Source Files\Components\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="PaddleBehaviorComponent.cpp">
+      <Filter>Source Files\Components\Behaviors</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

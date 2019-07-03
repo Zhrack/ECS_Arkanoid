@@ -3,13 +3,15 @@
 
 #include "GameState.h"
 #include "CircleColliderComponent.h"
+#include "PaddleBehaviorComponent.h"
 
 #include "TransformComponent.h"
 
 
-BallBehaviorComponent::BallBehaviorComponent(EntityID entityID, GameState* game, const sf::Vector2f& velocity) :
+BallBehaviorComponent::BallBehaviorComponent(EntityID entityID, GameState* game, float velocity) :
     BaseComponent(entityID, game),
-    mVelocity(velocity)
+    mVelocity(velocity, velocity),
+    mMaxVelocity(velocity)
 {
     mWindow = mGame->getWindow();
 
@@ -19,6 +21,8 @@ BallBehaviorComponent::BallBehaviorComponent(EntityID entityID, GameState* game,
     std::function<void(const CollisionData& data)> cb = std::bind(&BallBehaviorComponent::onCollisionCb, this, std::placeholders::_1);
 
     mCollider->setOnCollision(cb);
+
+    mPaddleComp = mGame->getPaddleComponent();
 }
 
 
@@ -48,21 +52,30 @@ void BallBehaviorComponent::update(float elapsed)
 
 void BallBehaviorComponent::onCollisionCb(const CollisionData & data)
 {
-    std::cout << "Ball collision with entity " << data.otherCollider->getEntityID() << std::endl;
-
-    //TransformComponent* otherTransform = mGame->getComponent<TransformComponent>(CompType::TRANSFORM, data.other->getEntityID());
-
-    mTransform->move(data.amount);
-
-    if (data.amount.x != 0)
+    if (std::fabs(data.amount.x) > 0.01f)
     {
         // collision on the horizontal direction
         mVelocity.x = -mVelocity.x;
     }
 
-    if (data.amount.y != 0)
+    if (std::fabs(data.amount.y) > 0.01f)
     {
         // collision on the vertical direction
         mVelocity.y = -mVelocity.y;
+
+        if (std::fabs(mVelocity.y) < 20.f)
+        {
+            mVelocity.y = -50.f;
+        }
     }
+
+    if (mGame->getEntityType(data.otherCollider->getEntityID()) == EntityType::TAG_PLAYER)
+    {
+        mVelocity.x += (mPaddleComp->getFriction() * mPaddleComp->getCurrentVelocity().x);
+        sf::Vector2f mVelUnit = mVelocity / std::sqrtf((mVelocity.x * mVelocity.x) + (mVelocity.y * mVelocity.y));
+        mVelocity = mVelUnit * mMaxVelocity;
+
+        std::cout << "VelX: " << mVelocity.x << std::endl << "VelY: " << mVelocity.y << std::endl;
+    }
+
 }

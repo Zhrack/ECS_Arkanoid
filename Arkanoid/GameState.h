@@ -22,7 +22,7 @@ std::unordered_map<
     std::vector< BaseComponent* >
 >;
 
-class PlayerInputComponent;
+class PaddleBehaviorComponent;
 class RectRenderComponent;
 class BallBehaviorComponent;
 
@@ -77,6 +77,8 @@ public:
 
     void increaseScore(long points);
 
+    PaddleBehaviorComponent* getPaddleComponent();
+
 private:
     void removeEntity(EntityID entityID);
 
@@ -90,6 +92,8 @@ private:
     long mHighScore;
     long mCurrentScore;
     int mRemainingLives;
+
+    EntityID mPaddleID;
 
     /// <summary>
     /// The used to generate IDs.
@@ -110,7 +114,7 @@ private:
 
     std::vector<EntityID> mZombieEntities;
 
-    PlayerInputComponent* mPlayerInputComp;
+    PaddleBehaviorComponent* mPlayerInputComp;
 
     BallBehaviorComponent* mBallBehavior;
 

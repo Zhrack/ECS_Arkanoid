@@ -7,12 +7,13 @@
 
 class TransformComponent;
 class CircleColliderComponent;
+class PaddleBehaviorComponent;
 
 class BallBehaviorComponent :
     public BaseComponent
 {
 public:
-    BallBehaviorComponent(EntityID entityID, GameState* game, const sf::Vector2f& velocity);
+    BallBehaviorComponent(EntityID entityID, GameState* game, float velocity);
     virtual ~BallBehaviorComponent();
 
     // Inherited via BaseComponent
@@ -22,9 +23,12 @@ public:
 
 private:
     sf::Vector2f mVelocity;
+    float mMaxVelocity;
     sf::RenderWindow* mWindow;
     TransformComponent* mTransform;
     CircleColliderComponent* mCollider;
+
+    PaddleBehaviorComponent* mPaddleComp;
 };
 
 

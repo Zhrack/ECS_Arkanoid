@@ -1,7 +1,7 @@
 
 #include "GameState.h"
 
-#include "PlayerInputComponent.h"
+#include "PaddleBehaviorComponent.h"
 #include "TransformComponent.h"
 #include "RectRenderComponent.h"
 #include "CircleRenderComponent.h"
@@ -57,21 +57,23 @@ void GameState::enter()
 
     mRemainingLives = mTree.get<int>("NUM_LIVES");
 
-    auto entityID = this->createEntity(EntityType::TAG_PLAYER);
+    mPaddleID = this->createEntity(EntityType::TAG_PLAYER);
     //auto entityID2 = this->createEntity();
 
     sf::Vector2f paddleSize(mTree.get<float>("PADDLE_SIZE_X"), mTree.get<float>("PADDLE_SIZE_Y"));
+    sf::Vector2f brickSize(mTree.get<float>("BRICK_SIZE_X"), mTree.get<float>("BRICK_SIZE_Y"));
 
 
-    addComponent<BoxColliderComponent>(CompType::BOX_COLLIDER, entityID, paddleSize);
-    mPlayerInputComp = addComponent<PlayerInputComponent>(CompType::PLAYER_INPUT, entityID, 
+
+    addComponent<BoxColliderComponent>(CompType::BOX_COLLIDER, mPaddleID, paddleSize);
+    mPlayerInputComp = addComponent<PaddleBehaviorComponent>(CompType::PLAYER_INPUT, mPaddleID,
         sf::Vector2f((float)mTree.get<int>("SCREEN_WIDTH") / 2.f, (float)(mTree.get<int>("SCREEN_HEIGHT") - mTree.get<int>("PADDLE_SIZE_Y") - 200)));
-    addComponent<RectRenderComponent>(CompType::RECT_RENDER, entityID, paddleSize, sf::Color::Green);
+    addComponent<RectRenderComponent>(CompType::RECT_RENDER, mPaddleID, paddleSize, sf::Color::Green);
 
     auto ballID = this->createEntity(EntityType::TAG_BALL);
 
     addComponent<CircleColliderComponent>(CompType::CIRCLE_COLLIDER, ballID, mTree.get<float>("BALL_RADIUS"));
-    mBallBehavior = addComponent<BallBehaviorComponent>(CompType::BALL, ballID, sf::Vector2f(mTree.get<float>("BALL_MAX_VELOCITY"), mTree.get<float>("BALL_MAX_VELOCITY")));
+    mBallBehavior = addComponent<BallBehaviorComponent>(CompType::BALL, ballID, mTree.get<float>("BALL_MAX_VELOCITY"));
     addComponent<CircleRenderComponent>(CompType::CIRCLE_RENDER, ballID, mTree.get<float>("BALL_RADIUS"), sf::Color::Red);
 
 
@@ -84,9 +86,9 @@ void GameState::enter()
         {
             auto brickID = this->createEntity(EntityType::TAG_BRICK);
 
-            addComponent<BoxColliderComponent>(CompType::BOX_COLLIDER, brickID, paddleSize);
-            addComponent<BrickBehaviorComponent>(CompType::BRICK, brickID, sf::Vector2f(paddleSize.x * i, paddleSize.y * j) + offset);
-            addComponent<RectRenderComponent>(CompType::RECT_RENDER, brickID, paddleSize, sf::Color::Blue, sf::Color::Magenta, 1.f);
+            addComponent<BoxColliderComponent>(CompType::BOX_COLLIDER, brickID, brickSize);
+            addComponent<BrickBehaviorComponent>(CompType::BRICK, brickID, sf::Vector2f(brickSize.x * i + 100.f, brickSize.y * j + 10.f) + offset);
+            addComponent<RectRenderComponent>(CompType::RECT_RENDER, brickID, brickSize, sf::Color::Blue, sf::Color::Magenta, 1.f);
         }
     }
 }
@@ -252,6 +254,11 @@ void GameState::increaseScore(long points)
     }
 
     std::cout << "SCORE: " << mCurrentScore << std::endl;
+}
+
+PaddleBehaviorComponent * GameState::getPaddleComponent()
+{
+    return getComponent<PaddleBehaviorComponent>(CompType::PLAYER_INPUT, mPaddleID);
 }
 
 std::vector<BaseComponent*>& GameState::getComponentList(CompType type)

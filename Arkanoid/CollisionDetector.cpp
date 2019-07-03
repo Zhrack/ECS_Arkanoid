@@ -155,7 +155,6 @@ bool AABBvsAABB(BaseComponent * box1, BaseComponent * box2, sf::Vector2f& amount
 
 bool AABBvsCircle(BaseComponent * box, BaseComponent * c, sf::Vector2f& amount)
 {
-    amount;
     // since I'm sure about the type of the components, it's safe to use a static_cast
     BoxColliderComponent* b = static_cast<BoxColliderComponent*>(box);
     CircleColliderComponent* circle = static_cast<CircleColliderComponent*>(c);
@@ -165,69 +164,22 @@ bool AABBvsCircle(BaseComponent * box, BaseComponent * c, sf::Vector2f& amount)
 
     sf::Vector2f sizeBox = b->getSize();
     float radius = circle->getRadius();
-    float radiusSq = radius * radius;
 
+    // center circle
     posCircle.x += radius;
     posCircle.y += radius;
 
     sf::Vector2f cPoint;
 
-    //if (posCircle.x + radius < posBox.x)//left of B
-    //{
-    //    cPoint.x = posBox.x - radius;
-    //}
-    //else if (posCircle.x - radius > posBox.x + sizeBox.x)//right of B
-    //{
-    //    cPoint.x = posBox.x + sizeBox.x + radius;
-    //}
-    //else//inside B
-    //{
-    //    cPoint.x = posCircle.x;
-    //}
-
-    //if (posCircle.y + radius < posBox.y)//up of B
-    //{
-    //    cPoint.y = posBox.y - radius;
-    //}
-    //else if (posCircle.y - radius > posBox.y + sizeBox.y)
-    //{
-    //    cPoint.y = posBox.y + sizeBox.y + radius;
-    //}
-    //else
-    //{
-    //    cPoint.y = posCircle.y;
-    //}
-
-
-    //float distSq = (cPoint.x - posCircle.x) * (cPoint.x - posCircle.x) + 
-    //                (cPoint.y - posCircle.y) * (cPoint.y - posCircle.y);
-
-
-
-    //if(distSq < radiusSq)
-    //{
-    //    sf::Vector2f penetrationDir = (cPoint - posCircle);
-    //    float penetrationDirLength = (penetrationDir.x * penetrationDir.x +
-    //        penetrationDir.y * penetrationDir.y); 
-    //    penetrationDir /= penetrationDirLength;
-
-    //    amount = penetrationDir * std::sqrtf(radiusSq - distSq);
-    //    return true;
-    //}
-
-    //return false;
-
     cPoint.x = posCircle.x - std::max(posBox.x, std::min(posCircle.x, posBox.x + sizeBox.x));
     cPoint.y = posCircle.y - std::max(posBox.y, std::min(posCircle.y, posBox.y + sizeBox.y));
 
-    if (cPoint.x * cPoint.x + cPoint.y * cPoint.y < radiusSq)
+    if (cPoint.x * cPoint.x + cPoint.y * cPoint.y < radius * radius)
     {
-        //sf::Vector2f penetrationDir = (cPoint - posCircle);
-        //float penetrationDirLength = (penetrationDir.x * penetrationDir.x +
-        //    penetrationDir.y * penetrationDir.y);
-        //penetrationDir /= penetrationDirLength;
+        float penetrationDirLength = (cPoint.x * cPoint.x +
+            cPoint.y * cPoint.y);
 
-        amount = cPoint;// *std::sqrtf(radiusSq - distSq);
+        amount = cPoint / penetrationDirLength;
         return true;
     }
     return false;

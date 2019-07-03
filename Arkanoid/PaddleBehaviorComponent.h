@@ -8,15 +8,20 @@
 class BoxColliderComponent;
 class TransformComponent;
 
-class PlayerInputComponent :
+class PaddleBehaviorComponent :
     public BaseComponent
 {
 public:
-    PlayerInputComponent(EntityID entityID, GameState* game, sf::Vector2f pos);
-    virtual ~PlayerInputComponent();
+    PaddleBehaviorComponent(EntityID entityID, GameState* game, sf::Vector2f pos);
+    virtual ~PaddleBehaviorComponent();
 
     // Inherited via BaseComponent
     virtual void update(float elapsed) override;
+
+    float getFriction() const;
+
+    sf::Vector2f getCurrentVelocity() const;
+    float getMaxVelocity() const;
 
 private:
     sf::RenderWindow* mWindow;

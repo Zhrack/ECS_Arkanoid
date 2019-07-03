@@ -1,5 +1,5 @@
 
-#include "PlayerInputComponent.h"
+#include "PaddleBehaviorComponent.h"
 
 #include "GameState.h"
 #include "BoxColliderComponent.h"
@@ -8,7 +8,7 @@
 #include <iostream>
 
 
-PlayerInputComponent::PlayerInputComponent(EntityID entityID, GameState* game, sf::Vector2f pos) :
+PaddleBehaviorComponent::PaddleBehaviorComponent(EntityID entityID, GameState* game, sf::Vector2f pos) :
     BaseComponent(entityID, game),
     mVel(0.f, 0.f),
     mAccel(0.f, 0.f)
@@ -29,11 +29,11 @@ PlayerInputComponent::PlayerInputComponent(EntityID entityID, GameState* game, s
 }
 
 
-PlayerInputComponent::~PlayerInputComponent()
+PaddleBehaviorComponent::~PaddleBehaviorComponent()
 {
 }
 
-void PlayerInputComponent::update(float elapsed)
+void PaddleBehaviorComponent::update(float elapsed)
 {
     //this->pullMessages();
     
@@ -80,4 +80,19 @@ void PlayerInputComponent::update(float elapsed)
             sf::Vector2f(screenSize.x - collSize.x,
                 screenSize.y - collSize.y));
     }
+}
+
+float PaddleBehaviorComponent::getFriction() const
+{
+    return mPaddleFriction;
+}
+
+sf::Vector2f PaddleBehaviorComponent::getCurrentVelocity() const
+{
+    return mVel;
+}
+
+float PaddleBehaviorComponent::getMaxVelocity() const
+{
+    return mPaddleMaxVel;
 }

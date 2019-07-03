@@ -180,7 +180,7 @@
     <ClInclude Include="Message.h" />
     <ClInclude Include="MessageHandler.h" />
     <ClInclude Include="MessageTypes.h" />
-    <ClInclude Include="PlayerInputComponent.h" />
+    <ClInclude Include="PaddleBehaviorComponent.h" />
     <ClInclude Include="RectRenderComponent.h" />
     <ClInclude Include="RenderComponent.h" />
     <ClInclude Include="SpriteRenderComponent.h" />
@@ -201,7 +201,7 @@
     <ClCompile Include="BaseState.cpp" />
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="MessageHandler.cpp" />
-    <ClCompile Include="PlayerInputComponent.cpp" />
+    <ClCompile Include="PaddleBehaviorComponent.cpp" />
     <ClCompile Include="RectRenderComponent.cpp" />
     <ClCompile Include="RenderComponent.cpp" />
     <ClCompile Include="SpriteRenderComponent.cpp" />
