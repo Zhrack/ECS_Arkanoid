@@ -11,12 +11,13 @@
 PaddleBehaviorComponent::PaddleBehaviorComponent(EntityID entityID, GameState* game, sf::Vector2f pos) :
     BaseComponent(entityID, game),
     mVel(0.f, 0.f),
-    mAccel(0.f, 0.f)
+    mAccel(0.f, 0.f),
+    mStickyPaddle(true),
+    mState(PaddleState::STATE_NORMAL)
 {
     mWindow = mGame->getWindow();
 
     mCollider = mGame->getComponent<BoxColliderComponent>(CompType::BOX_COLLIDER, getEntityID());
-    mTransform = mGame->getComponent<TransformComponent>(CompType::TRANSFORM, getEntityID());
 
     auto& config = mGame->config();
 
@@ -26,6 +27,8 @@ PaddleBehaviorComponent::PaddleBehaviorComponent(EntityID entityID, GameState* g
     mPaddleSize = sf::Vector2f(config.get<float>("PADDLE_SIZE_X"), config.get<float>("PADDLE_SIZE_Y"));
     mPaddleMaxVel = config.get<float>("PADDLE_MAX_VELOCITY");
     mPaddleFriction = config.get<float>("PADDLE_FRICTION");
+
+    mStickyPaddle = true;
 }
 
 
@@ -35,34 +38,18 @@ PaddleBehaviorComponent::~PaddleBehaviorComponent()
 
 void PaddleBehaviorComponent::update(float elapsed)
 {
-    //this->pullMessages();
-    
+    this->pullMessages();
 
     sf::Vector2i screenSize(mGame->config().get<int>("SCREEN_WIDTH"), mGame->config().get<int>("SCREEN_HEIGHT"));
 
-    //mVel.x += mAccel.x;
-
-    //if (mVel.x != 0)
-    //{
-    //    // friction
-    //    //if(mAccel.x == 0)
-    //        mVel.x = mVel.x > 0 ? mVel.x - mPaddleFriction : mVel.x + mPaddleFriction;
-
-    //    // clamp velocity
-    //    if (mVel.x > mPaddleMaxVel)
-    //    {
-    //        mVel.x = mPaddleMaxVel;
-    //    }
-    //    else if (mVel.x < -mPaddleMaxVel)
-    //    {
-    //        mVel.x = -mPaddleMaxVel;
-    //    }
-    //}
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left))
+    {
         mVel.x = -mPaddleMaxVel;
-
+    }
     else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right))
+    {
         mVel.x = mPaddleMaxVel;
+    }
     else
         mVel.x = 0;
     
@@ -82,6 +69,18 @@ void PaddleBehaviorComponent::update(float elapsed)
     }
 }
 
+void PaddleBehaviorComponent::handleMessage(Message & msg)
+{
+
+    switch (msg.mType)
+    {
+    case MSG_PU_STICKY:
+        mStickyPaddle = true;
+        mState = PaddleState::STATE_STICKY;
+        break;
+    }
+}
+
 float PaddleBehaviorComponent::getFriction() const
 {
     return mPaddleFriction;
@@ -95,4 +94,25 @@ sf::Vector2f PaddleBehaviorComponent::getCurrentVelocity() const
 float PaddleBehaviorComponent::getMaxVelocity() const
 {
     return mPaddleMaxVel;
+}
+
+bool PaddleBehaviorComponent::isSticky() const
+{
+    return mState == PaddleState::STATE_STICKY;
+}
+
+void PaddleBehaviorComponent::onFireButtonPressed()
+{
+    if (mStickyPaddle)
+    {
+        // if not currently under the power up effect, disable it (no handle starting of game
+        if (!isSticky())
+            mStickyPaddle = false;
+
+        // release ball(s)
+        Message msg;
+        msg.mSenderID = mEntityID;
+        msg.mType = MessageType::MSG_RELEASE_BALL;
+        mGame->sendMessage(EntityType::TAG_BALL, CompType::BALL_BEHAVIOR, msg);
+    }
 }

@@ -5,12 +5,13 @@
 #include "BoxColliderComponent.h"
 #include "TransformComponent.h"
 
+#include "PowerUpService.h"
+
 BrickBehaviorComponent::BrickBehaviorComponent(EntityID entityID, GameState* game, sf::Vector2f pos, int hp) :
     BaseComponent(entityID, game),
     mHP(hp)
 {
     mCollider = mGame->getComponent<BoxColliderComponent>(CompType::BOX_COLLIDER, getEntityID());
-    mTransform = mGame->getComponent<TransformComponent>(CompType::TRANSFORM, getEntityID());
 
     std::function<void(const CollisionData& data)> cb = std::bind(&BrickBehaviorComponent::onCollisionCb, this, std::placeholders::_1);
 
@@ -42,6 +43,8 @@ void BrickBehaviorComponent::onCollisionCb(const CollisionData & data)
         {
             mGame->increaseScore(points);
             mGame->destroyEntity(mEntityID);
+
+            mGame->getPUService().spawnRandomPU(mTransform->getPosition());
         }
         else
         {

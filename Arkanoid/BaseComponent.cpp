@@ -1,12 +1,15 @@
 
 #include "BaseComponent.h"
 
+#include "GameState.h"
+#include "TransformComponent.h"
 
 BaseComponent::BaseComponent(EntityID entityID, GameState* game) :
     mEntityID(entityID),
     mGame(game),
     mZombie(false)
 {
+    mTransform = mGame->getComponent<TransformComponent>(CompType::TRANSFORM, mEntityID);
 }
 
 
@@ -32,6 +35,11 @@ void BaseComponent::setZombie()
 GameState * BaseComponent::getGameState() const
 {
     return mGame;
+}
+
+TransformComponent * BaseComponent::getTransform() const
+{
+    return mTransform;
 }
 
 void BaseComponent::handleMessage(Message & msg)

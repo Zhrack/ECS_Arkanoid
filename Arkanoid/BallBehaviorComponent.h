@@ -8,12 +8,19 @@
 class TransformComponent;
 class CircleColliderComponent;
 class PaddleBehaviorComponent;
+class BoxColliderComponent;
+
+enum class BallState
+{
+    BALL_NORMAL,
+    BALL_FOLLOW_PADDLE
+};
 
 class BallBehaviorComponent :
     public BaseComponent
 {
 public:
-    BallBehaviorComponent(EntityID entityID, GameState* game, float velocity);
+    BallBehaviorComponent(EntityID entityID, GameState* game, float velocity, const sf::Vector2f& pos);
     virtual ~BallBehaviorComponent();
 
     // Inherited via BaseComponent
@@ -21,14 +28,28 @@ public:
 
     void onCollisionCb(const CollisionData& data);
 
+    void releaseBall();
+    void lockBall();
+
+    virtual void handleMessage(Message& msg) override;
+
+    void changeState(BallState newState);
+
 private:
     sf::Vector2f mVelocity;
     float mMaxVelocity;
     sf::RenderWindow* mWindow;
-    TransformComponent* mTransform;
     CircleColliderComponent* mCollider;
 
-    PaddleBehaviorComponent* mPaddleComp;
+    PaddleBehaviorComponent* mPaddleBehaviorComp;
+    BoxColliderComponent* mPaddleCollider;
+
+    /// <summary>
+    /// Is the ball locked to the paddle?
+    /// </summary>
+    bool mLocked;
+
+    BallState mState;
 };
 
 

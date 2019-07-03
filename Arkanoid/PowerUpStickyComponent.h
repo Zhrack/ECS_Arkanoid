@@ -1,16 +1,16 @@
-#ifndef BRICK_COMPONENT_H
-#define BRICK_COMPONENT_H
+#ifndef POWER_UP_STICKY_H
+#define POWER_UP_STICKY_H
 
 #include "BaseComponent.h"
 
 class BoxColliderComponent;
 
-class BrickBehaviorComponent :
+class PowerUpStickyComponent :
     public BaseComponent
 {
 public:
-    BrickBehaviorComponent(EntityID entityID, GameState* game, sf::Vector2f pos, int hp = 1);
-    virtual ~BrickBehaviorComponent();
+    PowerUpStickyComponent(EntityID entityID, GameState* game, sf::Vector2f pos);
+    virtual ~PowerUpStickyComponent();
 
     // Inherited via BaseComponent
     virtual void update(float elapsed) override;
@@ -19,8 +19,9 @@ public:
 
 private:
     BoxColliderComponent* mCollider;
-    int mHP;
+
+    float mVelocity;
 };
 
 
-#endif // !BRICK_COMPONENT_H
+#endif // !POWER_UP_STICKY_H

@@ -24,8 +24,9 @@ GameState::GameState(sf::RenderWindow* window, pt::ptree& tree) :
     mCompMap(),
     mEntityMap(),
     mZombieEntities(),
-    mPlayerInputComp(nullptr),
-    mTree(tree)
+    mPaddleBehaviorComp(nullptr),
+    mTree(tree),
+    mPUService(this)
 {
     using UniquePtrVector = std::vector<BaseComponent*>;
 
@@ -57,24 +58,25 @@ void GameState::enter()
 
     mRemainingLives = mTree.get<int>("NUM_LIVES");
 
-    mPaddleID = this->createEntity(EntityType::TAG_PLAYER);
-    //auto entityID2 = this->createEntity();
 
     sf::Vector2f paddleSize(mTree.get<float>("PADDLE_SIZE_X"), mTree.get<float>("PADDLE_SIZE_Y"));
     sf::Vector2f brickSize(mTree.get<float>("BRICK_SIZE_X"), mTree.get<float>("BRICK_SIZE_Y"));
 
 
+    mPaddleID = this->createEntity(EntityType::TAG_PLAYER);
 
     addComponent<BoxColliderComponent>(CompType::BOX_COLLIDER, mPaddleID, paddleSize);
-    mPlayerInputComp = addComponent<PaddleBehaviorComponent>(CompType::PLAYER_INPUT, mPaddleID,
-        sf::Vector2f((float)mTree.get<int>("SCREEN_WIDTH") / 2.f, (float)(mTree.get<int>("SCREEN_HEIGHT") - mTree.get<int>("PADDLE_SIZE_Y") - 200)));
+    mPaddleBehaviorComp = addComponent<PaddleBehaviorComponent>(CompType::PADDLE_BEHAVIOR, mPaddleID,
+        sf::Vector2f((float)mTree.get<int>("SCREEN_WIDTH") / 2.f, (float)(mTree.get<int>("SCREEN_HEIGHT") - paddleSize.y)));
     addComponent<RectRenderComponent>(CompType::RECT_RENDER, mPaddleID, paddleSize, sf::Color::Green);
 
     auto ballID = this->createEntity(EntityType::TAG_BALL);
 
-    addComponent<CircleColliderComponent>(CompType::CIRCLE_COLLIDER, ballID, mTree.get<float>("BALL_RADIUS"));
-    mBallBehavior = addComponent<BallBehaviorComponent>(CompType::BALL, ballID, mTree.get<float>("BALL_MAX_VELOCITY"));
-    addComponent<CircleRenderComponent>(CompType::CIRCLE_RENDER, ballID, mTree.get<float>("BALL_RADIUS"), sf::Color::Red);
+    float ballRadius = mTree.get<float>("BALL_RADIUS");
+
+    addComponent<CircleColliderComponent>(CompType::CIRCLE_COLLIDER, ballID, ballRadius);
+    mBallBehavior = addComponent<BallBehaviorComponent>(CompType::BALL_BEHAVIOR, ballID, mTree.get<float>("BALL_MAX_VELOCITY"), sf::Vector2f());
+    addComponent<CircleRenderComponent>(CompType::CIRCLE_RENDER, ballID, ballRadius, sf::Color::Red);
 
 
 
@@ -108,11 +110,24 @@ void GameState::update(float elapsed)
             {
                 mWindow->close();
             }
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space))
+            {
+                mPaddleBehaviorComp->onFireButtonPressed();
+            }
         }
     }
     // update
-    mPlayerInputComp->update(elapsed);
+    mPaddleBehaviorComp->update(elapsed);
     mBallBehavior->update(elapsed);
+    auto powerups = getComponentList(CompType::STICKY);
+    // append other power ups here...
+    for (auto e : powerups)
+    {
+        if (!e->isZombie())
+        {
+            e->update(elapsed);
+        }
+    }
     // late update for collision detection and other "physics" stuff
 
     // make copies of colliders
@@ -258,13 +273,40 @@ void GameState::increaseScore(long points)
 
 PaddleBehaviorComponent * GameState::getPaddleComponent()
 {
-    return getComponent<PaddleBehaviorComponent>(CompType::PLAYER_INPUT, mPaddleID);
+    return getComponent<PaddleBehaviorComponent>(CompType::PADDLE_BEHAVIOR, mPaddleID);
+}
+
+void GameState::sendMessage(EntityType type, CompType compType, Message & msg, SendType sendType)
+{
+    // small optimization for often accessed component
+    if (type == TAG_PLAYER)
+    {
+        getPaddleComponent()->receive(msg, sendType);
+        return;
+    }
+
+    for (auto e : mEntityMap)
+    {
+        if (e.second == type)
+        {
+            getComponent<BaseComponent>(compType, e.first)->receive(msg, sendType);
+        }
+    }
+}
+
+void GameState::sendMessage(CompType compType, EntityID entityID, Message & msg, SendType sendType)
+{
+    getComponent<BaseComponent>(compType, entityID)->receive(msg, sendType);
+}
+
+PowerUpService & GameState::getPUService()
+{
+    return mPUService;
 }
 
 std::vector<BaseComponent*>& GameState::getComponentList(CompType type)
 {
-    //static_assert(std::is_base_of<BaseComponent, T>::value, "T must derive from BaseComponent");
-
+    // no check needed, all CompTypes auto register
     return mCompMap[type];
 }
 

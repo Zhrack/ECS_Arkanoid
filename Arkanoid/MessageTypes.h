@@ -14,11 +14,18 @@ enum MessageType {
     MSG_NULL = 0,
     MSG_INPUT_EVENT, // test only
     MSG_MOVE,
-    MSG_COLLISION
+    MSG_COLLISION,
+    MSG_RELEASE_BALL,
+
+    // POWERUP COLLISIONS
+    MSG_PU_STICKY
 };
 
 // Following, structs to be sent with specific message types are defined here.
 
+/// <summary>
+/// For MSG_COLLISION messages
+/// </summary>
 struct CollisionData
 {
     BaseComponent* otherCollider;

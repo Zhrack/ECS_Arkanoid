@@ -4,25 +4,30 @@
 #include "GameState.h"
 #include "CircleColliderComponent.h"
 #include "PaddleBehaviorComponent.h"
+#include "BoxColliderComponent.h"
 
 #include "TransformComponent.h"
 
 
-BallBehaviorComponent::BallBehaviorComponent(EntityID entityID, GameState* game, float velocity) :
+BallBehaviorComponent::BallBehaviorComponent(EntityID entityID, GameState* game, float velocity, const sf::Vector2f& pos) :
     BaseComponent(entityID, game),
-    mVelocity(velocity, velocity),
-    mMaxVelocity(velocity)
+    mVelocity(sf::Vector2f()),
+    mMaxVelocity(velocity),
+    mLocked(true),
+    mState(BallState::BALL_FOLLOW_PADDLE)
 {
     mWindow = mGame->getWindow();
 
     mCollider = mGame->getComponent<CircleColliderComponent>(CompType::CIRCLE_COLLIDER, getEntityID());
-    mTransform = mGame->getComponent<TransformComponent>(CompType::TRANSFORM, getEntityID());
 
     std::function<void(const CollisionData& data)> cb = std::bind(&BallBehaviorComponent::onCollisionCb, this, std::placeholders::_1);
 
     mCollider->setOnCollision(cb);
 
-    mPaddleComp = mGame->getPaddleComponent();
+    mPaddleBehaviorComp = mGame->getPaddleComponent();
+    mPaddleCollider = mGame->getComponent<BoxColliderComponent>(CompType::BOX_COLLIDER, mPaddleBehaviorComp->getEntityID());
+
+    mTransform->setPosition(pos);
 }
 
 
@@ -32,22 +37,35 @@ BallBehaviorComponent::~BallBehaviorComponent()
 
 void BallBehaviorComponent::update(float elapsed)
 {
+    this->pullMessages();
+
     sf::Vector2i screenSize(mGame->config().get<int>("SCREEN_WIDTH"), mGame->config().get<int>("SCREEN_HEIGHT"));
-    mTransform->move(mVelocity * elapsed);
-
-    float radius = mCollider->getRadius();
-
-    if (mTransform->getPosition().x < 0 ||
-        mTransform->getPosition().x + radius > screenSize.x - mCollider->getRadius())
+    if (mState == BallState::BALL_NORMAL)
     {
-        mVelocity.x = -mVelocity.x;
+        mTransform->move(mVelocity * elapsed);
+
+        float radius = mCollider->getRadius();
+
+        if (mTransform->getPosition().x < 0 ||
+            mTransform->getPosition().x + radius > screenSize.x - mCollider->getRadius())
+        {
+            mVelocity.x = -mVelocity.x;
+        }
+
+        if (mTransform->getPosition().y < 0 ||
+            mTransform->getPosition().y + radius > screenSize.y - mCollider->getRadius())
+        {
+            mVelocity.y = -mVelocity.y;
+        }
     }
-
-    if (mTransform->getPosition().y < 0 ||
-        mTransform->getPosition().y + radius > screenSize.y - mCollider->getRadius())
+    else if(mState == BallState::BALL_FOLLOW_PADDLE)
     {
-        mVelocity.y = -mVelocity.y;
-    } 
+        auto paddleTransform = mPaddleBehaviorComp->getTransform();
+        sf::Vector2f pos(paddleTransform->getPosition());
+        pos.y -= mCollider->getRadius() * 2.f;
+        pos.x += (mPaddleCollider->getSize().x * 0.5f) - mCollider->getRadius();
+        mTransform->setPosition(pos);
+    }
 }
 
 void BallBehaviorComponent::onCollisionCb(const CollisionData & data)
@@ -71,11 +89,53 @@ void BallBehaviorComponent::onCollisionCb(const CollisionData & data)
 
     if (mGame->getEntityType(data.otherCollider->getEntityID()) == EntityType::TAG_PLAYER)
     {
-        mVelocity.x += (mPaddleComp->getFriction() * mPaddleComp->getCurrentVelocity().x);
+        mVelocity.x += (mPaddleBehaviorComp->getFriction() * mPaddleBehaviorComp->getCurrentVelocity().x);
         sf::Vector2f mVelUnit = mVelocity / std::sqrtf((mVelocity.x * mVelocity.x) + (mVelocity.y * mVelocity.y));
         mVelocity = mVelUnit * mMaxVelocity;
 
         std::cout << "VelX: " << mVelocity.x << std::endl << "VelY: " << mVelocity.y << std::endl;
+
+        if (!mLocked && mPaddleBehaviorComp->isSticky())
+        {
+            lockBall();
+        } 
     }
 
+}
+
+void BallBehaviorComponent::releaseBall()
+{
+    if (!mLocked) return;
+
+    changeState(BallState::BALL_NORMAL);
+    
+    float dir = mPaddleBehaviorComp->getCurrentVelocity().x > 0 ? 1.f : -1.f;
+    mVelocity = sf::Vector2f(dir * mMaxVelocity, -mMaxVelocity);
+    mTransform->move(0.f, -5.f);
+    mLocked = false;
+}
+
+void BallBehaviorComponent::lockBall()
+{
+    if (mLocked) return;
+    std::cout << "LOCK" << std::endl;
+    changeState(BallState::BALL_FOLLOW_PADDLE);
+    mVelocity = sf::Vector2f();
+    mLocked = true;
+}
+
+void BallBehaviorComponent::handleMessage(Message & msg)
+{
+
+    switch (msg.mType)
+    {
+    case MSG_RELEASE_BALL:
+        releaseBall();
+        break;
+    }
+}
+
+void BallBehaviorComponent::changeState(BallState newState)
+{
+    mState = newState;
 }

@@ -2,8 +2,8 @@
 #define COMPONENT_LIST_H
 
 enum CompType {
-    PLAYER_INPUT = 0,
-    BALL,
+    PADDLE_BEHAVIOR = 0,
+    BALL_BEHAVIOR,
     BRICK,
 
     TRANSFORM,
@@ -14,6 +14,8 @@ enum CompType {
 
     BOX_COLLIDER,
     CIRCLE_COLLIDER,
+
+    STICKY,
 
     COUNT // keep last, to know number of components types
 };

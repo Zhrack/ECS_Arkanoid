@@ -7,6 +7,7 @@
 #include "EntityTypes.h"
 #include "BaseComponent.h"
 #include "CollisionDetector.h"
+#include "PowerUpService.h"
 
 #include <unordered_map>
 #include <vector>
@@ -79,6 +80,11 @@ public:
 
     PaddleBehaviorComponent* getPaddleComponent();
 
+    void sendMessage(EntityType type, CompType compType, Message & msg, SendType sendType = SendType::ENQUEUE);
+    void sendMessage(CompType compType, EntityID entityID, Message& msg, SendType sendType = SendType::ENQUEUE);
+
+    PowerUpService& getPUService();
+
 private:
     void removeEntity(EntityID entityID);
 
@@ -114,13 +120,15 @@ private:
 
     std::vector<EntityID> mZombieEntities;
 
-    PaddleBehaviorComponent* mPlayerInputComp;
+    PaddleBehaviorComponent* mPaddleBehaviorComp;
 
     BallBehaviorComponent* mBallBehavior;
 
     CollisionDetector mCollisionDetector;
 
     pt::ptree& mTree;
+
+    PowerUpService mPUService;
 };
 
 

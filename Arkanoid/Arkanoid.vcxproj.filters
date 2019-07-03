@@ -49,6 +49,12 @@
     <Filter Include="Source Files\Components\Behaviors">
       <UniqueIdentifier>{28e733da-54ea-4142-8318-1ecad027660f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Components\PowerUps">
+      <UniqueIdentifier>{a727a7e4-84f5-408f-afbe-dc813cd508a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Components\PowerUps">
+      <UniqueIdentifier>{00f7b98a-e325-457a-af06-d0aae2e7ba41}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="World.h">
@@ -117,6 +123,12 @@
     <ClInclude Include="PaddleBehaviorComponent.h">
       <Filter>Header Files\Components\Behaviors</Filter>
     </ClInclude>
+    <ClInclude Include="PowerUpStickyComponent.h">
+      <Filter>Header Files\Components\PowerUps</Filter>
+    </ClInclude>
+    <ClInclude Include="PowerUpService.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="World.cpp">
@@ -172,6 +184,12 @@
     </ClCompile>
     <ClCompile Include="PaddleBehaviorComponent.cpp">
       <Filter>Source Files\Components\Behaviors</Filter>
+    </ClCompile>
+    <ClCompile Include="PowerUpStickyComponent.cpp">
+      <Filter>Source Files\Components\PowerUps</Filter>
+    </ClCompile>
+    <ClCompile Include="PowerUpService.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

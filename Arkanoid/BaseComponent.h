@@ -8,6 +8,7 @@
 using EntityID = unsigned long;
 
 class GameState;
+class TransformComponent;
 
 /// <summary>
 /// Base class for components.
@@ -30,6 +31,7 @@ public:
     void setZombie();
 
     GameState* getGameState() const;
+    TransformComponent* getTransform() const;
 
 protected:
     EntityID mEntityID;
@@ -44,6 +46,8 @@ protected:
 protected:
     // Inherited via MessageHandler
     virtual void handleMessage(Message & msg) override;
+
+    TransformComponent* mTransform;
 };
 #endif // !BASE_COMPONENT_H
 

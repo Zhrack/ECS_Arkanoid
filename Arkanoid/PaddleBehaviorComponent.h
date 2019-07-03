@@ -8,6 +8,16 @@
 class BoxColliderComponent;
 class TransformComponent;
 
+enum class PaddleState
+{
+    STATE_NORMAL = 0,
+    STATE_STICKY,
+    STATE_ENLARGED,
+    STATE_LASER,
+    STATE_SLOW,
+    STATE_DISRUPTION
+};
+
 class PaddleBehaviorComponent :
     public BaseComponent
 {
@@ -17,16 +27,20 @@ public:
 
     // Inherited via BaseComponent
     virtual void update(float elapsed) override;
+    // Inherited via MessageHandler
+    virtual void handleMessage(Message& msg) override;
 
     float getFriction() const;
-
     sf::Vector2f getCurrentVelocity() const;
     float getMaxVelocity() const;
+
+    bool isSticky() const;
+
+    void onFireButtonPressed();
 
 private:
     sf::RenderWindow* mWindow;
     BoxColliderComponent* mCollider;
-    TransformComponent* mTransform;
 
     sf::Vector2f mVel;
     sf::Vector2f mAccel;
@@ -34,6 +48,10 @@ private:
     sf::Vector2f mPaddleSize;
     float mPaddleMaxVel;
     float mPaddleFriction;
+
+    bool mStickyPaddle;
+
+    PaddleState mState;
 };
 
 
