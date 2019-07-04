@@ -53,19 +53,19 @@ void CollisionDetector::checkCollisions(const std::vector<BaseComponent*>& actor
             if (func(comp1, comp2, amount))
             {
                 // collision!
-                CollisionData data1;
-                data1.otherCollider = comp2;
-                data1.otherType = comp2Box ? CompType::BOX_COLLIDER : CompType::CIRCLE_COLLIDER;
-                data1.amount = amount;
-                Message msg1(0, MessageType::MSG_COLLISION, &data1);
+                std::shared_ptr<CollisionData> data1 = std::make_shared<CollisionData>();
+                data1->otherCollider = comp2;
+                data1->otherType = comp2Box ? CompType::BOX_COLLIDER : CompType::CIRCLE_COLLIDER;
+                data1->amount = amount;
+                Message msg1(0, MessageType::MSG_COLLISION, data1);
 
                 comp1->receive(msg1, SendType::IMMEDIATE);
 
-                CollisionData data2;
-                data2.otherCollider = comp1;
-                data2.otherType = comp1Box ? CompType::BOX_COLLIDER : CompType::CIRCLE_COLLIDER;
-                data2.amount = amount;
-                Message msg2(0, MessageType::MSG_COLLISION, &data2);
+                std::shared_ptr<CollisionData> data2 = std::make_shared<CollisionData>();
+                data2->otherCollider = comp1;
+                data2->otherType = comp1Box ? CompType::BOX_COLLIDER : CompType::CIRCLE_COLLIDER;
+                data2->amount = amount;
+                Message msg2(0, MessageType::MSG_COLLISION, data2);
 
                 comp2->receive(msg2, SendType::IMMEDIATE);
             }

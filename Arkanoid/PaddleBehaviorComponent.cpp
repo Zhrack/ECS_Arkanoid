@@ -71,20 +71,25 @@ void PaddleBehaviorComponent::update(float elapsed)
 
 void PaddleBehaviorComponent::handleMessage(Message & msg)
 {
-
-    switch (msg.mType)
+    if (msg.mType == MSG_PU_STICKY)
     {
-    case MSG_PU_STICKY:
-        mStickyPaddle = true;
-        mState = PaddleState::STATE_STICKY;
+        std::shared_ptr<StickyData> extraInfo = std::dynamic_pointer_cast<StickyData>(msg.mExtraInfo);
 
-        mRenderer->getShape().setFillColor(sf::Color::Cyan);
-        break;
-    case MSG_PU_END_EFFECT:
+        if (extraInfo->start)
+        {
+            // start effect
+            mStickyPaddle = true;
+            mState = PaddleState::STATE_STICKY;
 
-        mState = PaddleState::STATE_NORMAL;
-        mRenderer->getShape().setFillColor(sf::Color::Green);
-        break;
+            mRenderer->getShape().setFillColor(sf::Color::Cyan);
+        }
+        // if not sticky, this PU has been overwritten and this is an obsolete message, so I can ignore it
+        else if(!extraInfo->start && isSticky()) 
+        {
+            mStickyPaddle = false;
+            mState = PaddleState::STATE_NORMAL;
+            mRenderer->getShape().setFillColor(sf::Color::Green);
+        }
     }
 }
 

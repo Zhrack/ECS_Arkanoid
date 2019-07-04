@@ -32,15 +32,10 @@ void ColliderComponent::setOnCollision(std::function<void(const CollisionData&)>
 
 void ColliderComponent::handleMessage(Message & msg)
 {
-    CollisionData* data = nullptr;
-    switch (msg.mType)
+    if (msg.mType == MSG_COLLISION)
     {
-    case MSG_COLLISION:
-        data = static_cast<CollisionData*>(msg.mExtraInfo);
-        if(mOnCollision)
+        std::shared_ptr<CollisionData> data = std::dynamic_pointer_cast<CollisionData>(msg.mExtraInfo);
+        if (mOnCollision)
             mOnCollision(*data);
-        break;
-    default:
-        break;
     }
 }

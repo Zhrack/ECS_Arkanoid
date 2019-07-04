@@ -25,14 +25,30 @@ enum MessageType {
 
 // Following, structs to be sent with specific message types are defined here.
 
+struct BaseData {
+    virtual ~BaseData() {}
+};
+
 /// <summary>
 /// For MSG_COLLISION messages
 /// </summary>
-struct CollisionData
+struct CollisionData : BaseData
 {
     BaseComponent* otherCollider;
     CompType otherType;
     sf::Vector2f amount;
+
+    virtual ~CollisionData() {}
+};
+
+/// <summary>
+/// For MSG_COLLISION messages
+/// </summary>
+struct StickyData : BaseData
+{
+    bool start;
+
+    virtual ~StickyData() {}
 };
 
 #endif // !MESSAGE_TYPES_H

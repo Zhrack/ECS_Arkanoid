@@ -228,6 +228,7 @@ void GameState::removeComponent(CompType type, EntityID entityID)
 
         // swap with last element
         std::iter_swap(vec.begin() + i, vec.end() - 1);
+        delete *(vec.end() - 1);
         vec.pop_back();
     }
 }

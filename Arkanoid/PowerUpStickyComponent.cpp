@@ -24,6 +24,7 @@ PowerUpStickyComponent::PowerUpStickyComponent(EntityID entityID, GameState* gam
 
 PowerUpStickyComponent::~PowerUpStickyComponent()
 {
+    std::cout << "Power Up destructor" << std::endl;
 }
 
 void PowerUpStickyComponent::update(float elapsed)
@@ -32,6 +33,7 @@ void PowerUpStickyComponent::update(float elapsed)
 
     if (mTransform->getPosition().y > mGame->config().get<float>("SCREEN_HEIGHT"))
     {
+        std::cout << "Power Up out of screen" << std::endl;
         mGame->destroyEntity(getEntityID());
     }
 }
@@ -42,11 +44,15 @@ void PowerUpStickyComponent::onCollisionCb(const CollisionData & data)
     if (mGame->getEntityType(otherID) == EntityType::TAG_PLAYER)
     {
         auto paddleBehavior = mGame->getComponent<PaddleBehaviorComponent>(CompType::PADDLE_BEHAVIOR, otherID);
-        Message msg(mEntityID, MessageType::MSG_PU_STICKY);
+        std::shared_ptr<StickyData> stickyData = std::make_shared<StickyData>();
+        stickyData->start = true;
+        Message msg(mEntityID, MessageType::MSG_PU_STICKY, stickyData);
         paddleBehavior->receive(msg);
 
         // send delayed message to stop the effect
-        Message msgEnd(mEntityID, MessageType::MSG_PU_END_EFFECT);
+        std::shared_ptr<StickyData> endData = std::make_shared<StickyData>();
+        endData->start = false;
+        Message msgEnd(mEntityID, MessageType::MSG_PU_STICKY, endData);
         paddleBehavior->receive(msgEnd, SendType::DELAYED, sf::seconds(mEffectDuration));
 
         mGame->destroyEntity(getEntityID());

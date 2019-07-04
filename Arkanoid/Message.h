@@ -5,13 +5,14 @@
 #include "MessageTypes.h"
 
 #include <SFML/System.hpp>
+#include <memory>
 
 struct Message {
     unsigned long mSenderID;
 
     MessageType mType;
 
-    void* mExtraInfo;
+    std::shared_ptr<BaseData> mExtraInfo;
 
     sf::Time mSendingTime;
 
@@ -23,10 +24,10 @@ struct Message {
     {
     }
 
-    Message(unsigned long sender, MessageType type, void * extra = nullptr) :
+    Message(unsigned long sender, MessageType type, std::shared_ptr<BaseData> extra = nullptr) :
         mSenderID(sender),
         mType(type),
-        mExtraInfo(extra)
+        mExtraInfo(std::move(extra))
     {
     }
 
