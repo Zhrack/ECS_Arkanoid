@@ -14,7 +14,7 @@ PaddleBehaviorComponent::PaddleBehaviorComponent(EntityID entityID, GameState* g
     mVel(0.f, 0.f),
     mAccel(0.f, 0.f),
     mStickyPaddle(true),
-    mState(PaddleState::STATE_NORMAL)
+    mState(PaddleState::STATE_START)
 {
     mWindow = mGame->getWindow();
 
@@ -40,7 +40,10 @@ PaddleBehaviorComponent::~PaddleBehaviorComponent()
 
 void PaddleBehaviorComponent::update(float elapsed)
 {
-    sf::Vector2i screenSize(mGame->config().get<int>("SCREEN_WIDTH"), mGame->config().get<int>("SCREEN_HEIGHT"));
+    const sf::RectangleShape& walls = mGame->getWalls();
+
+    sf::Vector2f gameAreaSize(walls.getSize());
+    sf::Vector2f gameAreaPos(walls.getPosition());
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left))
     {
@@ -55,17 +58,17 @@ void PaddleBehaviorComponent::update(float elapsed)
     
     mTransform->move(mVel * elapsed);
 
-    if (mTransform->getPosition().x < 0)
+    if (mTransform->getPosition().x < gameAreaPos.x)
     {
-        mTransform->setPosition(sf::Vector2f(0, screenSize.y - mCollider->getSize().y));
+        mTransform->setPosition(sf::Vector2f(gameAreaPos.x, gameAreaSize.y - mCollider->getSize().y));
     }
 
-    if (mTransform->getPosition().x > screenSize.x - mCollider->getSize().x)
+    if (mTransform->getPosition().x > gameAreaPos.x + gameAreaSize.x - mCollider->getSize().x)
     {
         auto collSize = mCollider->getSize();
         mTransform->setPosition(
-            sf::Vector2f(screenSize.x - collSize.x,
-                screenSize.y - collSize.y));
+            sf::Vector2f(gameAreaPos.x + gameAreaSize.x - collSize.x,
+                gameAreaSize.y - collSize.y));
     }
 }
 
@@ -117,10 +120,28 @@ bool PaddleBehaviorComponent::isSticky() const
     return mState == PaddleState::STATE_STICKY;
 }
 
+bool PaddleBehaviorComponent::isStarting() const
+{
+    return mState == PaddleState::STATE_START;
+}
+
+bool PaddleBehaviorComponent::isNormal() const
+{
+    return mState == PaddleState::STATE_NORMAL;
+}
+
+void PaddleBehaviorComponent::changeState(PaddleState newState)
+{
+    mState = newState;
+}
+
 void PaddleBehaviorComponent::onFireButtonPressed()
 {
-    if (mStickyPaddle)
+    if (isStarting() ||
+        isSticky())
     {
+        if(mState == PaddleState::STATE_START)
+            mState = PaddleState::STATE_NORMAL;
         // if not currently under the power up effect, disable it (to handle starting of game stickyness)
         if (!isSticky())
             mStickyPaddle = false;

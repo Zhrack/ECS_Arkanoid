@@ -21,6 +21,8 @@ enum MessageType {
     MSG_PU_END_EFFECT,
     MSG_PU_STICKY,
 
+    MSG_BALL_LOST
+
 };
 
 // Following, structs to be sent with specific message types are defined here.

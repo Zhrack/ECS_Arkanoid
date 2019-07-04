@@ -44,7 +44,7 @@ void BrickBehaviorComponent::onCollisionCb(const CollisionData & data)
             mGame->increaseScore(points);
             mGame->destroyEntity(mEntityID);
 
-            mGame->getPUService().spawnRandomPU(mTransform->getPosition());
+            mGame->getPUService().spawnRandomPU(mTransform->getPosition() + (mCollider->getSize() / 2.f));
         }
         else
         {

@@ -26,7 +26,10 @@ PowerUpService::~PowerUpService()
 
 void PowerUpService::spawnRandomPU(const sf::Vector2f & pos)
 {
-    PUType type = (PUType)(rand() % (PUType::PU_COUNT - 1));
+    int chancePU = rand() % 100;
+    if (chancePU > 30) return;
+
+    PUType type = (PUType)(rand() % (PUType::PU_COUNT));
 
     switch (type)
     {
@@ -49,9 +52,11 @@ void PowerUpService::createStickyPU(const sf::Vector2f & pos)
 
     float radius = config.get<float>("POWER_UP_SIZE");
 
+    sf::Vector2f finalPos(pos.x - radius, pos.y - radius);
+
     mGame->addComponent<CircleColliderComponent>(CompType::CIRCLE_COLLIDER, id, radius);
     mGame->addComponent<CircleRenderComponent>(CompType::CIRCLE_RENDER, id, radius, sf::Color::Yellow);
-    mGame->addComponent<PowerUpStickyComponent>(CompType::STICKY, id, pos);
+    mGame->addComponent<PowerUpStickyComponent>(CompType::STICKY, id, finalPos);
 }
 
 void PowerUpService::createDisruptionPU(const sf::Vector2f & pos)

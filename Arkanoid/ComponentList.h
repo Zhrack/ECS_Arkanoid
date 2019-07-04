@@ -17,6 +17,8 @@ enum CompType {
 
     STICKY,
 
+    GAME_OVER_WATCHER,
+
     COUNT // keep last, to know number of components types
 };
 

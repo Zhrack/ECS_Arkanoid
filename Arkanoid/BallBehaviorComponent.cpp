@@ -37,35 +37,42 @@ BallBehaviorComponent::~BallBehaviorComponent()
 
 void BallBehaviorComponent::update(float elapsed)
 {
-    sf::Vector2i screenSize(mGame->config().get<int>("SCREEN_WIDTH"), mGame->config().get<int>("SCREEN_HEIGHT"));
+    const sf::RectangleShape& walls = mGame->getWalls();
+
+    sf::Vector2f gameAreaSize(walls.getSize());
+    sf::Vector2f gameAreaPos(walls.getPosition());
+
     if (mState == BallState::BALL_NORMAL)
     {
         mTransform->move(mVelocity * elapsed);
 
         float radius = mCollider->getRadius();
 
-        if (mTransform->getPosition().x < 0)
+        if (mTransform->getPosition().x < gameAreaPos.x)
         {
-            mTransform->setPosition(0.f, mTransform->getPosition().y);
+            mTransform->setPosition(gameAreaPos.x, mTransform->getPosition().y);
             mVelocity.x = -mVelocity.x;
         }
-        else if (mTransform->getPosition().x + radius > screenSize.x - mCollider->getRadius())
+        else if (mTransform->getPosition().x + radius > gameAreaPos.x + gameAreaSize.x - mCollider->getRadius())
         {
-            mTransform->setPosition(screenSize.x - mCollider->getRadius() - radius, mTransform->getPosition().y);
+            mTransform->setPosition(gameAreaPos.x + gameAreaSize.x - mCollider->getRadius() - radius, mTransform->getPosition().y);
             mVelocity.x = -mVelocity.x;
         }
 
-        if (mTransform->getPosition().y < 0)
+        if (mTransform->getPosition().y < gameAreaPos.y)
         {
-            mTransform->setPosition(mTransform->getPosition().x, 0.f);
+            mTransform->setPosition(mTransform->getPosition().x, gameAreaPos.y);
             mVelocity.y = -mVelocity.y;
         }
-        else if (mTransform->getPosition().y + radius > screenSize.y - mCollider->getRadius())
+        else if (mTransform->getPosition().y > gameAreaPos.y + gameAreaSize.y)
         {
-            mTransform->setPosition(mTransform->getPosition().x, screenSize.y - mCollider->getRadius() - radius);
-            mVelocity.y = -mVelocity.y;
+            //mTransform->setPosition(mTransform->getPosition().x, gameAreaPos.y + gameAreaSize.y - mCollider->getRadius() - radius);
+            //mVelocity.y = -mVelocity.y;
 
             // ball is OUT!
+            Message ballLostMsg(getEntityID(), MessageType::MSG_BALL_LOST);
+            mGame->sendMessage(EntityType::TAG_GAME_OVER_WATCHER, CompType::GAME_OVER_WATCHER, ballLostMsg, SendType::DELAYED, sf::seconds(0.5));
+            mGame->destroyEntity(getEntityID());
         }
     }
     else if(mState == BallState::BALL_FOLLOW_PADDLE)

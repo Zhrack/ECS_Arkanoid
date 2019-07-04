@@ -17,6 +17,8 @@
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
 
+#include <SFML/Graphics.hpp>
+
 using ComponentMap = 
 std::unordered_map<
     CompType,
@@ -46,6 +48,10 @@ public:
     virtual void update() override;
     virtual void exit() override;
 
+    pt::ptree& config();
+
+    const sf::RectangleShape& getWalls() const;
+
     EntityID createEntity(EntityType type);
 
     /// <summary>
@@ -58,8 +64,6 @@ public:
     inline T* addComponent(CompType type, EntityID entityID, Args... args);
 
     std::vector<BaseComponent*>& getComponentList(CompType type);
-
-    pt::ptree& config();
 
     /// <summary>
     /// Gets the requested component. The template parameter is used to downcast directly to the right derived type.
@@ -80,10 +84,16 @@ public:
 
     void increaseScore(long points);
 
+    void decrementPlayerLives();
+
+    int getPlayerLives() const;
+
+    void gameOver();
+
     PaddleBehaviorComponent* getPaddleComponent();
 
-    void sendMessage(EntityType type, CompType compType, Message & msg, SendType sendType = SendType::ENQUEUE);
-    void sendMessage(CompType compType, EntityID entityID, Message& msg, SendType sendType = SendType::ENQUEUE);
+    void sendMessage(EntityType type, CompType compType, Message & msg, SendType sendType = SendType::ENQUEUE, const sf::Time& timeToFire = sf::Time::Zero);
+    void sendMessage(CompType compType, EntityID entityID, Message& msg, SendType sendType = SendType::ENQUEUE, const sf::Time& timeToFire = sf::Time::Zero);
 
     PowerUpService& getPUService();
 
@@ -99,6 +109,8 @@ private:
 
     void renderGame(float elapsed);
 
+    void buildLevel();
+
 private:
 
     /// <summary>
@@ -111,10 +123,20 @@ private:
     float mTimeLag;
     float mMSPerUpdate;
 
+    bool mGameOver;
+
     // general game data
     long mHighScore;
     long mCurrentScore;
     int mRemainingLives;
+
+    sf::Font mFont;
+
+    sf::Text mHighScoreText;
+    sf::Text mCurrentScoreText;
+    sf::Text mRemainingLivesText;
+
+    sf::RectangleShape mWalls;
 
     EntityID mPaddleID;
 

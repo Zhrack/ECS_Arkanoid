@@ -12,6 +12,7 @@ class RectRenderComponent;
 enum class PaddleState
 {
     STATE_NORMAL = 0,
+    STATE_START,
     STATE_STICKY,
     STATE_ENLARGED,
     STATE_LASER,
@@ -35,6 +36,10 @@ public:
     float getMaxVelocity() const;
 
     bool isSticky() const;
+    bool isStarting() const;
+    bool isNormal() const;
+
+    void changeState(PaddleState newState);
 
     void onFireButtonPressed();
 

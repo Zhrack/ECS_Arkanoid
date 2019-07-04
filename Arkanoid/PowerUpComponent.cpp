@@ -21,7 +21,9 @@ void PowerUpComponent::update(float elapsed)
 {
     mTransform->move(0.f, mVelocity * elapsed);
 
-    if (mTransform->getPosition().y > mGame->config().get<float>("SCREEN_HEIGHT"))
+    auto& gameArea = mGame->getWalls();
+
+    if (mTransform->getPosition().y > gameArea.getPosition().y + gameArea.getSize().y)
     {
         mGame->destroyEntity(getEntityID());
     }

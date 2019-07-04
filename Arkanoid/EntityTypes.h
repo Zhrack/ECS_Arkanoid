@@ -8,7 +8,9 @@ enum EntityType
     TAG_BALL,
     TAG_BRICK,
     TAG_POWER_UP,
-    TAG_ALIEN
+    TAG_ALIEN,
+
+    TAG_GAME_OVER_WATCHER
 };
 
 #endif // !ENTITY_TYPES

@@ -42,9 +42,6 @@ void PowerUpDisruptionComponent::onCollisionCb(const CollisionData & data)
         sf::Vector2f ballPos = ballTransform->getPosition();
 
         // create 2 more balls in the current ball position, with random velocities
-
-        
-
         for (int i = 0; i < 2; ++i)
         {
             auto ballID = mGame->createEntity(EntityType::TAG_BALL);
@@ -56,8 +53,8 @@ void PowerUpDisruptionComponent::onCollisionCb(const CollisionData & data)
             mGame->addComponent<CircleRenderComponent>(CompType::CIRCLE_RENDER, ballID, ballRadius, sf::Color::Red);
             auto ballBehavior = mGame->addComponent<BallBehaviorComponent>(CompType::BALL_BEHAVIOR, ballID, vel, ballPos);
 
-            float val1 = (float)(rand() % (int)vel);
-            float val2 = (float)(rand() % (int)vel);
+            float val1 = (float)(rand() % (int)(vel + 100.f));
+            float val2 = (float)(rand() % (int)(vel + 100.f));
             sf::Vector2f dir(val1, val2);
             ballBehavior->setVelocity(dir);
         }
