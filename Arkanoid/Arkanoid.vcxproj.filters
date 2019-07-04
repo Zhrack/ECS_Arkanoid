@@ -129,6 +129,12 @@
     <ClInclude Include="PowerUpService.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="PowerUpDisruptionComponent.h">
+      <Filter>Header Files\Components\PowerUps</Filter>
+    </ClInclude>
+    <ClInclude Include="PowerUpComponent.h">
+      <Filter>Header Files\Components\PowerUps</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="World.cpp">
@@ -189,6 +195,12 @@
       <Filter>Source Files\Components\PowerUps</Filter>
     </ClCompile>
     <ClCompile Include="PowerUpService.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PowerUpDisruptionComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PowerUpComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

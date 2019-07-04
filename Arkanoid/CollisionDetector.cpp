@@ -199,10 +199,11 @@ bool CirclevsCircle(BaseComponent * c1, BaseComponent * c2, sf::Vector2f& amount
     float radius2 = circle2->getRadius();
 
     float radiiSq = (radius1 + radius2) * (radius1 + radius2);
+    float distCentersSq = (posCircle1.x - posCircle2.x) * (posCircle1.x - posCircle2.x) +
+        (posCircle1.y - posCircle2.y) * (posCircle1.y - posCircle2.y);
 
     //if distance btw center of circles is less than sum of radii
-    if ((posCircle1.x - posCircle2.x) * (posCircle1.x - posCircle2.x) + 
-        (posCircle1.y - posCircle2.y) * (posCircle1.y - posCircle2.y) < radiiSq)
+    if (distCentersSq < radiiSq)
     {
         //coll!
         return true;

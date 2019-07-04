@@ -35,6 +35,8 @@ public:
 
     void changeState(BallState newState);
 
+    void setVelocity(const sf::Vector2f& vel);
+
 private:
     sf::Vector2f mVelocity;
     float mMaxVelocity;

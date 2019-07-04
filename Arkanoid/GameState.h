@@ -76,6 +76,8 @@ public:
 
     EntityType getEntityType(EntityID entityID);
 
+    std::vector<EntityID> getAllEntitiesByType(EntityType type);
+
     void increaseScore(long points);
 
     PaddleBehaviorComponent* getPaddleComponent();

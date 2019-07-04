@@ -77,7 +77,7 @@ void GameState::enter()
     addComponent<CircleColliderComponent>(CompType::CIRCLE_COLLIDER, ballID, ballRadius);
     addComponent<CircleRenderComponent>(CompType::CIRCLE_RENDER, ballID, ballRadius, sf::Color::Red);
     mBallBehavior = addComponent<BallBehaviorComponent>(CompType::BALL_BEHAVIOR, ballID, mTree.get<float>("BALL_MAX_VELOCITY"), sf::Vector2f());
-
+    mBallBehavior->changeState(BallState::BALL_FOLLOW_PADDLE);
 
 
     // create some bricks in a grid
@@ -118,14 +118,21 @@ void GameState::update(float elapsed)
     }
     // update
     mPaddleBehaviorComp->updateComponent(elapsed);
-    mBallBehavior->updateComponent(elapsed);
+    auto balls = getComponentList(CompType::BALL_BEHAVIOR);    
+    for (auto e : balls)
+    {
+        if (!e->isZombie())
+        {
+            e->updateComponent(elapsed);
+        }
+    }
     auto powerups = getComponentList(CompType::STICKY);
     // append other power ups here...
     for (auto e : powerups)
     {
         if (!e->isZombie())
         {
-            e->update(elapsed);
+            e->updateComponent(elapsed);
         }
     }
     // late update for collision detection and other "physics" stuff
@@ -258,6 +265,21 @@ EntityType GameState::getEntityType(EntityID entityID)
         return mEntityMap[entityID];
     }
     return EntityType::TAG_NONE;
+}
+
+std::vector<EntityID> GameState::getAllEntitiesByType(EntityType type)
+{
+    std::vector<EntityID> result;
+
+    std::for_each(mEntityMap.begin(), mEntityMap.end(), [&](std::pair<EntityID, EntityType> pair)
+    {
+        if (pair.second == type)
+        {
+            result.push_back(pair.first);
+        }
+    });
+
+    return result;
 }
 
 void GameState::increaseScore(long points)

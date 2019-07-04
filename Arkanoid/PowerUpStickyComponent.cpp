@@ -7,7 +7,7 @@
 #include "PaddleBehaviorComponent.h"
 
 PowerUpStickyComponent::PowerUpStickyComponent(EntityID entityID, GameState* game, sf::Vector2f pos) :
-    BaseComponent(entityID, game)
+    PowerUpComponent(entityID, game, pos)
 {
     mCollider = mGame->getComponent<CircleColliderComponent>(CompType::CIRCLE_COLLIDER, getEntityID());
 
@@ -15,27 +15,12 @@ PowerUpStickyComponent::PowerUpStickyComponent(EntityID entityID, GameState* gam
 
     mCollider->setOnCollision(cb);
 
-    mTransform->setPosition(pos);
-
-    mVelocity = mGame->config().get<float>("POWER_UP_VELOCITY");
     mEffectDuration = mGame->config().get<float>("POWER_UP_STICKY_TIME_SEC");
 }
 
 
 PowerUpStickyComponent::~PowerUpStickyComponent()
 {
-    std::cout << "Power Up destructor" << std::endl;
-}
-
-void PowerUpStickyComponent::update(float elapsed)
-{
-    mTransform->move(0.f, mVelocity * elapsed);
-
-    if (mTransform->getPosition().y > mGame->config().get<float>("SCREEN_HEIGHT"))
-    {
-        std::cout << "Power Up out of screen" << std::endl;
-        mGame->destroyEntity(getEntityID());
-    }
 }
 
 void PowerUpStickyComponent::onCollisionCb(const CollisionData & data)

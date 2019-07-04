@@ -14,7 +14,7 @@ BallBehaviorComponent::BallBehaviorComponent(EntityID entityID, GameState* game,
     mVelocity(sf::Vector2f()),
     mMaxVelocity(velocity),
     mLocked(true),
-    mState(BallState::BALL_FOLLOW_PADDLE)
+    mState(BallState::BALL_NORMAL)
 {
     mWindow = mGame->getWindow();
 
@@ -44,16 +44,28 @@ void BallBehaviorComponent::update(float elapsed)
 
         float radius = mCollider->getRadius();
 
-        if (mTransform->getPosition().x < 0 ||
-            mTransform->getPosition().x + radius > screenSize.x - mCollider->getRadius())
+        if (mTransform->getPosition().x < 0)
         {
+            mTransform->setPosition(0.f, mTransform->getPosition().y);
+            mVelocity.x = -mVelocity.x;
+        }
+        else if (mTransform->getPosition().x + radius > screenSize.x - mCollider->getRadius())
+        {
+            mTransform->setPosition(screenSize.x - mCollider->getRadius() - radius, mTransform->getPosition().y);
             mVelocity.x = -mVelocity.x;
         }
 
-        if (mTransform->getPosition().y < 0 ||
-            mTransform->getPosition().y + radius > screenSize.y - mCollider->getRadius())
+        if (mTransform->getPosition().y < 0)
         {
+            mTransform->setPosition(mTransform->getPosition().x, 0.f);
             mVelocity.y = -mVelocity.y;
+        }
+        else if (mTransform->getPosition().y + radius > screenSize.y - mCollider->getRadius())
+        {
+            mTransform->setPosition(mTransform->getPosition().x, screenSize.y - mCollider->getRadius() - radius);
+            mVelocity.y = -mVelocity.y;
+
+            // ball is OUT!
         }
     }
     else if(mState == BallState::BALL_FOLLOW_PADDLE)
@@ -136,4 +148,9 @@ void BallBehaviorComponent::handleMessage(Message & msg)
 void BallBehaviorComponent::changeState(BallState newState)
 {
     mState = newState;
+}
+
+void BallBehaviorComponent::setVelocity(const sf::Vector2f & vel)
+{
+    mVelocity = vel;
 }

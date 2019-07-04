@@ -89,6 +89,10 @@ void PaddleBehaviorComponent::handleMessage(Message & msg)
             mStickyPaddle = false;
             mState = PaddleState::STATE_NORMAL;
             mRenderer->getShape().setFillColor(sf::Color::Green);
+
+            // tell balls to go
+            Message msgBall(mEntityID, MessageType::MSG_RELEASE_BALL);
+            mGame->sendMessage(EntityType::TAG_BALL, CompType::BALL_BEHAVIOR, msgBall);
         }
     }
 }

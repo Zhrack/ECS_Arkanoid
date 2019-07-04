@@ -181,6 +181,8 @@
     <ClInclude Include="MessageHandler.h" />
     <ClInclude Include="MessageTypes.h" />
     <ClInclude Include="PaddleBehaviorComponent.h" />
+    <ClInclude Include="PowerUpComponent.h" />
+    <ClInclude Include="PowerUpDisruptionComponent.h" />
     <ClInclude Include="PowerUpService.h" />
     <ClInclude Include="PowerUpStickyComponent.h" />
     <ClInclude Include="RectRenderComponent.h" />
@@ -204,6 +206,8 @@
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="MessageHandler.cpp" />
     <ClCompile Include="PaddleBehaviorComponent.cpp" />
+    <ClCompile Include="PowerUpComponent.cpp" />
+    <ClCompile Include="PowerUpDisruptionComponent.cpp" />
     <ClCompile Include="PowerUpService.cpp" />
     <ClCompile Include="PowerUpStickyComponent.cpp" />
     <ClCompile Include="RectRenderComponent.cpp" />
