@@ -14,6 +14,8 @@ public:
     RenderComponent(EntityID entityID, GameState* game);
     virtual ~RenderComponent();
 
+    virtual sf::Shape& getShape() = 0;
+
 protected:
     TransformComponent* mTranform;
 };

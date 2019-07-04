@@ -4,6 +4,8 @@
 
 #include "MessageTypes.h"
 
+#include <SFML/System.hpp>
+
 struct Message {
     unsigned long mSenderID;
 
@@ -11,10 +13,13 @@ struct Message {
 
     void* mExtraInfo;
 
+    sf::Time mSendingTime;
+
     Message() :
         mSenderID(0),
         mType(MessageType::MSG_NULL),
-        mExtraInfo(nullptr)
+        mExtraInfo(nullptr),
+        mSendingTime()
     {
     }
 
@@ -25,7 +30,7 @@ struct Message {
     {
     }
 
-    virtual ~Message() {}
+    ~Message() {}
 };
 
 #endif // !MESSAGE_H

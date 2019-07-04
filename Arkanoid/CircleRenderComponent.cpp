@@ -39,3 +39,8 @@ void CircleRenderComponent::update(float elapsed)
 
     mGame->getWindow()->draw(mShape);
 }
+
+sf::Shape & CircleRenderComponent::getShape()
+{
+    return mShape;
+}

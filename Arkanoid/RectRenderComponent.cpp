@@ -39,3 +39,8 @@ void RectRenderComponent::update(float elapsed)
 
     mGame->getWindow()->draw(mShape);
 }
+
+sf::Shape & RectRenderComponent::getShape()
+{
+    return mShape;
+}

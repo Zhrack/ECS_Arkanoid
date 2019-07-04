@@ -18,6 +18,7 @@ PowerUpStickyComponent::PowerUpStickyComponent(EntityID entityID, GameState* gam
     mTransform->setPosition(pos);
 
     mVelocity = mGame->config().get<float>("POWER_UP_VELOCITY");
+    mEffectDuration = mGame->config().get<float>("POWER_UP_STICKY_TIME_SEC");
 }
 
 
@@ -40,10 +41,13 @@ void PowerUpStickyComponent::onCollisionCb(const CollisionData & data)
     auto otherID = data.otherCollider->getEntityID();
     if (mGame->getEntityType(otherID) == EntityType::TAG_PLAYER)
     {
-        Message msg;
-        msg.mSenderID = getEntityID();
-        msg.mType = MessageType::MSG_PU_STICKY;
-        mGame->getComponent<PaddleBehaviorComponent>(CompType::PADDLE_BEHAVIOR, otherID)->receive(msg);
+        auto paddleBehavior = mGame->getComponent<PaddleBehaviorComponent>(CompType::PADDLE_BEHAVIOR, otherID);
+        Message msg(mEntityID, MessageType::MSG_PU_STICKY);
+        paddleBehavior->receive(msg);
+
+        // send delayed message to stop the effect
+        Message msgEnd(mEntityID, MessageType::MSG_PU_END_EFFECT);
+        paddleBehavior->receive(msgEnd, SendType::DELAYED, sf::seconds(mEffectDuration));
 
         mGame->destroyEntity(getEntityID());
     }

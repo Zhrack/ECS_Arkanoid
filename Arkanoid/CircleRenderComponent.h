@@ -18,9 +18,12 @@ public:
 
     // Inherited via RenderComponent
     virtual void update(float elapsed) override;
+    // Inherited via RenderComponent
+    virtual sf::Shape & getShape() override;
 
 private:
     sf::CircleShape mShape;
+
 };
 
 

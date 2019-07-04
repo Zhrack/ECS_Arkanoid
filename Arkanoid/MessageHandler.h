@@ -2,12 +2,24 @@
 #define MESSAGE_HANDLER_H
 
 #include "Message.h"
-#include <queue>
+#include <list>
 
 enum SendType {
     IMMEDIATE = 0,
-    ENQUEUE
+    ENQUEUE,
+    DELAYED
 };
+
+using DelayedMsg = std::pair<sf::Time, Message>;
+
+struct CustomCompare
+{
+    bool operator()(const DelayedMsg& lhs, const DelayedMsg& rhs)
+    {
+        return lhs.first > rhs.first;
+    }
+};
+
 
 /// <summary>
 /// Gives a messaging system to whoever derives from this.
@@ -23,7 +35,7 @@ public:
     /// </summary>
     /// <param name="msg">The MSG.</param>
     /// <param name="sendType">Whether it enqueues the message or handle immediatly in the caller thread.</param>
-    void receive(Message& msg, SendType sendType = SendType::ENQUEUE);
+    void receive(Message& msg, SendType sendType = SendType::ENQUEUE, const sf::Time& timeToFire = sf::Time::Zero);
 
 protected:
     /// <summary>
@@ -44,10 +56,22 @@ protected:
     /// </summary>
     void pullMessages();
 
+    void getReadyMessages();
+
     bool isEmpty() const;
 
 private:
-    std::queue<Message> mQueue;
+    /// <summary>
+    /// Queue of arrived messages
+    /// </summary>
+    std::list<Message> mQueue;
+
+    std::list<DelayedMsg> mDelayedMessages;
+
+    /// <summary>
+    /// Needed for delayed messages
+    /// </summary>
+    sf::Clock mClock;
 };
 
 #endif // !MESSAGE_HANDLER_H

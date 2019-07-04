@@ -66,17 +66,17 @@ void GameState::enter()
     mPaddleID = this->createEntity(EntityType::TAG_PLAYER);
 
     addComponent<BoxColliderComponent>(CompType::BOX_COLLIDER, mPaddleID, paddleSize);
+    addComponent<RectRenderComponent>(CompType::RECT_RENDER, mPaddleID, paddleSize, sf::Color::Green);
     mPaddleBehaviorComp = addComponent<PaddleBehaviorComponent>(CompType::PADDLE_BEHAVIOR, mPaddleID,
         sf::Vector2f((float)mTree.get<int>("SCREEN_WIDTH") / 2.f, (float)(mTree.get<int>("SCREEN_HEIGHT") - paddleSize.y)));
-    addComponent<RectRenderComponent>(CompType::RECT_RENDER, mPaddleID, paddleSize, sf::Color::Green);
 
     auto ballID = this->createEntity(EntityType::TAG_BALL);
 
     float ballRadius = mTree.get<float>("BALL_RADIUS");
 
     addComponent<CircleColliderComponent>(CompType::CIRCLE_COLLIDER, ballID, ballRadius);
-    mBallBehavior = addComponent<BallBehaviorComponent>(CompType::BALL_BEHAVIOR, ballID, mTree.get<float>("BALL_MAX_VELOCITY"), sf::Vector2f());
     addComponent<CircleRenderComponent>(CompType::CIRCLE_RENDER, ballID, ballRadius, sf::Color::Red);
+    mBallBehavior = addComponent<BallBehaviorComponent>(CompType::BALL_BEHAVIOR, ballID, mTree.get<float>("BALL_MAX_VELOCITY"), sf::Vector2f());
 
 
 
@@ -89,8 +89,8 @@ void GameState::enter()
             auto brickID = this->createEntity(EntityType::TAG_BRICK);
 
             addComponent<BoxColliderComponent>(CompType::BOX_COLLIDER, brickID, brickSize);
-            addComponent<BrickBehaviorComponent>(CompType::BRICK, brickID, sf::Vector2f(brickSize.x * i + 100.f, brickSize.y * j + 10.f) + offset);
             addComponent<RectRenderComponent>(CompType::RECT_RENDER, brickID, brickSize, sf::Color::Blue, sf::Color::Magenta, 1.f);
+            addComponent<BrickBehaviorComponent>(CompType::BRICK, brickID, sf::Vector2f(brickSize.x * i + 100.f, brickSize.y * j + 10.f) + offset);
         }
     }
 }

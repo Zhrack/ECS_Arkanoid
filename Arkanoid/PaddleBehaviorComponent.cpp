@@ -4,6 +4,7 @@
 #include "GameState.h"
 #include "BoxColliderComponent.h"
 #include "TransformComponent.h"
+#include "RectRenderComponent.h"
 
 #include <iostream>
 
@@ -18,6 +19,7 @@ PaddleBehaviorComponent::PaddleBehaviorComponent(EntityID entityID, GameState* g
     mWindow = mGame->getWindow();
 
     mCollider = mGame->getComponent<BoxColliderComponent>(CompType::BOX_COLLIDER, getEntityID());
+    mRenderer = mGame->getComponent<RectRenderComponent>(CompType::RECT_RENDER, getEntityID());
 
     auto& config = mGame->config();
 
@@ -75,6 +77,13 @@ void PaddleBehaviorComponent::handleMessage(Message & msg)
     case MSG_PU_STICKY:
         mStickyPaddle = true;
         mState = PaddleState::STATE_STICKY;
+
+        mRenderer->getShape().setFillColor(sf::Color::Cyan);
+        break;
+    case MSG_PU_END_EFFECT:
+
+        mState = PaddleState::STATE_NORMAL;
+        mRenderer->getShape().setFillColor(sf::Color::Green);
         break;
     }
 }
@@ -108,9 +117,7 @@ void PaddleBehaviorComponent::onFireButtonPressed()
             mStickyPaddle = false;
 
         // release ball(s)
-        Message msg;
-        msg.mSenderID = mEntityID;
-        msg.mType = MessageType::MSG_RELEASE_BALL;
+        Message msg(mEntityID, MessageType::MSG_RELEASE_BALL);
         mGame->sendMessage(EntityType::TAG_BALL, CompType::BALL_BEHAVIOR, msg);
     }
 }

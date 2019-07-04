@@ -21,6 +21,8 @@ private:
     CircleColliderComponent* mCollider;
 
     float mVelocity;
+
+    float mEffectDuration;
 };
 
 

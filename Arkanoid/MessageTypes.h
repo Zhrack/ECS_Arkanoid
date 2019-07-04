@@ -18,7 +18,9 @@ enum MessageType {
     MSG_RELEASE_BALL,
 
     // POWERUP COLLISIONS
-    MSG_PU_STICKY
+    MSG_PU_END_EFFECT,
+    MSG_PU_STICKY,
+
 };
 
 // Following, structs to be sent with specific message types are defined here.

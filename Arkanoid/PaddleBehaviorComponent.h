@@ -7,6 +7,7 @@
 
 class BoxColliderComponent;
 class TransformComponent;
+class RectRenderComponent;
 
 enum class PaddleState
 {
@@ -14,7 +15,6 @@ enum class PaddleState
     STATE_STICKY,
     STATE_ENLARGED,
     STATE_LASER,
-    STATE_SLOW,
     STATE_DISRUPTION
 };
 
@@ -41,6 +41,7 @@ public:
 private:
     sf::RenderWindow* mWindow;
     BoxColliderComponent* mCollider;
+    RectRenderComponent* mRenderer;
 
     sf::Vector2f mVel;
     sf::Vector2f mAccel;
