@@ -5,7 +5,6 @@
 #include "RenderComponent.h"
 
 class GameState;
-class TransformComponent;
 
 class RectRenderComponent :
     public RenderComponent

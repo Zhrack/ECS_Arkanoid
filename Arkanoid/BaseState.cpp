@@ -1,9 +1,11 @@
 
 #include "BaseState.h"
 
+#include "World.h"
 
-BaseState::BaseState(sf::RenderWindow* window) :
-    mWindow(window)
+BaseState::BaseState(World* world) :
+    mWorld(world),
+    mWindow(mWorld->getWindow())
 {
 }
 

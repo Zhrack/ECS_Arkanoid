@@ -4,7 +4,6 @@
 #include "RenderComponent.h"
 
 class GameState;
-class TransformComponent;
 
 class SpriteRenderComponent :
     public RenderComponent

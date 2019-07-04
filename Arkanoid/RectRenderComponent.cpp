@@ -33,9 +33,9 @@ void RectRenderComponent::update(float elapsed)
 {
     elapsed;
     // update transform
-    mShape.setPosition(mTranform->getPosition());
-    mShape.setRotation(mTranform->getRotation());
-    mShape.setScale(mTranform->getScale());
+    mShape.setPosition(mTransform->getPosition());
+    mShape.setRotation(mTransform->getRotation());
+    mShape.setScale(mTransform->getScale());
 
     mGame->getWindow()->draw(mShape);
 }

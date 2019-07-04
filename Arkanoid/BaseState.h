@@ -7,13 +7,15 @@
 
 #include <memory>
 
+class World;
+
 /// <summary>
 /// Base class for the FSM.
 /// </summary>
 class BaseState
 {
 public:
-    BaseState(sf::RenderWindow* window);
+    BaseState(World* world);
     virtual ~BaseState();
     /// <summary>
     /// Called at state entrance to setup the state.
@@ -22,7 +24,7 @@ public:
     /// <summary>
     /// Called every step.
     /// </summary>
-    virtual void update(float elapsed) = 0;
+    virtual void update() = 0;
     /// <summary>
     /// Called at state exit to clean up any work.
     /// </summary>
@@ -30,7 +32,7 @@ public:
 
     sf::RenderWindow* getWindow() const;
 protected:
-
+    World* mWorld;
     sf::RenderWindow* mWindow;
 };
 

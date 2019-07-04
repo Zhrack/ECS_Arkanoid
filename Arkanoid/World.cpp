@@ -15,6 +15,7 @@ World::World() :
     mWindow->create(sf::VideoMode(  mTree.get<unsigned int>("SCREEN_WIDTH"),
                                     mTree.get<unsigned int>("SCREEN_HEIGHT")), 
                     "Arkanoid");
+    mWindow->setVerticalSyncEnabled(true);
 }
 
 
@@ -25,7 +26,7 @@ World::~World()
 void World::initialize()
 {
     // set starting state
-    this->changeState(new GameState(mWindow.get(), mTree));
+    this->changeState(new GameState(this, mTree));
 }
 
 void World::loop()
@@ -34,10 +35,8 @@ void World::loop()
     
     while (mWindow->isOpen())
     {
-        auto elapsed = mClock.restart().asSeconds();
-
         // update state
-        mCurrentState->update(elapsed);
+        mCurrentState->update();
     }
 
     this->terminate();
@@ -72,4 +71,9 @@ bool World::loadFile(const std::string & filename)
     }
 
     return true;
+}
+
+sf::RenderWindow * World::getWindow() const
+{
+    return mWindow.get();
 }

@@ -12,12 +12,13 @@
 #include "BrickBehaviorComponent.h"
 
 #include <iostream>
+#include <thread>
 
 // start it from 1, 0 is reserved to be a NULL value
 unsigned long GameState::nextID = 1;
 
-GameState::GameState(sf::RenderWindow* window, pt::ptree& tree) :
-    BaseState(window),
+GameState::GameState(World* world, pt::ptree& tree) :
+    BaseState(world),
     mHighScore(0),
     mCurrentScore(0),
     mRemainingLives(),
@@ -93,10 +94,22 @@ void GameState::enter()
             addComponent<BrickBehaviorComponent>(CompType::BRICK, brickID, sf::Vector2f(brickSize.x * i + 100.f, brickSize.y * j + 10.f) + offset);
         }
     }
+
+
+    
+    mPreviousTime = mClock.getElapsedTime().asSeconds();
+    mTimeLag = 0.f;
+    mMSPerUpdate = mTree.get<float>("MS_PER_UPDATE");
 }
 
-void GameState::update(float elapsed)
+void GameState::update()
 {
+    mCurrentTime = mClock.getElapsedTime().asSeconds();
+    float elapsed = mCurrentTime - mPreviousTime;
+    mPreviousTime = mCurrentTime;
+    mTimeLag += elapsed;
+
+
     sf::Event event;
     while (mWindow->pollEvent(event))
     {
@@ -116,9 +129,27 @@ void GameState::update(float elapsed)
             }
         }
     }
+
+    // update loop
+    while (mTimeLag >= mMSPerUpdate)
+    {
+        updateGame(mMSPerUpdate);
+        mTimeLag -= mMSPerUpdate;
+    }
+
+    // render step
+    renderGame(mTimeLag / mMSPerUpdate);
+
+    // do some cleanup
+    cleanupZombies();
+}
+
+
+void GameState::updateGame(float elapsed)
+{
     // update
     mPaddleBehaviorComp->updateComponent(elapsed);
-    auto balls = getComponentList(CompType::BALL_BEHAVIOR);    
+    auto balls = getComponentList(CompType::BALL_BEHAVIOR);
     for (auto e : balls)
     {
         if (!e->isZombie())
@@ -143,7 +174,10 @@ void GameState::update(float elapsed)
     boxColliders.insert(boxColliders.end(), circleColliders.begin(), circleColliders.end());
 
     mCollisionDetector.checkCollisions(boxColliders);
-    // render step
+}
+
+void GameState::renderGame(float elapsed)
+{
     mWindow->clear();
 
     // call all renderComponents
@@ -165,9 +199,6 @@ void GameState::update(float elapsed)
     }
 
     mWindow->display();
-
-    // do some cleanup
-    cleanupZombies();
 }
 
 void GameState::exit()

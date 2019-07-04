@@ -40,15 +40,17 @@ public:
     /// <param name="newState">The new state.</param>
     void changeState(BaseState* newState);
 
+    /// <summary>
+    /// Loads settings file.
+    /// </summary>
+    /// <param name="filename">The filename.</param>
+    /// <returns></returns>
     bool loadFile(const std::string& filename);
+
+    sf::RenderWindow* getWindow() const;
 
 private:
     std::unique_ptr<BaseState> mCurrentState;
-
-    /// <summary>
-    /// The clock of the game.
-    /// </summary>
-    sf::Clock mClock;
 
     /// <summary>
     /// The SFML window of the game.

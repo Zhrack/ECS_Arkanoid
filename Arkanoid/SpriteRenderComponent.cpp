@@ -20,9 +20,9 @@ void SpriteRenderComponent::update(float elapsed)
 {
     elapsed;
     // update transform
-    mSprite.setPosition(mTranform->getPosition());
-    mSprite.setRotation(mTranform->getRotation());
-    mSprite.setScale(mTranform->getScale());
+    mSprite.setPosition(mTransform->getPosition());
+    mSprite.setRotation(mTransform->getRotation());
+    mSprite.setScale(mTransform->getScale());
 
     mGame->getWindow()->draw(mSprite);
 }

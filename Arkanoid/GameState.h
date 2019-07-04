@@ -38,12 +38,12 @@ class GameState :
     public BaseState
 {
 public:
-    GameState(sf::RenderWindow* window, pt::ptree& tree);
+    GameState(World* world, pt::ptree& tree);
     virtual ~GameState();
 
     // Inherited via BaseState
     virtual void enter() override;
-    virtual void update(float elapsed) override;
+    virtual void update() override;
     virtual void exit() override;
 
     EntityID createEntity(EntityType type);
@@ -95,7 +95,22 @@ private:
     /// </summary>
     void cleanupZombies();
 
+    void updateGame(float elapsed);
+
+    void renderGame(float elapsed);
+
 private:
+
+    /// <summary>
+    /// General clock for the game.
+    /// </summary>
+    sf::Clock mClock;
+
+    float mCurrentTime;
+    float mPreviousTime;
+    float mTimeLag;
+    float mMSPerUpdate;
+
     // general game data
     long mHighScore;
     long mCurrentScore;
