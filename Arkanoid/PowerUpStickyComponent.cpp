@@ -1,7 +1,7 @@
 #include "PowerUpStickyComponent.h"
 
 #include "GameState.h"
-#include "BoxColliderComponent.h"
+#include "CircleColliderComponent.h"
 #include "TransformComponent.h"
 
 #include "PaddleBehaviorComponent.h"
@@ -9,7 +9,7 @@
 PowerUpStickyComponent::PowerUpStickyComponent(EntityID entityID, GameState* game, sf::Vector2f pos) :
     BaseComponent(entityID, game)
 {
-    mCollider = mGame->getComponent<BoxColliderComponent>(CompType::BOX_COLLIDER, getEntityID());
+    mCollider = mGame->getComponent<CircleColliderComponent>(CompType::CIRCLE_COLLIDER, getEntityID());
 
     std::function<void(const CollisionData& data)> cb = std::bind(&PowerUpStickyComponent::onCollisionCb, this, std::placeholders::_1);
 
@@ -43,7 +43,7 @@ void PowerUpStickyComponent::onCollisionCb(const CollisionData & data)
         Message msg;
         msg.mSenderID = getEntityID();
         msg.mType = MessageType::MSG_PU_STICKY;
-        mGame->getComponent<PaddleBehaviorComponent>(CompType::STICKY, otherID)->receive(msg);
+        mGame->getComponent<PaddleBehaviorComponent>(CompType::PADDLE_BEHAVIOR, otherID)->receive(msg);
 
         mGame->destroyEntity(getEntityID());
     }

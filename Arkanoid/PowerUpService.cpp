@@ -5,7 +5,9 @@
 
 #include "GameState.h"
 #include "BoxColliderComponent.h"
+#include "CircleColliderComponent.h"
 #include "RectRenderComponent.h"
+#include "CircleRenderComponent.h"
 
 #include "PowerUpStickyComponent.h"
 
@@ -42,9 +44,10 @@ void PowerUpService::createStickyPU(const sf::Vector2f & pos)
     auto id = mGame->createEntity(EntityType::TAG_POWER_UP);
 
     auto config = mGame->config();
-    sf::Vector2f collSize(config.get<float>("POWER_UP_SIZE_X"), config.get<float>("POWER_UP_SIZE_Y"));
 
-    mGame->addComponent<BoxColliderComponent>(CompType::BOX_COLLIDER, id, collSize);
+    float radius = config.get<float>("POWER_UP_SIZE");
+
+    mGame->addComponent<CircleColliderComponent>(CompType::CIRCLE_COLLIDER, id, radius);
     mGame->addComponent<PowerUpStickyComponent>(CompType::STICKY, id, pos);
-    mGame->addComponent<RectRenderComponent>(CompType::RECT_RENDER, id, collSize, sf::Color::Yellow);
+    mGame->addComponent<CircleRenderComponent>(CompType::CIRCLE_RENDER, id, radius, sf::Color::Yellow);
 }

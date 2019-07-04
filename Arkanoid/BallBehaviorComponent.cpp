@@ -37,8 +37,6 @@ BallBehaviorComponent::~BallBehaviorComponent()
 
 void BallBehaviorComponent::update(float elapsed)
 {
-    this->pullMessages();
-
     sf::Vector2i screenSize(mGame->config().get<int>("SCREEN_WIDTH"), mGame->config().get<int>("SCREEN_HEIGHT"));
     if (mState == BallState::BALL_NORMAL)
     {

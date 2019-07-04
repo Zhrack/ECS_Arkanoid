@@ -117,8 +117,8 @@ void GameState::update(float elapsed)
         }
     }
     // update
-    mPaddleBehaviorComp->update(elapsed);
-    mBallBehavior->update(elapsed);
+    mPaddleBehaviorComp->updateComponent(elapsed);
+    mBallBehavior->updateComponent(elapsed);
     auto powerups = getComponentList(CompType::STICKY);
     // append other power ups here...
     for (auto e : powerups)
@@ -153,7 +153,7 @@ void GameState::update(float elapsed)
     {
         if (!e->isZombie())
         {
-            e->update(elapsed);
+            e->updateComponent(elapsed);
         }
     }
 

@@ -3,7 +3,7 @@
 
 #include "BaseComponent.h"
 
-class BoxColliderComponent;
+class CircleColliderComponent;
 
 class PowerUpStickyComponent :
     public BaseComponent
@@ -18,7 +18,7 @@ public:
     void onCollisionCb(const CollisionData& data);
 
 private:
-    BoxColliderComponent* mCollider;
+    CircleColliderComponent* mCollider;
 
     float mVelocity;
 };

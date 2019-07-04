@@ -21,6 +21,12 @@ public:
     virtual ~BaseComponent();
 
     /// <summary>
+    /// Called by GameState. It checks for messages before calling the update function
+    /// </summary>
+    /// <param name="elapsed">The elapsed.</param>
+    void updateComponent(float elapsed);
+
+    /// <summary>
     /// Update for this component.
     /// </summary>
     virtual void update(float elapsed) = 0;

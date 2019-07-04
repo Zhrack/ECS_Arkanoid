@@ -17,6 +17,13 @@ BaseComponent::~BaseComponent()
 {
 }
 
+void BaseComponent::updateComponent(float elapsed)
+{
+    this->pullMessages();
+
+    update(elapsed);
+}
+
 EntityID BaseComponent::getEntityID() const
 {
     return mEntityID;

@@ -38,8 +38,6 @@ PaddleBehaviorComponent::~PaddleBehaviorComponent()
 
 void PaddleBehaviorComponent::update(float elapsed)
 {
-    this->pullMessages();
-
     sf::Vector2i screenSize(mGame->config().get<int>("SCREEN_WIDTH"), mGame->config().get<int>("SCREEN_HEIGHT"));
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left))
@@ -105,7 +103,7 @@ void PaddleBehaviorComponent::onFireButtonPressed()
 {
     if (mStickyPaddle)
     {
-        // if not currently under the power up effect, disable it (no handle starting of game
+        // if not currently under the power up effect, disable it (to handle starting of game stickyness)
         if (!isSticky())
             mStickyPaddle = false;
 
