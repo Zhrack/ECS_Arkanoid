@@ -31,6 +31,13 @@ class BallBehaviorComponent;
 
 namespace pt = boost::property_tree;
 
+enum class GameStatus
+{
+    GAME_NORMAL,
+    GAME_LOSE,
+    GAME_WIN
+};
+
 /// <summary>
 /// State that manages the actual game
 /// </summary>
@@ -88,7 +95,7 @@ public:
 
     int getPlayerLives() const;
 
-    void gameOver();
+    void gameOver(bool win);
 
     void restartGame();
 
@@ -125,7 +132,7 @@ private:
     float mTimeLag;
     float mMSPerUpdate;
 
-    bool mGameOver;
+    GameStatus mGameStatus;
 
     // general game data
     long mHighScore;

@@ -4,12 +4,20 @@
 #include "BaseComponent.h"
 
 class BoxColliderComponent;
+class RectRenderComponent;
+
+enum BrickType
+{
+    BRICK_NORMAL,
+    BRICK_DOUBLE,
+    BRICK_2HIT
+};
 
 class BrickBehaviorComponent :
     public BaseComponent
 {
 public:
-    BrickBehaviorComponent(EntityID entityID, GameState* game, sf::Vector2f pos, int hp = 1);
+    BrickBehaviorComponent(EntityID entityID, GameState* game, sf::Vector2f pos, BrickType type);
     virtual ~BrickBehaviorComponent();
 
     // Inherited via BaseComponent
@@ -19,7 +27,10 @@ public:
 
 private:
     BoxColliderComponent* mCollider;
+    RectRenderComponent* mRenderer;
     int mHP;
+
+    BrickType mType;
 };
 
 

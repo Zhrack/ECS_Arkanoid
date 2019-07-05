@@ -32,16 +32,8 @@ GameState::GameState(World* world, pt::ptree& tree) :
     mPaddleBehaviorComp(nullptr),
     mTree(tree),
     mPUService(this),
-    mGameOver(false)
+    mGameStatus(GameStatus::GAME_NORMAL)
 {
-    using UniquePtrVector = std::vector<BaseComponent*>;
-
-    // register types
-    for (size_t i = 0; i < CompType::COUNT; ++i)
-    {
-        mCompMap.insert({ CompType(i), UniquePtrVector()});
-    }
-
 }
 
 
@@ -61,6 +53,13 @@ GameState::~GameState()
 void GameState::enter()
 {
     std::cout << "GameState::enter" << std::endl;
+
+    // register types
+    using UniquePtrVector = std::vector<BaseComponent*>;
+    for (size_t i = 0; i < CompType::COUNT; ++i)
+    {
+        mCompMap.insert({ CompType(i), UniquePtrVector() });
+    }
 
     buildLevel();
 
@@ -165,7 +164,7 @@ void GameState::update()
             mWindow->close();
             break;
         case sf::Event::KeyPressed:
-            if (!mGameOver)
+            if (mGameStatus == GameStatus::GAME_NORMAL)
             {
                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space))
                 {
@@ -188,7 +187,7 @@ void GameState::update()
     }
 
     // update loop
-    if (!mGameOver)
+    if (mGameStatus == GameStatus::GAME_NORMAL)
     {
         while (mTimeLag >= mMSPerUpdate)
         {
@@ -279,7 +278,7 @@ void GameState::renderGame(float elapsed)
     mWindow->draw(mRemainingLivesText);
     mWindow->draw(mRemainingLivesNumberText);
 
-    if (mGameOver)
+    if (mGameStatus != GameStatus::GAME_NORMAL)
     {
         mWindow->draw(mGameOverText);
         mWindow->draw(mGameOverInstructionsText);
@@ -324,11 +323,11 @@ void GameState::buildLevel()
     addComponent<CircleColliderComponent>(CompType::CIRCLE_COLLIDER, ballID, ballRadius);
     addComponent<CircleRenderComponent>(CompType::CIRCLE_RENDER, ballID, ballRadius, sf::Color::Red);
     mBallBehavior = addComponent<BallBehaviorComponent>(CompType::BALL_BEHAVIOR, ballID, mTree.get<float>("BALL_MAX_VELOCITY"), sf::Vector2f());
-    mBallBehavior->changeState(BallState::BALL_FOLLOW_PADDLE);
+    mBallBehavior->lockBall();
 
 
     // create some bricks in a grid
-    sf::Vector2f offset(mWalls.getPosition());
+    sf::Vector2f offset(50, 50);
     offset += sf::Vector2f(mWalls.getSize().x * 0.2f, mWalls.getSize().y * 0.2f);
     for (size_t i = 0; i < 6; i++)
     {
@@ -336,9 +335,17 @@ void GameState::buildLevel()
         {
             auto brickID = this->createEntity(EntityType::TAG_BRICK);
 
+            //sf::Vector2f pos = offset + sf::Vector2f(brickSize.x * i + (i * 13), brickSize.y * j + (j * 13));
+            sf::Vector2f pos = offset + sf::Vector2f(brickSize.x * i, brickSize.y * j);
+
+            BrickType type = BrickType::BRICK_NORMAL;
+
+            if (j % 2 == 0) type = BrickType::BRICK_DOUBLE;
+            if (j == 0) type = BrickType::BRICK_2HIT;
+
             addComponent<BoxColliderComponent>(CompType::BOX_COLLIDER, brickID, brickSize);
-            addComponent<RectRenderComponent>(CompType::RECT_RENDER, brickID, brickSize, sf::Color::Yellow);
-            addComponent<BrickBehaviorComponent>(CompType::BRICK, brickID, sf::Vector2f(brickSize.x * i + (i*13), brickSize.y * j + (j*13)) + offset);
+            addComponent<RectRenderComponent>(CompType::RECT_RENDER, brickID, brickSize, sf::Color::Yellow, sf::Color::Black, 1.f);
+            addComponent<BrickBehaviorComponent>(CompType::BRICK, brickID, pos, type);
         }
     }
 
@@ -477,10 +484,10 @@ void GameState::decrementPlayerLives()
 {
     mRemainingLives--;
 
-    if (mRemainingLives == 0)
+    if (mRemainingLives <= 0)
     {
         // :(
-        gameOver();
+        gameOver(false);
     }
     else
     {
@@ -495,6 +502,7 @@ void GameState::decrementPlayerLives()
         mBallBehavior->changeState(BallState::BALL_FOLLOW_PADDLE);
 
         mPaddleBehaviorComp->changeState(PaddleState::STATE_START);
+        mBallBehavior->lockBall();
     }
 }
 
@@ -503,23 +511,37 @@ int GameState::getPlayerLives() const
     return mRemainingLives;
 }
 
-void GameState::gameOver()
+void GameState::gameOver(bool win)
 {
-    mGameOver = true;
+    if (win)
+    {
+        mGameStatus = GameStatus::GAME_WIN;
+        mGameOverText.setString("You WIN!");
+    }
+    else
+    {
+        mGameStatus = GameStatus::GAME_LOSE;
+        mGameOverText.setString("GAME OVER!");
+    }
 }
 
 void GameState::restartGame()
 {
     cleanupZombies();
 
-    for (EntityID i = 0; i < mEntityMap.size(); ++i)
+    for (auto it = mEntityMap.begin(); it != mEntityMap.end();)
     {
+        EntityID i = it->first;
+        ++it;
         removeEntity(i);
     }
 
+    mGameStatus = GameStatus::GAME_NORMAL;
+    mRemainingLives = mTree.get<int>("NUM_LIVES");
+    mCurrentScore = 0;
+
     buildLevel();
 
-    mGameOver = false;
 }
 
 PaddleBehaviorComponent * GameState::getPaddleComponent()

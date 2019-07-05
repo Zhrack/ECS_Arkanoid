@@ -6,6 +6,8 @@
 GameOverWatcher::GameOverWatcher(EntityID entityID, GameState* game) :
     BaseComponent(entityID, game)
 {
+    auto bricks = mGame->getAllEntitiesByType(EntityType::TAG_BRICK);
+    mNumBricks = (int)bricks.size();
 }
 
 
@@ -28,6 +30,16 @@ void GameOverWatcher::handleMessage(Message & msg)
         {
             std::cout << "LOST LIFE" << std::endl;
             mGame->decrementPlayerLives();
+        }
+    }
+    else if (msg.mType == MSG_BRICK_DESTROYED)
+    {
+        mNumBricks--;
+
+        if (mNumBricks == 0)
+        {
+            // finished level
+            mGame->gameOver(true);
         }
     }
 }

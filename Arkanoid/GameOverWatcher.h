@@ -15,6 +15,9 @@ public:
 
 private:
     virtual void handleMessage(Message & msg) override;
+
+private:
+    int mNumBricks;
 };
 
 

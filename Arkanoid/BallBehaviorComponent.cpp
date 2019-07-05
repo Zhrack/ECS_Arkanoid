@@ -13,7 +13,7 @@ BallBehaviorComponent::BallBehaviorComponent(EntityID entityID, GameState* game,
     BaseComponent(entityID, game),
     mVelocity(sf::Vector2f()),
     mMaxVelocity(velocity),
-    mLocked(true),
+    mLocked(false),
     mState(BallState::BALL_NORMAL)
 {
     mWindow = mGame->getWindow();
@@ -155,7 +155,7 @@ void BallBehaviorComponent::handleMessage(Message & msg)
     switch (msg.mType)
     {
     case MSG_RELEASE_BALL:
-        if (mLocked)
+        if(mState == BallState::BALL_FOLLOW_PADDLE)
             releaseBall();
         break;
     }
