@@ -217,8 +217,8 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Xsd Include="settings.json">
+    <None Include="resources\settings.json">
       <Filter>Resource Files</Filter>
-    </Xsd>
+    </None>
   </ItemGroup>
 </Project>

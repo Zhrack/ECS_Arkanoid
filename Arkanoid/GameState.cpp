@@ -18,6 +18,10 @@
 #include <iostream>
 #include <thread>
 
+#include <boost/filesystem.hpp>
+
+namespace fs = boost::filesystem;
+
 // start it from 1, 0 is reserved to be a NULL value
 unsigned long GameState::nextID = 1;
 
@@ -40,13 +44,11 @@ GameState::GameState(World* world, pt::ptree& tree) :
 GameState::~GameState()
 {
     cleanupZombies();
-    for (auto it = mCompMap.begin(); it != mCompMap.end(); ++it)
+    for (auto it = mEntityMap.begin(); it != mEntityMap.end();)
     {
-        for (unsigned int i = 0; i < it->second.size(); i++)
-        {
-            delete it->second[i];
-        }
-        it->second.clear();
+        EntityID i = it->first;
+        ++it;
+        removeEntity(i);
     }
 }
 
@@ -61,9 +63,40 @@ void GameState::enter()
         mCompMap.insert({ CompType(i), UniquePtrVector() });
     }
 
+    // load sounds
+    std::string audioFolder = mTree.get<std::string>("AUDIO_FOLDER");
+    fs::path audioPath(audioFolder);
+
+    if (fs::is_directory(audioPath)) {
+        for (auto& entry : boost::make_iterator_range(fs::directory_iterator(audioPath), {}))
+        {
+            if (fs::is_directory(entry)) continue;
+
+            std::cout << "Loading " << entry.path().filename().string() << "\n";
+            std::string filename = entry.path().filename().string();
+            std::unique_ptr<sf::SoundBuffer> ptr(new sf::SoundBuffer());
+
+            if (!ptr->loadFromFile(audioFolder + filename))
+            {
+                std::cout << "Error loading " << filename << std::endl;
+            }
+            mSounds[filename] = std::move(ptr);
+        }
+    }
+
+    audioFolder = mTree.get<std::string>("GAME_MUSIC");
+    
+    if (!mBackgroundMusic.openFromFile(audioFolder))
+    {
+        std::cout << "Error loading " << audioFolder << "\n";
+    }
+
+    mBackgroundMusic.setLoop(true);
+    mBackgroundMusic.play();
+
     buildLevel();
 
-    if (!mFont.loadFromFile("sprites/joystix monospace.ttf"))
+    if (!mFont.loadFromFile("resources/joystix monospace.ttf"))
     {
         std::cout << "Error loading font" << std::endl;
     }
@@ -177,6 +210,7 @@ void GameState::update()
                 {
                     // go to MENU
                     mWorld->changeState(new MenuState(mWorld));
+                    return;
                 }
                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Enter))
                 {
@@ -329,9 +363,9 @@ void GameState::buildLevel()
     // create some bricks in a grid
     sf::Vector2f offset(50, 50);
     offset += sf::Vector2f(mWalls.getSize().x * 0.2f, mWalls.getSize().y * 0.2f);
-    for (size_t i = 0; i < 6; i++)
+    for (size_t i = 0; i < 8; i++)
     {
-        for (size_t j = 0; j < 5; j++)
+        for (size_t j = 0; j < 7; j++)
         {
             auto brickID = this->createEntity(EntityType::TAG_BRICK);
 
@@ -340,7 +374,7 @@ void GameState::buildLevel()
 
             BrickType type = BrickType::BRICK_NORMAL;
 
-            if (j % 2 == 0) type = BrickType::BRICK_DOUBLE;
+            if (j % 2 != 0) type = BrickType::BRICK_DOUBLE;
             if (j == 0) type = BrickType::BRICK_2HIT;
 
             addComponent<BoxColliderComponent>(CompType::BOX_COLLIDER, brickID, brickSize);
@@ -357,6 +391,8 @@ void GameState::exit()
 {
     std::cout << "GameState::exit" << std::endl;
     mTree.put<int>("HIGH_SCORE", mHighScore);
+
+    mBackgroundMusic.stop();
 
     pt::write_json("settings.json", mTree);
 }
@@ -591,6 +627,15 @@ pt::ptree & GameState::config()
 const sf::RectangleShape& GameState::getWalls() const
 {
     return mWalls;
+}
+
+sf::SoundBuffer * GameState::getSound(const std::string& soundName) const
+{
+    if (mSounds.count(soundName) > 0)
+    {
+        return mSounds.at(soundName).get();
+    }
+    return nullptr;
 }
 
 EntityID GameState::createID() const

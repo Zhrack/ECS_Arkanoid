@@ -6,6 +6,7 @@
 #include "CircleRenderComponent.h"
 
 #include "BallBehaviorComponent.h"
+#include "PaddleBehaviorComponent.h"
 
 #include <chrono>
 #include <time.h>
@@ -59,6 +60,9 @@ void PowerUpDisruptionComponent::onCollisionCb(const CollisionData & data)
             ballBehavior->setVelocity(dir);
         }
 
+        auto paddleBehavior = mGame->getComponent<PaddleBehaviorComponent>(CompType::PADDLE_BEHAVIOR, otherID);
+        Message msg(mEntityID, MessageType::MSG_PU_DISRUPTION);
+        paddleBehavior->receive(msg);
 
         mGame->destroyEntity(getEntityID());
     }

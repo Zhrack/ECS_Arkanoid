@@ -4,6 +4,7 @@
 #include "BaseComponent.h"
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 
 class TransformComponent;
 class CircleColliderComponent;
@@ -52,6 +53,9 @@ private:
     bool mLocked;
 
     BallState mState;
+
+    sf::Sound mHitSound;
+    sf::Sound mHitBrickSound;
 };
 
 

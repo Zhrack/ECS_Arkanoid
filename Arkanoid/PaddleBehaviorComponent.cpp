@@ -28,6 +28,9 @@ PaddleBehaviorComponent::PaddleBehaviorComponent(EntityID entityID, GameState* g
     mPaddleSize = sf::Vector2f(config.get<float>("PADDLE_SIZE_X"), config.get<float>("PADDLE_SIZE_Y"));
     mPaddleMaxVel = config.get<float>("PADDLE_MAX_VELOCITY");
     mPaddleFriction = config.get<float>("PADDLE_FRICTION");
+
+    sf::SoundBuffer* buffer = mGame->getSound("Powerup.wav");
+    mPUSound.setBuffer(*buffer);
 }
 
 
@@ -42,11 +45,13 @@ void PaddleBehaviorComponent::update(float elapsed)
     sf::Vector2f gameAreaSize(walls.getSize());
     sf::Vector2f gameAreaPos(walls.getPosition());
 
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left))
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left) ||
+        sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A))
     {
         mVel.x = -mPaddleMaxVel;
     }
-    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right))
+    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right) ||
+        sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D))
     {
         mVel.x = mPaddleMaxVel;
     }
@@ -71,7 +76,7 @@ void PaddleBehaviorComponent::update(float elapsed)
 
 void PaddleBehaviorComponent::handleMessage(Message & msg)
 {
-    if (msg.mType == MSG_PU_STICKY)
+    if (msg.mType == MessageType::MSG_PU_STICKY)
     {
         std::shared_ptr<StickyData> extraInfo = std::dynamic_pointer_cast<StickyData>(msg.mExtraInfo);
 
@@ -79,6 +84,8 @@ void PaddleBehaviorComponent::handleMessage(Message & msg)
         {
             // start effect
             mState = PaddleState::STATE_STICKY;
+
+            mPUSound.play();
 
             mRenderer->getShape().setFillColor(sf::Color::Cyan);
         }
@@ -92,6 +99,10 @@ void PaddleBehaviorComponent::handleMessage(Message & msg)
             Message msgBall(mEntityID, MessageType::MSG_RELEASE_BALL);
             mGame->sendMessage(EntityType::TAG_BALL, CompType::BALL_BEHAVIOR, msgBall);
         }
+    }
+    else if (msg.mType == MessageType::MSG_PU_DISRUPTION)
+    {
+        mPUSound.play();
     }
 }
 

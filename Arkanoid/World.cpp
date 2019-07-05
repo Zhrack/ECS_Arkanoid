@@ -7,7 +7,7 @@ World::World() :
     mWindow(new sf::RenderWindow()),
     mCurrentState(nullptr)
 {
-    if (!loadFile("settings.json"))
+    if (!loadFile("resources/settings.json"))
     {
         std::cout << "Error reading settings.json file!" << std::endl;
     }

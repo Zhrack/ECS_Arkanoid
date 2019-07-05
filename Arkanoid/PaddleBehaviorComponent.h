@@ -4,6 +4,7 @@
 #include "BaseComponent.h"
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 
 class BoxColliderComponent;
 class TransformComponent;
@@ -56,6 +57,8 @@ private:
     float mPaddleFriction;
 
     PaddleState mState;
+
+    sf::Sound mPUSound;
 };
 
 

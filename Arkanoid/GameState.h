@@ -18,6 +18,7 @@
 #include <boost/property_tree/json_parser.hpp>
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 
 using ComponentMap = 
 std::unordered_map<
@@ -57,8 +58,16 @@ public:
 
     pt::ptree& config();
 
-    const sf::RectangleShape& getWalls() const;
+    /////////////////////////////////
+    // COMPONENTS
+    /////////////////////////////////
 
+
+    /// <summary>
+    /// Creates the entity with the given type.
+    /// </summary>
+    /// <param name="type">The type.</param>
+    /// <returns></returns>
     EntityID createEntity(EntityType type);
 
     /// <summary>
@@ -89,6 +98,10 @@ public:
 
     std::vector<EntityID> getAllEntitiesByType(EntityType type);
 
+    /////////////////////////////////
+    // GAMEPLAY
+    /////////////////////////////////
+
     void increaseScore(long points);
 
     void decrementPlayerLives();
@@ -99,12 +112,37 @@ public:
 
     void restartGame();
 
+    PowerUpService& getPUService();
+
     PaddleBehaviorComponent* getPaddleComponent();
 
+    const sf::RectangleShape& getWalls() const;
+
+    sf::SoundBuffer* getSound(const std::string& soundName) const;
+
+    /////////////////////////////////
+    // MESSAGING
+    /////////////////////////////////
+
+    /// <summary>
+    /// Messaging utility functions for when the component doesn't have an ID or wants to send a message to a group.
+    /// </summary>
+    /// <param name="type">The Entity type.</param>
+    /// <param name="compType">Type of the component.</param>
+    /// <param name="msg">The message.</param>
+    /// <param name="sendType">Sending mode.</param>
+    /// <param name="timeToFire">Time after which the message is fired. Used only if sendType is DELAYED.</param>
     void sendMessage(EntityType type, CompType compType, Message & msg, SendType sendType = SendType::ENQUEUE, const sf::Time& timeToFire = sf::Time::Zero);
+    /// <summary>
+    /// Messaging utility functions for when the component doesn't have an ID or wants to send a message to a group.
+    /// </summary>
+    /// <param name="compType">Type of the component.</param>
+    /// <param name="entityID">The entity identifier.</param>
+    /// <param name="msg">The message.</param>
+    /// <param name="sendType">Sending mode.</param>
+    /// <param name="timeToFire">Time after which the message is fired. Used only if sendType is DELAYED.</param>
     void sendMessage(CompType compType, EntityID entityID, Message& msg, SendType sendType = SendType::ENQUEUE, const sf::Time& timeToFire = sf::Time::Zero);
 
-    PowerUpService& getPUService();
 
 private:
     void removeEntity(EntityID entityID);
@@ -153,6 +191,10 @@ private:
     sf::Text mGameOverInstructions2Text;
 
     sf::RectangleShape mWalls;
+
+    std::unordered_map<std::string, std::unique_ptr<sf::SoundBuffer>> mSounds;
+
+    sf::Music mBackgroundMusic;
 
     EntityID mPaddleID;
 
