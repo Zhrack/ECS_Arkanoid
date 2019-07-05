@@ -14,7 +14,8 @@
 namespace pt = boost::property_tree;
 
 /// <summary>
-/// Wrapper class for everything.
+/// Wrapper class for everything. 
+/// It's a Finite State Machine with some basic resource management.
 /// </summary>
 class World
 {
@@ -32,6 +33,9 @@ public:
     /// </summary>
     void loop();
 
+    /// <summary>
+    /// Terminates this FSM and its current state.
+    /// </summary>
     void terminate();
 
     /// <summary>
@@ -57,6 +61,9 @@ private:
     /// </summary>
     std::unique_ptr<sf::RenderWindow> mWindow;
 
+    /// <summary>
+    /// The holding data structure for the json configuration file.
+    /// </summary>
     pt::ptree mTree;
 };
 

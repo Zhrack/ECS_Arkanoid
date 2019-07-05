@@ -20,6 +20,10 @@ enum class PaddleState
     STATE_DISRUPTION
 };
 
+/// <summary>
+/// Implements the player controls and the paddle logic and states.
+/// </summary>
+/// <seealso cref="BaseComponent" />
 class PaddleBehaviorComponent :
     public BaseComponent
 {

@@ -1,0 +1,79 @@
+/*! \mainpage Project Overview
+ *
+ * \section intro_sec Introduction
+ *
+ * Hi,
+ * the following is an overview of the technical assessment.
+ *
+ * I took the liberty of generating this documentation using Doxygen, to enable detailed explanation of choices throughout the code, in case they become a necessity.
+ * This page should be sufficient for a quick explanation though. 
+ * 
+ *
+ * \section setup_sec Project setup
+ *
+ * The project is a VS2017 solution. The only dependencies are the STL library, the SFML library for graphics, windowing, audio and inputs and Boost Property Tree to parse the JSON configuration file.
+ * The dependencies are bundled with the project.
+ *
+ * \section overview_sec Overview
+ *
+ * Since the stated objective of the test is to measure my software design and gameplay programming abilities, I went for a, for me new, game architecture.
+ * The game employs an Entity-Component architecture for all gameplay actors. This was my first time approaching this design and it has been an interesting experience.
+ * Traditionally I always went for classic OOP architectures, which didn't cut it for the flexible approach in the game objects I wanted, given the limited amount of time at my disposal.
+ * So in the end I went for an ECS architecture. I was inspired mainly by the Unity engine and a few articles read over the years on the internet.
+ * 
+ *
+ * Starting with a top-down view, the game is structured as a Finite State Machine, the World class itself. It manages two states: MenuState and GameState.
+ * The MenuState manages the initial starting screen and it is a fairly badic game loop.
+ * The GameState instead is where the real meat is.
+ * The ECS architecture uses it as a central hub for informations. 
+ * In fact, I chose a variant of the classic ECS architecture, since, to better use data locality and the cache memory, all Components are stored in contiguous std::vectors, grouped by component type. The data structure is managed by GameState.
+ * There is no "Entity" class, but it has been reduced to a single integer ID. This ID is the only member that connects components to form a single game actor and every component has one.
+ * The "System" classes has been absorbed into the Components classes, so that, inspired by Unity, there are components of mainly data and components of mainly logic.
+ * This way there are relatively few concepts and classes to keep track of and during development of Arkanoid, it has revealed a choice that gives flexibility in the definition of the various game actors.
+ * 
+ * Components have various ways to communicate and retrieve data:
+ *	- through the GameState class itself, using the getComponent function
+ *	- through the MessageHandler class, from which derives BaseComponent (the base class of all components)
+ *	- through the GameState class again, as a central dispatcher of messages, for cases when a a components wants to send messages to groups of components or it doesn't have an entity
+ *	- through the GameState class itself
+ *
+ * \subsection subsec1 High level classes
+ *
+ * The Game class is the highest level one, which encapsulates all the application. It also simulates a complete game, structured with a update loop. 
+ * In fact the ownership of the actor data is in this class. At every update, the actor list is passed to the AIController, the same as every other (virtual) subsystem of this game.
+ *
+ * The AIController class manages all the AI work. It stores the shared instance of the BlackBoard and starts the Behavior Tree update cycle for every actor passed by the Game class.
+ * 
+ * The BlackBoard class is the storage space for mutable data which the Behavior Tree needs to work. 
+ * Every node can store stateful data for a given actor using the NodeActorAIState struct. 
+ * At the moment is mainly used to store the running child index for composite nodes, but is ready for more is necessary. 
+ * Through this architecture a Flyweight pattern is achieved, with the common data (the tree and their node functionalities) and instance data (the state data for (node, actor) pairs plus the BTState instance) split.
+ * 
+ * The BTState class instead is a small class to store stateful data at the whole-tree level. It is used to indicate mainly the current Dog instance, but ready for more.
+ *
+ * The Dog class is self explanatory, stores Dog specific data, such as a name, energy and boredom, plus some setters and getters.
+ * Initial values can be randomized if necessary, all settings are in the Constants source file. 
+ * Since the compile time is small and I'm forbidden from using external libraries, I haven't implemented a read from file for it.
+ *
+ * The BaseBTNode class representes both the entire tree and the single node, acting as a base class for the applied (slightly modified) Composite design pattern.
+ * The AIController owns a std::unique_ptr to a single instance of this, which acts as the root of the tree.
+ *
+ * Other classes that form the inheritance tre of the BaseBTNode are explained in the following paragraphs.
+ * 
+ * \subsection subsec3 Problems during the development
+ *
+ * I didn't have many problems implementing this, the test assignment was clear and development has been smooth.
+ *
+ * My main problem has been with designing the test tree itself, since I wanted a tree which not only simulated a dog as specified, but also a tree that showed as much as possible the RUNNING state management and looped clearly through all the branches cyclically.
+ *
+ * It seems that I succeded, since the dogs continuously explore all branches, but I wanted to explain this choice.
+ *
+ * \subsection subsec4 Conclusion
+ *
+ * Thanks for this experience. This was my first time implementing such a system and I must say that it has been a very funny project. Also, it seems to work! :)
+ *
+ * Thanks for reading this and have a good day!
+ *
+ * Davide Marcoccio
+ *
+ */

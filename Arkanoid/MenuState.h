@@ -8,6 +8,10 @@
 
 namespace pt = boost::property_tree;
 
+/// <summary>
+/// This class manages the initial menu screen.
+/// </summary>
+/// <seealso cref="BaseState" />
 class MenuState :
     public BaseState
 {
