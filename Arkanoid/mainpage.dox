@@ -17,10 +17,12 @@
  * \section overview_sec Overview
  *
  * Since the stated objective of the test is to measure my software design and gameplay programming abilities, I went for a, for me new, game architecture.
+ * The code has all been made from scratch, without code reuse of older projects, since I didn't feel they reached a high enough code cleaness.
  * The game employs an Entity-Component architecture for all gameplay actors. This was my first time approaching this design and it has been an interesting experience.
  * Traditionally I always went for classic OOP architectures, which didn't cut it for the flexible approach in the game objects I wanted, given the limited amount of time at my disposal.
  * So in the end I went for an ECS architecture. I was inspired mainly by the Unity engine and a few articles read over the years on the internet.
  * 
+ * \subsection subsec1 High level classes
  *
  * Starting with a top-down view, the game is structured as a Finite State Machine, the World class itself. It manages two states: MenuState and GameState.
  * The MenuState manages the initial starting screen and it is a fairly badic game loop.
@@ -34,31 +36,30 @@
  * Components have various ways to communicate and retrieve data:
  *	- through the GameState class itself, using the getComponent function
  *	- through the MessageHandler class, from which derives BaseComponent (the base class of all components)
- *	- through the GameState class again, as a central dispatcher of messages, for cases when a a components wants to send messages to groups of components or it doesn't have an entity
- *	- through the GameState class itself
- *
- * \subsection subsec1 High level classes
- *
- * The Game class is the highest level one, which encapsulates all the application. It also simulates a complete game, structured with a update loop. 
- * In fact the ownership of the actor data is in this class. At every update, the actor list is passed to the AIController, the same as every other (virtual) subsystem of this game.
- *
- * The AIController class manages all the AI work. It stores the shared instance of the BlackBoard and starts the Behavior Tree update cycle for every actor passed by the Game class.
+ *	- through the GameState class again, as a central dispatcher of messages, for cases when a a components wants to send messages to groups of components
  * 
- * The BlackBoard class is the storage space for mutable data which the Behavior Tree needs to work. 
- * Every node can store stateful data for a given actor using the NodeActorAIState struct. 
- * At the moment is mainly used to store the running child index for composite nodes, but is ready for more is necessary. 
- * Through this architecture a Flyweight pattern is achieved, with the common data (the tree and their node functionalities) and instance data (the state data for (node, actor) pairs plus the BTState instance) split.
+ * The MessageHandler class gives the capability to components to send and receive messages. 
+ * Messages are usually processed at the beginning of the receiver's update step, this way it is effectively an event loop ready for a multithreaded environment with only minor modifications (lock mechanisms for shared resources, such as the message queue).
+ * Messages can also be processed immediatly, or after a delayed time.
+ * This way the architecture can work as a Command pattern or an Event Loop pattern, giving a good flexibility.
  * 
- * The BTState class instead is a small class to store stateful data at the whole-tree level. It is used to indicate mainly the current Dog instance, but ready for more.
+ * The BaseComponent class inherits from MessageHandler, stores the EntityID, the EntityType (an enumerator that works as a simple tagging system for components) and few other variabiles.
+ * 
+ * From here, all components implements different functionalities. The TransformComponent is the only component always added to an entity, giving a transform matrix to the component.
+ * Entities and Components creation, retrieval and management is done in the GameState class.
+ * The addComponent function is a variadic template function, giving flexibility of using a common access point for component creation but the possibility of having components with different constructors paramenters then what is needed by the BaseComponent class.
+ * Other templates in functions are used mainly to return a dynamically down-casted pointer to components.
  *
- * The Dog class is self explanatory, stores Dog specific data, such as a name, energy and boredom, plus some setters and getters.
- * Initial values can be randomized if necessary, all settings are in the Constants source file. 
- * Since the compile time is small and I'm forbidden from using external libraries, I haven't implemented a read from file for it.
+ * The GameState class also employs a lazy removal system for components. In fact a dirty flag is used to remove zombie components at the end of the update loop, simplifying removal management.
+ * 
+ * Other classes are:
+ * 
+ * The CollionDetector class manages all "physics" calculations for the game, providing collision detection and response for components using the ColliderComponents classes's data, simple collision detection algorithms (AABBvsCircle and the likes) and uses messages to signal callbacks inside colliders.
+ * These callbacks are std::function objects that encapsulate functions of other components of (usually) the same entity. This way the response behavior for collision is personalized to the needs of more "game logic"-focused components.
  *
- * The BaseBTNode class representes both the entire tree and the single node, acting as a base class for the applied (slightly modified) Composite design pattern.
- * The AIController owns a std::unique_ptr to a single instance of this, which acts as the root of the tree.
- *
- * Other classes that form the inheritance tre of the BaseBTNode are explained in the following paragraphs.
+ * All components types are mapped by an enumerator ComponentList, which automatically registers to GameState at the beginning of the game.
+ * 
+ * Game configuration data is managed using a JSON file, which is read and stored inside a Boost Property Tree's ptree object and retrieved at runtime from this 
  * 
  * \subsection subsec3 Problems during the development
  *

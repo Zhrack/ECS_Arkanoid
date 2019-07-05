@@ -12,7 +12,8 @@
 class TransformComponent;
 
 /// <summary>
-/// Base class for all colliders.
+/// Base class for all colliders, it takes care of all the message handling and collision callback (provided by other components).
+/// Derived classes provides the right type of data to use.
 /// </summary>
 /// <seealso cref="BaseComponent" />
 class ColliderComponent :

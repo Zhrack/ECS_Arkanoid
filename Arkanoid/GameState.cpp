@@ -399,12 +399,16 @@ void GameState::buildLevel()
 void GameState::exit()
 {
     std::cout << "GameState::exit" << std::endl;
-    mTree.put<int>("HIGH_SCORE", mHighScore);
+
+    if (mTree.get<int>("HIGH_SCORE") < mHighScore)
+    {
+        mTree.put<int>("HIGH_SCORE", mHighScore);
+        pt::write_json("resources/settings.json", mTree);
+    }
 
     mBackgroundMusic.stop();
     mWindow->clear();
 
-    pt::write_json("resources/settings.json", mTree);
 }
 
 EntityID GameState::createEntity(EntityType type)
