@@ -11,7 +11,7 @@
  *
  * \section setup_sec Project setup
  *
- * The project is a VS2017 solution. The only dependencies are the STL library, the SFML library for graphics, windowing, audio and inputs and Boost Property Tree to parse the JSON configuration file.
+ * The project is a VS2017 solution. The only dependencies are the STL library, the SFML library for graphics, windowing, audio and inputs, Boost Property Tree and FileSystem to parse the JSON configuration file.
  * The dependencies are bundled with the project.
  *
  * \section overview_sec Overview
@@ -40,7 +40,7 @@
  * 
  * The MessageHandler class gives the capability to components to send and receive messages. 
  * Messages are usually processed at the beginning of the receiver's update step, this way it is effectively an event loop ready for a multithreaded environment with only minor modifications (lock mechanisms for shared resources, such as the message queue).
- * Messages can also be processed immediatly, or after a delayed time.
+ * Messages can also be processed immediately, or after a delayed time.
  * This way the architecture can work as a Command pattern or an Event Loop pattern, giving a good flexibility.
  * 
  * The BaseComponent class inherits from MessageHandler, stores the EntityID, the EntityType (an enumerator that works as a simple tagging system for components) and few other variabiles.
@@ -59,19 +59,21 @@
  *
  * All components types are mapped by an enumerator ComponentList, which automatically registers to GameState at the beginning of the game.
  * 
- * Game configuration data is managed using a JSON file, which is read and stored inside a Boost Property Tree's ptree object and retrieved at runtime from this 
+ * Game configuration data is managed using a JSON file, which is read and stored inside a Boost Property Tree's ptree object and retrieved at runtime from this data structure.
+ * The high score of the game is saved on the file.
  * 
  * \subsection subsec3 Problems during the development
  *
- * I didn't have many problems implementing this, the test assignment was clear and development has been smooth.
+ * My main problem has been time. I worked on it during the evenings and in fact I didn't manage to insert as many features as I wanted to have a polished game. 
+ * At the moment the main lack is graphics, but also a variety of power ups and bricks. During the incoming weekend I plan on working on it more, to polish it.
+ * On the software architecture side, there is room for improvement on the GameState class, as I think it became too large, unfortunately I didn't have time for a proper refactoring.
+ * For example the game resources (sounds, textures) should be managed outside the GameState class.
  *
- * My main problem has been with designing the test tree itself, since I wanted a tree which not only simulated a dog as specified, but also a tree that showed as much as possible the RUNNING state management and looped clearly through all the branches cyclically.
- *
- * It seems that I succeded, since the dogs continuously explore all branches, but I wanted to explain this choice.
  *
  * \subsection subsec4 Conclusion
  *
  * Thanks for this experience. This was my first time implementing such a system and I must say that it has been a very funny project. Also, it seems to work! :)
+ * I hope this small guide has been useful.
  *
  * Thanks for reading this and have a good day!
  *
