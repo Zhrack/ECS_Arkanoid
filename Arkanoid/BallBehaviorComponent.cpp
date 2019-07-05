@@ -142,8 +142,9 @@ void BallBehaviorComponent::onCollisionCb(const CollisionData & data)
         }
     }
 
-    if (otherType == EntityType::TAG_BRICK ||
-        otherType == EntityType::TAG_PLAYER)
+    if (mHitBrickSound.getStatus() != sf::SoundSource::Status::Playing && 
+        (otherType == EntityType::TAG_BRICK ||
+        otherType == EntityType::TAG_PLAYER) )
         mHitBrickSound.play();
 
 }

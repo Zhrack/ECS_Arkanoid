@@ -92,6 +92,7 @@ void GameState::enter()
     }
 
     mBackgroundMusic.setLoop(true);
+    mBackgroundMusic.setVolume(80);
     mBackgroundMusic.play();
 
     buildLevel();
@@ -394,7 +395,7 @@ void GameState::exit()
 
     mBackgroundMusic.stop();
 
-    pt::write_json("settings.json", mTree);
+    pt::write_json("resources/settings.json", mTree);
 }
 
 EntityID GameState::createEntity(EntityType type)
