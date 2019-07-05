@@ -55,8 +55,6 @@ private:
     float mPaddleMaxVel;
     float mPaddleFriction;
 
-    bool mStickyPaddle;
-
     PaddleState mState;
 };
 

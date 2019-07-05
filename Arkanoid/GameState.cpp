@@ -12,6 +12,9 @@
 #include "BrickBehaviorComponent.h"
 #include "GameOverWatcher.h"
 
+#include "World.h"
+#include "MenuState.h"
+
 #include <iostream>
 #include <thread>
 
@@ -61,10 +64,7 @@ void GameState::enter()
 
     buildLevel();
 
-    auto watcherID = createEntity(EntityType::TAG_GAME_OVER_WATCHER);
-    addComponent<GameOverWatcher>(CompType::GAME_OVER_WATCHER, watcherID);
-
-    if (!mFont.loadFromFile("sprites/arcadeclassic.regular.ttf"))
+    if (!mFont.loadFromFile("sprites/joystix monospace.ttf"))
     {
         std::cout << "Error loading font" << std::endl;
     }
@@ -73,31 +73,75 @@ void GameState::enter()
     mHighScore = mTree.get<int>("HIGH_SCORE");
 
     mHighScoreText.setFont(mFont);
-    mCurrentScoreText.setFont(mFont);
-    mRemainingLivesText.setFont(mFont);
+    mHighScoreNumberText.setFont(mFont);
 
-    mHighScoreText.setString("High score " + std::to_string(mHighScore));
-    mCurrentScoreText.setString("Score " + std::to_string(mCurrentScore));
-    mRemainingLivesText.setString("Remaining lives " + std::to_string(mRemainingLives));
+    mCurrentScoreText.setFont(mFont);
+    mCurrentScoreNumberText.setFont(mFont);
+
+    mRemainingLivesText.setFont(mFont);
+    mRemainingLivesNumberText.setFont(mFont);
+
+    mGameOverText.setFont(mFont);
+    mGameOverInstructionsText.setFont(mFont);
+    mGameOverInstructions2Text.setFont(mFont);
+
+    mHighScoreText.setString("High score");
+    mHighScoreNumberText.setString(std::to_string(mHighScore));
+    mCurrentScoreText.setString("Score");
+    mCurrentScoreNumberText.setString(std::to_string(mCurrentScore));
+    mRemainingLivesText.setString("Lives");
+    mRemainingLivesNumberText.setString(std::to_string(mRemainingLives));
+    mGameOverText.setString("GAME OVER!");
+    mGameOverInstructionsText.setString("Enter to restart");
+    mGameOverInstructions2Text.setString("Escape to return to Menu");
 
     sf::Vector2f textPos(
         mWalls.getPosition().x + mWalls.getSize().x + 10.f,
         mWalls.getPosition().y + 200.f);
 
     mHighScoreText.setPosition(textPos);
-    mCurrentScoreText.setPosition(textPos.x, textPos.y + mHighScoreText.getGlobalBounds().height + 10.f);
 
-    mRemainingLivesText.setPosition(
-        mCurrentScoreText.getPosition().x,
-        mCurrentScoreText.getPosition().y + mCurrentScoreText.getGlobalBounds().height + 10.f);
+    textPos.y += mHighScoreText.getGlobalBounds().height + 5.f;
+    mHighScoreNumberText.setPosition(textPos);
 
-    mHighScoreText.setCharacterSize(24);
-    mCurrentScoreText.setCharacterSize(24);
-    mRemainingLivesText.setCharacterSize(24);
+    textPos.y += mHighScoreNumberText.getGlobalBounds().height + 50.f;
+    mCurrentScoreText.setPosition(textPos);
+
+    textPos.y += mCurrentScoreText.getGlobalBounds().height + 5.f;
+    mCurrentScoreNumberText.setPosition(textPos);
+
+    textPos.y = mTree.get<float>("SCREEN_HEIGHT") - mRemainingLivesText.getGlobalBounds().height * 2.f - mRemainingLivesNumberText.getGlobalBounds().height;
+    mRemainingLivesText.setPosition(textPos);
+
+    textPos.y += mRemainingLivesNumberText.getGlobalBounds().height + 5.f;
+    mRemainingLivesNumberText.setPosition(textPos);
+
+    mGameOverText.setPosition(mWalls.getPosition().x + mWalls.getSize().x * 0.5f - mGameOverText.getGlobalBounds().width * 0.5f, mWalls.getPosition().y + 90.f);
+
+    mGameOverInstructionsText.setPosition(mGameOverText.getPosition().x,
+        mWalls.getSize().y * 0.5f + mGameOverText.getGlobalBounds().height + 50.f);
+
+    mGameOverInstructions2Text.setPosition(mGameOverText.getPosition().x,
+        mGameOverInstructionsText.getPosition().y + mGameOverInstructionsText.getGlobalBounds().height + mGameOverInstructions2Text.getGlobalBounds().height + 5.f);
+
+    mHighScoreText.setCharacterSize(20);
+    mHighScoreNumberText.setCharacterSize(20);
+    mCurrentScoreText.setCharacterSize(22);
+    mCurrentScoreNumberText.setCharacterSize(22);
+    mRemainingLivesText.setCharacterSize(20);
+    mRemainingLivesNumberText.setCharacterSize(20);
+
+    mGameOverText.setCharacterSize(40);
+    mGameOverInstructionsText.setCharacterSize(20);
+    mGameOverInstructions2Text.setCharacterSize(20);
 
     mHighScoreText.setFillColor(sf::Color::Red);
     mCurrentScoreText.setFillColor(sf::Color::Red);
     mRemainingLivesText.setFillColor(sf::Color::Red);
+
+    mGameOverText.setFillColor(sf::Color::Magenta);
+    mGameOverInstructionsText.setFillColor(sf::Color::Magenta);
+    mGameOverInstructions2Text.setFillColor(sf::Color::Magenta);
         
     mPreviousTime = mClock.getElapsedTime().asSeconds();
     mTimeLag = 0.f;
@@ -121,13 +165,24 @@ void GameState::update()
             mWindow->close();
             break;
         case sf::Event::KeyPressed:
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+            if (!mGameOver)
             {
-                mWindow->close();
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space))
+                {
+                    mPaddleBehaviorComp->onFireButtonPressed();
+                }
             }
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space))
+            else
             {
-                mPaddleBehaviorComp->onFireButtonPressed();
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+                {
+                    // go to MENU
+                    mWorld->changeState(new MenuState(mWorld));
+                }
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Enter))
+                {
+                    restartGame();
+                }
             }
         }
     }
@@ -173,11 +228,11 @@ void GameState::updateGame(float elapsed)
     // late update for collision detection and other "physics" stuff
 
     // make copies of colliders
-    auto boxColliders = getComponentList(CompType::BOX_COLLIDER);
+    auto colliders = getComponentList(CompType::BOX_COLLIDER);
     auto circleColliders = getComponentList(CompType::CIRCLE_COLLIDER);
-    boxColliders.insert(boxColliders.end(), circleColliders.begin(), circleColliders.end());
+    colliders.insert(colliders.end(), circleColliders.begin(), circleColliders.end());
 
-    mCollisionDetector.checkCollisions(boxColliders);
+    mCollisionDetector.checkCollisions(colliders);
 
     auto watchers = getComponentList(CompType::GAME_OVER_WATCHER);
     for (auto e : watchers)
@@ -188,9 +243,9 @@ void GameState::updateGame(float elapsed)
         }
     }
 
-    mHighScoreText.setString("High score " + std::to_string(mHighScore));
-    mCurrentScoreText.setString("Score " + std::to_string(mCurrentScore));
-    mRemainingLivesText.setString("Remaining lives " + std::to_string(mRemainingLives));
+    mHighScoreNumberText.setString(std::to_string(mHighScore));
+    mCurrentScoreNumberText.setString(std::to_string(mCurrentScore));
+    mRemainingLivesNumberText.setString(std::to_string(mRemainingLives));
 }
 
 void GameState::renderGame(float elapsed)
@@ -218,8 +273,18 @@ void GameState::renderGame(float elapsed)
     }
 
     mWindow->draw(mHighScoreText);
+    mWindow->draw(mHighScoreNumberText);
     mWindow->draw(mCurrentScoreText);
+    mWindow->draw(mCurrentScoreNumberText);
     mWindow->draw(mRemainingLivesText);
+    mWindow->draw(mRemainingLivesNumberText);
+
+    if (mGameOver)
+    {
+        mWindow->draw(mGameOverText);
+        mWindow->draw(mGameOverInstructionsText);
+        mWindow->draw(mGameOverInstructions2Text);
+    }
 
     mWindow->display();
 }
@@ -227,8 +292,6 @@ void GameState::renderGame(float elapsed)
 void GameState::buildLevel()
 {
     sf::Vector2f screenSize(mTree.get<float>("SCREEN_WIDTH"), mTree.get<float>("SCREEN_HEIGHT"));
-
-    //sf::Vector2f wallSize(screenSize.x - 100.f, screenSize.y - 10.f);
 
     float margin = 5.f;
 
@@ -238,7 +301,7 @@ void GameState::buildLevel()
     mWalls.setSize(sf::Vector2f(
         std::floorf(screenSize.x * scalingFactor.x), 
         std::floorf(screenSize.y * scalingFactor.y)));
-    mWalls.setFillColor(sf::Color::Transparent);
+    mWalls.setFillColor(sf::Color(20, 20, 220, 150));
     mWalls.setOutlineThickness(margin);
     mWalls.setOutlineColor(sf::Color::Red);
 
@@ -274,10 +337,13 @@ void GameState::buildLevel()
             auto brickID = this->createEntity(EntityType::TAG_BRICK);
 
             addComponent<BoxColliderComponent>(CompType::BOX_COLLIDER, brickID, brickSize);
-            addComponent<RectRenderComponent>(CompType::RECT_RENDER, brickID, brickSize, sf::Color::Blue);
+            addComponent<RectRenderComponent>(CompType::RECT_RENDER, brickID, brickSize, sf::Color::Yellow);
             addComponent<BrickBehaviorComponent>(CompType::BRICK, brickID, sf::Vector2f(brickSize.x * i + (i*13), brickSize.y * j + (j*13)) + offset);
         }
     }
+
+    auto watcherID = createEntity(EntityType::TAG_GAME_OVER_WATCHER);
+    addComponent<GameOverWatcher>(CompType::GAME_OVER_WATCHER, watcherID);
 }
 
 void GameState::exit()
@@ -405,8 +471,6 @@ void GameState::increaseScore(long points)
     {
         mHighScore = mCurrentScore;
     }
-
-    std::cout << "SCORE: " << mCurrentScore << std::endl;
 }
 
 void GameState::decrementPlayerLives()
@@ -442,6 +506,20 @@ int GameState::getPlayerLives() const
 void GameState::gameOver()
 {
     mGameOver = true;
+}
+
+void GameState::restartGame()
+{
+    cleanupZombies();
+
+    for (EntityID i = 0; i < mEntityMap.size(); ++i)
+    {
+        removeEntity(i);
+    }
+
+    buildLevel();
+
+    mGameOver = false;
 }
 
 PaddleBehaviorComponent * GameState::getPaddleComponent()

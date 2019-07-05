@@ -90,6 +90,8 @@ public:
 
     void gameOver();
 
+    void restartGame();
+
     PaddleBehaviorComponent* getPaddleComponent();
 
     void sendMessage(EntityType type, CompType compType, Message & msg, SendType sendType = SendType::ENQUEUE, const sf::Time& timeToFire = sf::Time::Zero);
@@ -133,8 +135,15 @@ private:
     sf::Font mFont;
 
     sf::Text mHighScoreText;
+    sf::Text mHighScoreNumberText;
     sf::Text mCurrentScoreText;
+    sf::Text mCurrentScoreNumberText;
     sf::Text mRemainingLivesText;
+    sf::Text mRemainingLivesNumberText;
+
+    sf::Text mGameOverText;
+    sf::Text mGameOverInstructionsText;
+    sf::Text mGameOverInstructions2Text;
 
     sf::RectangleShape mWalls;
 

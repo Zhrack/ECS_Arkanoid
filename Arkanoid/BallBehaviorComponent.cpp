@@ -74,6 +74,14 @@ void BallBehaviorComponent::update(float elapsed)
             mGame->sendMessage(EntityType::TAG_GAME_OVER_WATCHER, CompType::GAME_OVER_WATCHER, ballLostMsg, SendType::DELAYED, sf::seconds(0.5));
             mGame->destroyEntity(getEntityID());
         }
+
+        if (std::fabsf(mVelocity.y) < 20.f)
+        {
+            if (mVelocity.y < 0.f)
+                mVelocity.y = -70.f;
+            else
+                mVelocity.y = 70.f;
+        }
     }
     else if(mState == BallState::BALL_FOLLOW_PADDLE)
     {
@@ -147,7 +155,8 @@ void BallBehaviorComponent::handleMessage(Message & msg)
     switch (msg.mType)
     {
     case MSG_RELEASE_BALL:
-        releaseBall();
+        if (mLocked)
+            releaseBall();
         break;
     }
 }

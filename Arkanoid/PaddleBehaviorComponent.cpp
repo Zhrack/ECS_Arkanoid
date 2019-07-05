@@ -13,7 +13,6 @@ PaddleBehaviorComponent::PaddleBehaviorComponent(EntityID entityID, GameState* g
     BaseComponent(entityID, game),
     mVel(0.f, 0.f),
     mAccel(0.f, 0.f),
-    mStickyPaddle(true),
     mState(PaddleState::STATE_START)
 {
     mWindow = mGame->getWindow();
@@ -29,8 +28,6 @@ PaddleBehaviorComponent::PaddleBehaviorComponent(EntityID entityID, GameState* g
     mPaddleSize = sf::Vector2f(config.get<float>("PADDLE_SIZE_X"), config.get<float>("PADDLE_SIZE_Y"));
     mPaddleMaxVel = config.get<float>("PADDLE_MAX_VELOCITY");
     mPaddleFriction = config.get<float>("PADDLE_FRICTION");
-
-    mStickyPaddle = true;
 }
 
 
@@ -81,7 +78,6 @@ void PaddleBehaviorComponent::handleMessage(Message & msg)
         if (extraInfo->start)
         {
             // start effect
-            mStickyPaddle = true;
             mState = PaddleState::STATE_STICKY;
 
             mRenderer->getShape().setFillColor(sf::Color::Cyan);
@@ -89,7 +85,6 @@ void PaddleBehaviorComponent::handleMessage(Message & msg)
         // if not sticky, this PU has been overwritten and this is an obsolete message, so I can ignore it
         else if(!extraInfo->start && isSticky()) 
         {
-            mStickyPaddle = false;
             mState = PaddleState::STATE_NORMAL;
             mRenderer->getShape().setFillColor(sf::Color::Green);
 
@@ -142,9 +137,6 @@ void PaddleBehaviorComponent::onFireButtonPressed()
     {
         if(mState == PaddleState::STATE_START)
             mState = PaddleState::STATE_NORMAL;
-        // if not currently under the power up effect, disable it (to handle starting of game stickyness)
-        if (!isSticky())
-            mStickyPaddle = false;
 
         // release ball(s)
         Message msg(mEntityID, MessageType::MSG_RELEASE_BALL);

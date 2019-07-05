@@ -2,7 +2,7 @@
     "SCREEN_WIDTH": "1280",
     "SCREEN_HEIGHT": "768",
     "MS_PER_UPDATE": "0.0133",
-    "NUM_LIVES": "3",
+    "NUM_LIVES": "1",
     "HIGH_SCORE": "2800",
     "BRICK_POINTS": "100",
     "PADDLE_MAX_VELOCITY": "1000",
