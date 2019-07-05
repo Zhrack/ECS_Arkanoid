@@ -138,7 +138,7 @@
     <ClInclude Include="MenuState.h">
       <Filter>Header Files\States</Filter>
     </ClInclude>
-    <ClInclude Include="GameOverWatcher.h">
+    <ClInclude Include="GameOverWatcherComponent.h">
       <Filter>Header Files\Components</Filter>
     </ClInclude>
   </ItemGroup>
@@ -212,7 +212,7 @@
     <ClCompile Include="PowerUpDisruptionComponent.cpp">
       <Filter>Source Files\Components\PowerUps</Filter>
     </ClCompile>
-    <ClCompile Include="GameOverWatcher.cpp">
+    <ClCompile Include="GameOverWatcherComponent.cpp">
       <Filter>Source Files\Components</Filter>
     </ClCompile>
   </ItemGroup>

@@ -70,6 +70,8 @@ void PowerUpDisruptionComponent::onCollisionCb(const CollisionData & data)
         Message msg(mEntityID, MessageType::MSG_PU_DISRUPTION);
         paddleBehavior->receive(msg);
 
+        mGame->increaseScore(config.get<long>("POWER_UP_POINTS"));
+
         mGame->destroyEntity(getEntityID());
     }
 }

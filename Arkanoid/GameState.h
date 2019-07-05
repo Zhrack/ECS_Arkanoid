@@ -37,7 +37,8 @@ enum class GameStatus
 };
 
 /// <summary>
-/// State that manages the actual game
+/// State that manages the actual game.
+/// It acts as a central hub for informations for components.
 /// </summary>
 /// <seealso cref="BaseState" />
 /// <seealso cref="std::enable_shared_from_this{GameState}" />
@@ -87,6 +88,10 @@ public:
     template<class T>
     T* getComponent(CompType type, EntityID entityID);
 
+    /// <summary>
+    /// Destroys the requested entity.
+    /// </summary>
+    /// <param name="entityID">The entity identifier.</param>
     void destroyEntity(EntityID entityID);
 
     void removeComponent(CompType type, EntityID entityID);
@@ -105,16 +110,30 @@ public:
 
     int getPlayerLives() const;
 
+    /// <summary>
+    /// Games the over.
+    /// </summary>
+    /// <param name="win">if set to <c>true</c> will be shown a winning text, else a losing text [win].</param>
     void gameOver(bool win);
 
     void restartGame();
 
     PowerUpService& getPUService();
 
+    /// <summary>
+    /// Utility function for an often used component.
+    /// </summary>
+    /// <returns></returns>
     PaddleBehaviorComponent* getPaddleComponent();
 
     const sf::RectangleShape& getWalls() const;
 
+    /// <summary>
+    /// Return a pointer to the sound effect. 
+    /// Sounds files are loaded at startup.
+    /// </summary>
+    /// <param name="soundName">Name of the sound.</param>
+    /// <returns></returns>
     sf::SoundBuffer* getSound(const std::string& soundName) const;
 
     /////////////////////////////////

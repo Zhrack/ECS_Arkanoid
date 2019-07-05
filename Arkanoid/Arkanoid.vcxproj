@@ -176,7 +176,7 @@
     <ClInclude Include="CollisionDetector.h" />
     <ClInclude Include="ComponentList.h" />
     <ClInclude Include="EntityTypes.h" />
-    <ClInclude Include="GameOverWatcher.h" />
+    <ClInclude Include="GameOverWatcherComponent.h" />
     <ClInclude Include="GameState.h" />
     <ClInclude Include="MenuState.h" />
     <ClInclude Include="Message.h" />
@@ -202,7 +202,7 @@
     <ClCompile Include="CircleRenderComponent.cpp" />
     <ClCompile Include="ColliderComponent.cpp" />
     <ClCompile Include="CollisionDetector.cpp" />
-    <ClCompile Include="GameOverWatcher.cpp" />
+    <ClCompile Include="GameOverWatcherComponent.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="BaseComponent.cpp" />
     <ClCompile Include="BaseState.cpp" />

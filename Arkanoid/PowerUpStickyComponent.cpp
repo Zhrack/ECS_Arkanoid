@@ -40,6 +40,8 @@ void PowerUpStickyComponent::onCollisionCb(const CollisionData & data)
         Message msgEnd(mEntityID, MessageType::MSG_PU_STICKY, endData);
         paddleBehavior->receive(msgEnd, SendType::DELAYED, sf::seconds(mEffectDuration));
 
+        mGame->increaseScore(mGame->config().get<long>("POWER_UP_POINTS"));
+
         mGame->destroyEntity(getEntityID());
     }
 }

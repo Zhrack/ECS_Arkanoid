@@ -176,10 +176,7 @@ bool AABBvsCircle(BaseComponent * box, BaseComponent * c, sf::Vector2f& amount)
 
     if (cPoint.x * cPoint.x + cPoint.y * cPoint.y < radius * radius)
     {
-        float penetrationDirLength = (cPoint.x * cPoint.x +
-            cPoint.y * cPoint.y);
-
-        amount = cPoint / penetrationDirLength;
+        amount = cPoint;
         return true;
     }
     return false;

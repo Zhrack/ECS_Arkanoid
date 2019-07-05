@@ -24,7 +24,7 @@ private:
     sf::Font mFont;
 
     sf::Text mPressEnterText;
-    sf::Text mHighScoreNumberText;
+    sf::Text mInstructionText;
 
     sf::Music mBackgroundMusic;
 

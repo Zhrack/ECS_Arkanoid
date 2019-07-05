@@ -74,6 +74,14 @@ void MenuState::enter()
     mPressEnterText.setPosition(
         screenSizeX * 0.5f - mPressEnterText.getGlobalBounds().width * 0.5f, 
         screenSizeY * 0.5f + mPressEnterText.getGlobalBounds().height + 50.f);
+
+    mInstructionText.setFont(mFont);
+    mInstructionText.setString("Press Spacebar to fire the ball, A/D or arrows to control the paddle");
+    mInstructionText.setCharacterSize(15);
+    mInstructionText.setPosition(
+        screenSizeX * 0.5f - mInstructionText.getGlobalBounds().width * 0.5f,
+        screenSizeY - mPressEnterText.getGlobalBounds().height  - mInstructionText.getGlobalBounds().height - 50.f
+    );
 }
 
 void MenuState::update()
@@ -100,6 +108,7 @@ void MenuState::update()
     mWindow->draw(mBackground, &mBackgroundTexture);
     mWindow->draw(mLogo);
     mWindow->draw(mPressEnterText);
+    mWindow->draw(mInstructionText);
 
     mWindow->display();
 }

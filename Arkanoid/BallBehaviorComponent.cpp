@@ -47,8 +47,6 @@ void BallBehaviorComponent::update(float elapsed)
 
     sf::Vector2f gameAreaSize(walls.getSize());
     sf::Vector2f gameAreaPos(walls.getPosition());
-    //std::cout << "PosX: " << mTransform->getPosition().x << std::endl << "PosY: " << mTransform->getPosition().y << std::endl;
-    //std::cout << "VelX: " << mVelocity.x << std::endl << "VelY: " << mVelocity.y << std::endl <<std::endl;
 
     if (mState == BallState::BALL_NORMAL)
     {
@@ -116,6 +114,8 @@ void BallBehaviorComponent::onCollisionCb(const CollisionData & data)
     EntityType otherType = mGame->getEntityType(data.otherCollider->getEntityID());
     if (otherType == EntityType::TAG_PLAYER)
     {
+        // here friction is simulated to give some degree of control to the player,
+        // so that is possible to change the direction of the ball with the paddle
         mVelocity.x += (mPaddleBehaviorComp->getFriction() * mPaddleBehaviorComp->getCurrentVelocity().x);
         sf::Vector2f mVelUnit = mVelocity / std::sqrtf((mVelocity.x * mVelocity.x) + (mVelocity.y * mVelocity.y));
         mVelocity = mVelUnit * mMaxVelocity;
@@ -129,6 +129,11 @@ void BallBehaviorComponent::onCollisionCb(const CollisionData & data)
     mTransform->move(data.amount);
     //std::cout << "AmX: " << data.amount.x << std::endl << "AmY: " << data.amount.y << std::endl;
 
+    if (std::fabs(mVelocity.y) < 60.f)
+    {
+        mVelocity.y = -60.f;
+    }
+
     if (std::fabs(data.amount.x) > 0.01f)
     {
         // collision on the horizontal direction
@@ -139,11 +144,6 @@ void BallBehaviorComponent::onCollisionCb(const CollisionData & data)
     {
         // collision on the vertical direction
         mVelocity.y = -mVelocity.y;
-
-        if (std::fabs(mVelocity.y) < 20.f)
-        {
-            mVelocity.y = -50.f;
-        }
     }
 
     if (mHitBrickSound.getStatus() != sf::SoundSource::Status::Playing && 

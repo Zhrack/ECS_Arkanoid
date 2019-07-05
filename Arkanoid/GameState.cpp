@@ -10,7 +10,7 @@
 #include "CircleColliderComponent.h"
 #include "BallBehaviorComponent.h"
 #include "BrickBehaviorComponent.h"
-#include "GameOverWatcher.h"
+#include "GameOverWatcherComponent.h"
 
 #include "World.h"
 #include "MenuState.h"
@@ -393,7 +393,7 @@ void GameState::buildLevel()
     }
 
     auto watcherID = createEntity(EntityType::TAG_GAME_OVER_WATCHER);
-    addComponent<GameOverWatcher>(CompType::GAME_OVER_WATCHER, watcherID);
+    addComponent<GameOverWatcherComponent>(CompType::GAME_OVER_WATCHER, watcherID);
 }
 
 void GameState::exit()
