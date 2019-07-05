@@ -17,9 +17,6 @@
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
 
-#include <SFML/Graphics.hpp>
-#include <SFML/Audio.hpp>
-
 using ComponentMap = 
 std::unordered_map<
     CompType,
@@ -190,6 +187,8 @@ private:
     sf::Text mGameOverInstructionsText;
     sf::Text mGameOverInstructions2Text;
 
+    sf::Texture mBackgroundTexture;
+
     sf::RectangleShape mWalls;
 
     std::unordered_map<std::string, std::unique_ptr<sf::SoundBuffer>> mSounds;
@@ -199,7 +198,7 @@ private:
     EntityID mPaddleID;
 
     /// <summary>
-    /// The used to generate IDs.
+    /// Used to generate IDs.
     /// </summary>
     static EntityID nextID;
 

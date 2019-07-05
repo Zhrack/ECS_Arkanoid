@@ -2,6 +2,7 @@
 #include "World.h"
 
 #include "GameState.h"
+#include "MenuState.h"
 
 World::World() :
     mWindow(new sf::RenderWindow()),
@@ -26,7 +27,7 @@ World::~World()
 void World::initialize()
 {
     // set starting state
-    this->changeState(new GameState(this, mTree));
+    this->changeState(new MenuState(this, mTree));
 }
 
 void World::loop()
@@ -49,7 +50,8 @@ void World::terminate()
 
 void World::changeState(BaseState* newState)
 {
-    if (mCurrentState) {
+    if (mCurrentState) 
+    {
         mCurrentState->exit();
     }
 

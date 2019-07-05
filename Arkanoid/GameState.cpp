@@ -175,6 +175,15 @@ void GameState::enter()
     mGameOverText.setFillColor(sf::Color::Magenta);
     mGameOverInstructionsText.setFillColor(sf::Color::Magenta);
     mGameOverInstructions2Text.setFillColor(sf::Color::Magenta);
+
+    std::string filename = mTree.get<std::string>("BACKGROUND");
+
+    if (!mBackgroundTexture.loadFromFile(filename))
+    {
+        std::cout << "Error loading background image " << filename << std::endl;
+    }
+
+    mWalls.setTexture(&mBackgroundTexture);
         
     mPreviousTime = mClock.getElapsedTime().asSeconds();
     mTimeLag = 0.f;
@@ -210,7 +219,7 @@ void GameState::update()
                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
                 {
                     // go to MENU
-                    mWorld->changeState(new MenuState(mWorld));
+                    mWorld->changeState(new MenuState(mWorld, mTree));
                     return;
                 }
                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Enter))
@@ -335,7 +344,6 @@ void GameState::buildLevel()
     mWalls.setSize(sf::Vector2f(
         std::floorf(screenSize.x * scalingFactor.x), 
         std::floorf(screenSize.y * scalingFactor.y)));
-    mWalls.setFillColor(sf::Color(20, 20, 220, 150));
     mWalls.setOutlineThickness(margin);
     mWalls.setOutlineColor(sf::Color::Red);
 
@@ -394,6 +402,7 @@ void GameState::exit()
     mTree.put<int>("HIGH_SCORE", mHighScore);
 
     mBackgroundMusic.stop();
+    mWindow->clear();
 
     pt::write_json("resources/settings.json", mTree);
 }

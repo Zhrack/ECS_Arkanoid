@@ -61,14 +61,16 @@ void BallBehaviorComponent::update(float elapsed)
             mTransform->setPosition(gameAreaPos.x, mTransform->getPosition().y);
             mVelocity.x = -mVelocity.x;
 
-            mHitSound.play();
+            if (mHitSound.getStatus() != sf::SoundSource::Status::Playing)
+                mHitSound.play();
         }
         else if (mTransform->getPosition().x + radius > gameAreaPos.x + gameAreaSize.x - mCollider->getRadius())
         {
             mTransform->setPosition(gameAreaPos.x + gameAreaSize.x - mCollider->getRadius() - radius, mTransform->getPosition().y);
             mVelocity.x = -mVelocity.x;
 
-            mHitSound.play();
+            if (mHitSound.getStatus() != sf::SoundSource::Status::Playing)
+                mHitSound.play();
         }
 
         if (mTransform->getPosition().y < gameAreaPos.y)
@@ -76,7 +78,8 @@ void BallBehaviorComponent::update(float elapsed)
             mTransform->setPosition(mTransform->getPosition().x, gameAreaPos.y);
             mVelocity.y = -mVelocity.y;
 
-            mHitSound.play();
+            if(mHitSound.getStatus() != sf::SoundSource::Status::Playing)
+                mHitSound.play();
         }
         else if (mTransform->getPosition().y > gameAreaPos.y + gameAreaSize.y)
         {

@@ -2,6 +2,8 @@
     "AUDIO_FOLDER": "resources\/audio\/",
     "GAME_MUSIC": "resources\/audio\/music\/game_music.wav",
     "MENU_MUSIC": "resources\/audio\/music\/menu_music.wav",
+    "BACKGROUND": "resources\/sprites\/hexagon_pattern.png",
+    "LOGO_IMAGE": "resources\/sprites\/arkanoid_logo.png",
     "SCREEN_WIDTH": "1280",
     "SCREEN_HEIGHT": "768",
     "MS_PER_UPDATE": "0.0111",
