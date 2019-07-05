@@ -357,7 +357,7 @@ void GameState::buildLevel()
     addComponent<BoxColliderComponent>(CompType::BOX_COLLIDER, mPaddleID, paddleSize);
     addComponent<RectRenderComponent>(CompType::RECT_RENDER, mPaddleID, paddleSize, sf::Color::Green);
     mPaddleBehaviorComp = addComponent<PaddleBehaviorComponent>(CompType::PADDLE_BEHAVIOR, mPaddleID,
-        sf::Vector2f((float)mWalls.getSize().x / 2.f, (float)(mWalls.getSize().y - paddleSize.y)));
+        sf::Vector2f((float)mWalls.getSize().x * 0.5f - paddleSize.x * 0.5f, (float)(mWalls.getSize().y - paddleSize.y)));
 
     auto ballID = this->createEntity(EntityType::TAG_BALL);
 
@@ -370,7 +370,7 @@ void GameState::buildLevel()
 
 
     // create some bricks in a grid
-    sf::Vector2f offset(50, 50);
+    sf::Vector2f offset(0, 0);
     offset += sf::Vector2f(mWalls.getSize().x * 0.2f, mWalls.getSize().y * 0.2f);
     for (size_t i = 0; i < 8; i++)
     {
@@ -585,6 +585,9 @@ void GameState::restartGame()
     mGameStatus = GameStatus::GAME_NORMAL;
     mRemainingLives = mTree.get<int>("NUM_LIVES");
     mCurrentScore = 0;
+    mBackgroundMusic.stop();
+    mBackgroundMusic.play();
+    mBackgroundMusic.setLoop(true);
 
     buildLevel();
 

@@ -8,6 +8,9 @@ GameOverWatcher::GameOverWatcher(EntityID entityID, GameState* game) :
 {
     auto bricks = mGame->getAllEntitiesByType(EntityType::TAG_BRICK);
     mNumBricks = (int)bricks.size();
+
+    sf::SoundBuffer* buffer = mGame->getSound("BallLost.wav");
+    mLostBallSound.setBuffer(*buffer);
 }
 
 
@@ -25,6 +28,9 @@ void GameOverWatcher::handleMessage(Message & msg)
     if (msg.mType == MSG_BALL_LOST)
     {
         auto balls = mGame->getAllEntitiesByType(EntityType::TAG_BALL);
+
+        if (mLostBallSound.getStatus() != sf::SoundSource::Status::Playing)
+            mLostBallSound.play();
 
         if (balls.empty())
         {

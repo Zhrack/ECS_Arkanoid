@@ -3,6 +3,8 @@
 
 #include "BaseComponent.h"
 
+#include <SFML/Audio.hpp>
+
 class GameOverWatcher :
     public BaseComponent
 {
@@ -18,6 +20,8 @@ private:
 
 private:
     int mNumBricks;
+
+    sf::Sound mLostBallSound;
 };
 
 

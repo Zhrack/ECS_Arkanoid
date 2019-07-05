@@ -33,6 +33,13 @@ void PowerUpDisruptionComponent::onCollisionCb(const CollisionData & data)
     auto otherID = data.otherCollider->getEntityID();
     if (mGame->getEntityType(otherID) == EntityType::TAG_PLAYER)
     {
+        auto paddleBehavior = mGame->getPaddleComponent();
+
+        if (paddleBehavior->isStarting())
+        {
+            return;
+        }
+
         auto config = mGame->config();
         auto ballList = mGame->getAllEntitiesByType(EntityType::TAG_BALL);
         if (ballList.size() != 1)
@@ -60,7 +67,6 @@ void PowerUpDisruptionComponent::onCollisionCb(const CollisionData & data)
             ballBehavior->setVelocity(dir);
         }
 
-        auto paddleBehavior = mGame->getComponent<PaddleBehaviorComponent>(CompType::PADDLE_BEHAVIOR, otherID);
         Message msg(mEntityID, MessageType::MSG_PU_DISRUPTION);
         paddleBehavior->receive(msg);
 
