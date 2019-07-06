@@ -8,6 +8,9 @@
 
 #include "TransformComponent.h"
 
+#include "AudioService.h"
+#include "ServiceLocator.h"
+
 
 BallBehaviorComponent::BallBehaviorComponent(EntityID entityID, GameState* game, float velocity, const sf::Vector2f& pos) :
     BaseComponent(entityID, game),
@@ -29,10 +32,10 @@ BallBehaviorComponent::BallBehaviorComponent(EntityID entityID, GameState* game,
 
     mTransform->setPosition(pos);
 
-    sf::SoundBuffer* buffer = mGame->getSound("Hit_wall.wav");
+    sf::SoundBuffer* buffer = ServiceLocator::getAudio()->getSound(SoundID::BALL_HIT_WALL);
     mHitSound.setBuffer(*buffer);
 
-    buffer = mGame->getSound("Hit_Hurt5.wav");
+    buffer = ServiceLocator::getAudio()->getSound(SoundID::BALL_HIT_BRICK);
     mHitBrickSound.setBuffer(*buffer);
 }
 

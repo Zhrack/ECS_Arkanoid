@@ -128,14 +128,6 @@ public:
 
     const sf::RectangleShape& getWalls() const;
 
-    /// <summary>
-    /// Return a pointer to the sound effect. 
-    /// Sounds files are loaded at startup.
-    /// </summary>
-    /// <param name="soundName">Name of the sound.</param>
-    /// <returns></returns>
-    sf::SoundBuffer* getSound(const std::string& soundName) const;
-
     /////////////////////////////////
     // MESSAGING
     /////////////////////////////////
@@ -209,10 +201,6 @@ private:
     sf::Texture mBackgroundTexture;
 
     sf::RectangleShape mWalls;
-
-    std::unordered_map<std::string, std::unique_ptr<sf::SoundBuffer>> mSounds;
-
-    sf::Music mBackgroundMusic;
 
     EntityID mPaddleID;
 

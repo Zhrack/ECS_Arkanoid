@@ -30,8 +30,6 @@ private:
     sf::Text mPressEnterText;
     sf::Text mInstructionText;
 
-    sf::Music mBackgroundMusic;
-
     pt::ptree& mTree;
 
     sf::Texture mBackgroundTexture;

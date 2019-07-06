@@ -6,6 +6,9 @@
 #include "TransformComponent.h"
 #include "RectRenderComponent.h"
 
+#include "AudioService.h"
+#include "ServiceLocator.h"
+
 #include <iostream>
 
 
@@ -29,7 +32,7 @@ PaddleBehaviorComponent::PaddleBehaviorComponent(EntityID entityID, GameState* g
     mPaddleMaxVel = config.get<float>("PADDLE_MAX_VELOCITY");
     mPaddleFriction = config.get<float>("PADDLE_FRICTION");
 
-    sf::SoundBuffer* buffer = mGame->getSound("Powerup.wav");
+    sf::SoundBuffer* buffer = ServiceLocator::getAudio()->getSound(SoundID::POWER_UP_PICKED);
     mPUSound.setBuffer(*buffer);
 }
 

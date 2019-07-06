@@ -15,12 +15,11 @@
 #include "World.h"
 #include "MenuState.h"
 
+#include "PCAudioService.h"
+#include "ServiceLocator.h"
+
 #include <iostream>
 #include <thread>
-
-#include <boost/filesystem.hpp>
-
-namespace fs = boost::filesystem;
 
 // start it from 1, 0 is reserved to be a NULL value
 unsigned long GameState::nextID = 1;
@@ -64,36 +63,33 @@ void GameState::enter()
     }
 
     // load sounds
-    std::string audioFolder = mTree.get<std::string>("AUDIO_FOLDER");
-    fs::path audioPath(audioFolder);
+    auto audioService = new PCAudioService();
 
-    if (fs::is_directory(audioPath)) {
-        for (auto& entry : boost::make_iterator_range(fs::directory_iterator(audioPath), {}))
+    std::string sfxFolder = mTree.get<std::string>("AUDIO_FOLDER");
+    std::string musicFolder = mTree.get<std::string>("MUSIC_FOLDER");
+    std::vector<SoundIDFilename> sounds(
         {
-            if (fs::is_directory(entry)) continue;
+            {SoundID::BALL_HIT_BRICK, mTree.get<std::string>("AUDIO_BALL_HIT_BRICK")},
+            {SoundID::BALL_HIT_WALL, mTree.get<std::string>("AUDIO_BALL_HIT_WALL")},
+            {SoundID::POWER_UP_PICKED, mTree.get<std::string>("AUDIO_POWER_UP_PICKED")},
+            {SoundID::BALL_LOST, mTree.get<std::string>("AUDIO_BALL_LOST")},
+        });
+    std::vector<MusicIDFilename> musics(
+        {
+            {MusicID::MUSIC_GAME, mTree.get<std::string>("GAME_MUSIC")},
+            {MusicID::MUSIC_WIN, mTree.get<std::string>("WIN_MUSIC")},
+            {MusicID::MUSIC_LOSE, mTree.get<std::string>("LOSE_MUSIC")},
+        });
 
-            std::cout << "Loading " << entry.path().filename().string() << "\n";
-            std::string filename = entry.path().filename().string();
-            std::unique_ptr<sf::SoundBuffer> ptr(new sf::SoundBuffer());
-
-            if (!ptr->loadFromFile(audioFolder + filename))
-            {
-                std::cout << "Error loading " << filename << std::endl;
-            }
-            mSounds[filename] = std::move(ptr);
-        }
-    }
-
-    audioFolder = mTree.get<std::string>("GAME_MUSIC");
-    
-    if (!mBackgroundMusic.openFromFile(audioFolder))
+    if (!audioService->initialize(sfxFolder, musicFolder, sounds, musics))
     {
-        std::cout << "Error loading " << audioFolder << "\n";
+        throw "Error initializing the audio service";
     }
 
-    mBackgroundMusic.setLoop(true);
-    mBackgroundMusic.setVolume(80);
-    mBackgroundMusic.play();
+    ServiceLocator::provide(audioService);
+
+    ServiceLocator::getAudio()->playMusic(MusicID::MUSIC_GAME);
+    ServiceLocator::getAudio()->setLooping(MusicID::MUSIC_GAME, true);
 
     buildLevel();
 
@@ -406,7 +402,7 @@ void GameState::exit()
         pt::write_json("resources/settings.json", mTree);
     }
 
-    mBackgroundMusic.stop();
+    ServiceLocator::getAudio()->stopMusic(MusicID::MUSIC_GAME);
     mWindow->clear();
 
 }
@@ -567,11 +563,15 @@ void GameState::gameOver(bool win)
     {
         mGameStatus = GameStatus::GAME_WIN;
         mGameOverText.setString("You WIN!");
+        ServiceLocator::getAudio()->stopMusic(MusicID::MUSIC_GAME);
+        ServiceLocator::getAudio()->playMusic(MusicID::MUSIC_WIN);
     }
     else
     {
         mGameStatus = GameStatus::GAME_LOSE;
         mGameOverText.setString("GAME OVER!");
+        ServiceLocator::getAudio()->stopMusic(MusicID::MUSIC_GAME);
+        ServiceLocator::getAudio()->playMusic(MusicID::MUSIC_LOSE);
     }
 }
 
@@ -589,9 +589,13 @@ void GameState::restartGame()
     mGameStatus = GameStatus::GAME_NORMAL;
     mRemainingLives = mTree.get<int>("NUM_LIVES");
     mCurrentScore = 0;
-    mBackgroundMusic.stop();
-    mBackgroundMusic.play();
-    mBackgroundMusic.setLoop(true);
+
+    ServiceLocator::getAudio()->stopMusic(MusicID::MUSIC_GAME);
+    ServiceLocator::getAudio()->playMusic(MusicID::MUSIC_GAME);
+    ServiceLocator::getAudio()->setLooping(MusicID::MUSIC_GAME, true);
+    // TODO mBackgroundMusic.stop();
+    //mBackgroundMusic.play();
+    //mBackgroundMusic.setLoop(true);
 
     buildLevel();
 
@@ -644,15 +648,6 @@ pt::ptree & GameState::config()
 const sf::RectangleShape& GameState::getWalls() const
 {
     return mWalls;
-}
-
-sf::SoundBuffer * GameState::getSound(const std::string& soundName) const
-{
-    if (mSounds.count(soundName) > 0)
-    {
-        return mSounds.at(soundName).get();
-    }
-    return nullptr;
 }
 
 EntityID GameState::createID() const

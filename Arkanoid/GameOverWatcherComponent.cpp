@@ -1,6 +1,8 @@
 #include "GameOverWatcherComponent.h"
 
 #include "GameState.h"
+#include "AudioService.h"
+#include "ServiceLocator.h"
 
 
 GameOverWatcherComponent::GameOverWatcherComponent(EntityID entityID, GameState* game) :
@@ -9,7 +11,7 @@ GameOverWatcherComponent::GameOverWatcherComponent(EntityID entityID, GameState*
     auto bricks = mGame->getAllEntitiesByType(EntityType::TAG_BRICK);
     mNumBricks = (int)bricks.size();
 
-    sf::SoundBuffer* buffer = mGame->getSound("BallLost.wav");
+    sf::SoundBuffer* buffer = ServiceLocator::getAudio()->getSound(SoundID::BALL_LOST);
     mLostBallSound.setBuffer(*buffer);
 }
 
