@@ -69,7 +69,7 @@ public:
     EntityID createEntity(EntityType type);
 
     /// <summary>
-    /// Variadic template funciton that adds a new component.
+    /// Variadic template function that adds a new component and returns a casted pointer to it.
     /// </summary>
     /// <param name="type">The type ID of the component.</param>
     /// <param name="entityID">The entity identifier.</param>
@@ -111,7 +111,7 @@ public:
     int getPlayerLives() const;
 
     /// <summary>
-    /// Games the over.
+    /// Manages game over changes.
     /// </summary>
     /// <param name="win">if set to <c>true</c> will be shown a winning text, else a losing text [win].</param>
     void gameOver(bool win);
@@ -221,6 +221,9 @@ private:
     /// </summary>
     std::unordered_map<EntityID, EntityType> mEntityMap;
 
+    /// <summary>
+    /// Vector of entities slated for removal at the end of the current update loop
+    /// </summary>
     std::vector<EntityID> mZombieEntities;
 
     PaddleBehaviorComponent* mPaddleBehaviorComp;

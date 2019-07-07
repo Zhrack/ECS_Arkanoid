@@ -8,6 +8,10 @@
 
 using TextureIDFilename = std::tuple<TextureID, std::string, sf::IntRect>;
 
+/// <summary>
+/// Implements the Texture Service on PC.
+/// </summary>
+/// <seealso cref="TextureService" />
 class PCTextureService :
     public TextureService
 {

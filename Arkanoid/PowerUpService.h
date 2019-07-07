@@ -16,6 +16,9 @@ enum PUType
     PU_COUNT
 };
 
+/// <summary>
+/// Manages Power Up creation
+/// </summary>
 class PowerUpService
 {
 public:

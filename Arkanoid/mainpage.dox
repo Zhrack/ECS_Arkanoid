@@ -57,22 +57,43 @@
  * The CollionDetector class manages all "physics" calculations for the game, providing collision detection and response for components using the ColliderComponents classes's data, simple collision detection algorithms (AABBvsCircle and the likes) and uses messages to signal callbacks inside colliders.
  * These callbacks are std::function objects that encapsulate functions of other components of (usually) the same entity. This way the response behavior for collision is personalized to the needs of more "game logic"-focused components.
  *
+ * The ServiceLocator class acts as a "phone book" to find services. At the moment, it provides the AudioService and the TextureService, to access Audio functionalities and to get texture references, respectively.
+ *
+ *
  * All components types are mapped by an enumerator ComponentList, which automatically registers to GameState at the beginning of the game.
  * 
  * Game configuration data is managed using a JSON file, which is read and stored inside a Boost Property Tree's ptree object and retrieved at runtime from this data structure.
  * The high score of the game is saved on the file.
+ *
+ *
+ * \subsection subsec2 The Game 
+ *
+ * Initially I planned on having all original power ups and aliens, plus the possibility to select different pre-made levels (I was thinking on building them using Tiled and importing them).
+ * On top of this, I had thought about a couple possible special bricks and power ups, mostly intended as jokes about characters of Divinity: Original Sin.
  * 
+ * In the end I ran out of time, since I couldn't dedicate as much time as I tought. 
+ * Of the original power ups, I managed to implement the Sticky (yellow sphere) and the Disruption one (green sphere), plus I implemented one of the original power ups I wanted, the Bomber one (you will recognize it).
+ * On the brick side, there are 3 types: 1-hit normal, 1-hit with double score and 2-hit bricks.
+ *
+ * Sound effects have been done using Bfxr, meanwhile the musics are Creative Commons ones found online.
+ *
+ *
+ * Edit after more work: Added the Bomber power up.
+ *
  * \subsection subsec3 Problems during the development
  *
  * My main problem has been time. I worked on it during the evenings and in fact I didn't manage to insert as many features as I wanted to have a polished game. 
  * At the moment the main lack is graphics, but also a variety of power ups and bricks. During the incoming weekend I plan on working on it more, to polish it.
  * On the software architecture side, there is room for improvement on the GameState class, as I think it became too large, unfortunately I didn't have time for a proper refactoring.
- * For example the game resources (sounds, textures) should be managed outside the GameState class.
+ * For example the game resources (sounds, textures) should be managed outside the GameState class. 
+ * Also, a couple of bugs persists on the collisions side.
+ *
+ * Edit after more work: Sounds and textures are now implemented as services to other classes, using the Service Locator pattern.
  *
  *
  * \subsection subsec4 Conclusion
  *
- * Thanks for this experience. This was my first time implementing such a system and I must say that it has been a very funny project. Also, it seems to work! :)
+ * Thanks for this experience. This was my first time implementing such an architecture and I must say that it has been a very funny project. Also, it seems to work! :)
  * I hope this small guide has been useful.
  *
  * Thanks for reading this and have a good day!

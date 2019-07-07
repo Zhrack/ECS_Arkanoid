@@ -33,7 +33,7 @@ void PowerUpService::spawnRandomPU(const sf::Vector2f & pos)
 {
 
     int chancePU = rand() % 100;
-    if (chancePU > 20) return;
+    if (chancePU > 25) return;
 
     PUType type = (PUType)(rand() % (PUType::PU_COUNT));
 

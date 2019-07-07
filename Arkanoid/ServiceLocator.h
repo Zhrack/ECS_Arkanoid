@@ -6,6 +6,9 @@
 
 #include <memory>
 
+/// <summary>
+/// Acts as a single place to access services.
+/// </summary>
 class ServiceLocator
 {
 public:

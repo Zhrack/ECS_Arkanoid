@@ -5,6 +5,10 @@
 
 #include <SFML/Audio.hpp>
 
+/// <summary>
+/// To disable sound. Useful for development.
+/// </summary>
+/// <seealso cref="AudioService" />
 class NullAudioService :
     public AudioService
 {

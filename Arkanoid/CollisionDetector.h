@@ -14,6 +14,9 @@ bool AABBvsAABB(BaseComponent*, BaseComponent*, sf::Vector2f&);
 bool AABBvsCircle(BaseComponent*, BaseComponent*, sf::Vector2f&);
 bool CirclevsCircle(BaseComponent*, BaseComponent*, sf::Vector2f&);
 
+/// <summary>
+/// A utility class that implements a few collision detection algorithms.
+/// </summary>
 class CollisionDetector
 {
 public:

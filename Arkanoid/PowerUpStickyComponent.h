@@ -5,6 +5,10 @@
 
 class CircleColliderComponent;
 
+/// <summary>
+/// Power Up that changes the paddle to be sticky for a limited time.
+/// </summary>
+/// <seealso cref="PowerUpComponent" />
 class PowerUpStickyComponent :
     public PowerUpComponent
 {

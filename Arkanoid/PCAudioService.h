@@ -12,6 +12,10 @@
 using SoundIDFilename = std::pair<SoundID, std::string>;
 using MusicIDFilename = std::pair<MusicID, std::string>;
 
+/// <summary>
+/// Implementation of the Audio Service for PC.
+/// </summary>
+/// <seealso cref="AudioService" />
 class PCAudioService :
     public AudioService
 {

@@ -5,6 +5,10 @@
 
 #include <SFML/Audio.hpp>
 
+/// <summary>
+/// Component that listens for ball lost and game over messages.
+/// </summary>
+/// <seealso cref="BaseComponent" />
 class GameOverWatcherComponent :
     public BaseComponent
 {

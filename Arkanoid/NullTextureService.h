@@ -3,6 +3,10 @@
 
 #include "TextureService.h"
 
+/// <summary>
+/// To disable the Texture Service. Useful as a placeholder.
+/// </summary>
+/// <seealso cref="TextureService" />
 class NullTextureService :
     public TextureService
 {

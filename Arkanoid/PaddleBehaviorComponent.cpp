@@ -201,60 +201,6 @@ bool PaddleBehaviorComponent::isDisabled() const
 
 void PaddleBehaviorComponent::changeState(PaddleState newState)
 {
-    std::string currentState, newStateString, prevState;
-    switch (mState)
-    {
-    case PaddleState::STATE_NORMAL:
-        currentState = "STATE_NORMAL";
-        break;
-    case PaddleState::STATE_STICKY:
-        currentState = "STATE_STICKY";
-        break;
-    case PaddleState::STATE_DISABLED:
-        currentState = "STATE_DISABLED";
-        break;
-    case PaddleState::STATE_START:
-        currentState = "STATE_START";
-        break;
-    }
-
-    switch (newState)
-    {
-    case PaddleState::STATE_NORMAL:
-        newStateString = "STATE_NORMAL";
-        break;
-    case PaddleState::STATE_STICKY:
-        newStateString = "STATE_STICKY";
-        break;
-    case PaddleState::STATE_DISABLED:
-        newStateString = "STATE_DISABLED";
-        break;
-    case PaddleState::STATE_START:
-        newStateString = "STATE_START";
-        break;
-    }
-
-    switch (mPreviousState)
-    {
-    case PaddleState::STATE_NORMAL:
-        prevState = "STATE_NORMAL";
-        break;
-    case PaddleState::STATE_STICKY:
-        prevState = "STATE_STICKY";
-        break;
-    case PaddleState::STATE_DISABLED:
-        prevState = "STATE_DISABLED";
-        break;
-    case PaddleState::STATE_START:
-        prevState = "STATE_START";
-        break;
-    }
-
-    std::cout << "ChangeState" << std::endl;
-    std::cout << "Current " << currentState << std::endl;
-    std::cout << "New " << newStateString << std::endl;
-    std::cout << "Prev " << prevState << std::endl << std::endl;
-
     if (isDisabled() && mPreviousColor != sf::Color::Transparent)
     {
         mRenderer->getShape().setFillColor(mPreviousColor);
