@@ -17,6 +17,7 @@ public:
     /// <param name="game">The GameState pointer.</param>
     /// <param name="texture">The texture reference.</param>
     /// <param name="textureRect">The texture subrect to use.</param>
+    /// <param name="color">The color to add to the sprite.</param>
     SpriteRenderComponent(EntityID entityID, GameState* game,
         const sf::Texture& texture, const sf::IntRect& textureRect, const sf::Color& color = sf::Color::White);
 

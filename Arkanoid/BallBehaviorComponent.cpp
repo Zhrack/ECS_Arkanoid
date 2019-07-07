@@ -32,10 +32,10 @@ BallBehaviorComponent::BallBehaviorComponent(EntityID entityID, GameState* game,
 
     mTransform->setPosition(pos);
 
-    sf::SoundBuffer* buffer = ServiceLocator::getAudio()->getSound(SoundID::BALL_HIT_WALL);
+    sf::SoundBuffer* buffer = ServiceLocator::getAudioService()->getSound(SoundID::BALL_HIT_WALL);
     mHitSound.setBuffer(*buffer);
 
-    buffer = ServiceLocator::getAudio()->getSound(SoundID::BALL_HIT_BRICK);
+    buffer = ServiceLocator::getAudioService()->getSound(SoundID::BALL_HIT_BRICK);
     mHitBrickSound.setBuffer(*buffer);
 }
 

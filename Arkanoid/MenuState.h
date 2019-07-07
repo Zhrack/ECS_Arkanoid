@@ -32,10 +32,8 @@ private:
 
     pt::ptree& mTree;
 
-    sf::Texture mBackgroundTexture;
+    sf::Texture* mBackgroundTexture;
     sf::VertexArray  mBackground;
-
-    sf::Texture mLogoTexture;
     sf::Sprite mLogo;
 };
 

@@ -8,15 +8,22 @@ World::World() :
     mWindow(new sf::RenderWindow()),
     mCurrentState(nullptr)
 {
-    if (!loadFile("resources/settings.json"))
+    try
     {
-        std::cout << "Error reading settings.json file!" << std::endl;
-    }
+        if (!loadFile("resources/settings.json"))
+        {
+            throw std::exception("Error reading settings.json file!");
+        }
 
-    mWindow->create(sf::VideoMode(  mTree.get<unsigned int>("SCREEN_WIDTH"),
-                                    mTree.get<unsigned int>("SCREEN_HEIGHT")), 
-                    "Arkanoid");
-    mWindow->setVerticalSyncEnabled(true);
+        mWindow->create(sf::VideoMode(mTree.get<unsigned int>("SCREEN_WIDTH"),
+            mTree.get<unsigned int>("SCREEN_HEIGHT")),
+            "Arkanoid");
+        mWindow->setVerticalSyncEnabled(true);
+    }
+    catch (const std::exception& e)
+    {
+        std::cout << e.what() << std::endl;
+    }
 }
 
 

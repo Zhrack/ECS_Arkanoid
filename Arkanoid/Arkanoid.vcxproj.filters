@@ -61,6 +61,12 @@
     <Filter Include="Source Files\Audio">
       <UniqueIdentifier>{1654612d-e2f7-4d8a-92b0-aa25e908bc0b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Textures">
+      <UniqueIdentifier>{28abb3a2-739e-4a92-9fed-d8bd8b87ebb1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Texture">
+      <UniqueIdentifier>{c0c2398e-3653-45a6-8880-d3ef03be4dcb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="World.h">
@@ -162,6 +168,21 @@
     <ClInclude Include="ServiceLocator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="PowerUpBomberComponent.h">
+      <Filter>Header Files\Components\PowerUps</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureService.h">
+      <Filter>Header Files\Textures</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureIDs.h">
+      <Filter>Header Files\Textures</Filter>
+    </ClInclude>
+    <ClInclude Include="PCTextureService.h">
+      <Filter>Header Files\Textures</Filter>
+    </ClInclude>
+    <ClInclude Include="NullTextureService.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="World.cpp">
@@ -247,6 +268,18 @@
     </ClCompile>
     <ClCompile Include="ServiceLocator.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PowerUpBomberComponent.cpp">
+      <Filter>Source Files\Components\PowerUps</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureService.cpp">
+      <Filter>Source Files\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="PCTextureService.cpp">
+      <Filter>Source Files\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="NullTextureService.cpp">
+      <Filter>Source Files\Texture</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

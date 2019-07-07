@@ -16,6 +16,8 @@ enum CompType {
     CIRCLE_COLLIDER,
 
     STICKY,
+    DISRUPTION,
+    BOMBER,
 
     GAME_OVER_WATCHER,
 

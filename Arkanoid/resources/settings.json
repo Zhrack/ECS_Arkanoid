@@ -1,6 +1,7 @@
 {
   "AUDIO_FOLDER": "./resources\/audio\/",
   "MUSIC_FOLDER": "./resources\/audio\/music\/",
+  "TEXTURE_FOLDER": "./resources\/sprites\/",
   "AUDIO_BALL_HIT_BRICK": "Ball_brick.wav",
   "AUDIO_BALL_HIT_WALL": "Hit_wall.wav",
   "AUDIO_POWER_UP_PICKED": "Powerup.wav",
@@ -9,8 +10,9 @@
   "WIN_MUSIC": "victory.wav",
   "LOSE_MUSIC": "lose.wav",
   "MENU_MUSIC": "menu_music.wav",
-  "BACKGROUND": "resources\/sprites\/hexagon_pattern.png",
-  "LOGO_IMAGE": "resources\/sprites\/arkanoid_logo.png",
+  "BACKGROUND": "hexagon_pattern.png",
+  "LOGO_IMAGE": "arkanoid_logo.png",
+  "BOMBER_IMAGE": "kamikaze_skeleton.PNG",
   "SCREEN_WIDTH": "1280",
   "SCREEN_HEIGHT": "768",
   "MS_PER_UPDATE": "0.0111",
@@ -29,5 +31,7 @@
   "POWER_UP_VELOCITY": "150",
   "POWER_UP_SIZE": "10",
   "POWER_UP_POINTS": "100",
-  "POWER_UP_STICKY_TIME_SEC": "10"
+  "POWER_UP_STICKY_TIME_SEC": "10",
+  "POWER_UP_BOMBER_TIME_SEC": "2",
+  "POWER_UP_BOMBER_SIZE": "30"
 }

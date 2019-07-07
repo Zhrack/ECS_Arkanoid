@@ -170,6 +170,9 @@
     <ClInclude Include="BallBehaviorComponent.h" />
     <ClInclude Include="BaseComponent.h" />
     <ClInclude Include="BaseState.h" />
+    <ClInclude Include="NullTextureService.h" />
+    <ClInclude Include="PCTextureService.h" />
+    <ClInclude Include="PowerUpBomberComponent.h" />
     <ClInclude Include="BoxColliderComponent.h" />
     <ClInclude Include="BrickBehaviorComponent.h" />
     <ClInclude Include="CircleColliderComponent.h" />
@@ -196,12 +199,17 @@
     <ClInclude Include="ServiceLocator.h" />
     <ClInclude Include="SpriteRenderComponent.h" />
     <ClInclude Include="States.h" />
+    <ClInclude Include="TextureIDs.h" />
+    <ClInclude Include="TextureService.h" />
     <ClInclude Include="TransformComponent.h" />
     <ClInclude Include="World.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AudioService.cpp" />
     <ClCompile Include="BallBehaviorComponent.cpp" />
+    <ClCompile Include="NullTextureService.cpp" />
+    <ClCompile Include="PCTextureService.cpp" />
+    <ClCompile Include="PowerUpBomberComponent.cpp" />
     <ClCompile Include="BoxColliderComponent.cpp" />
     <ClCompile Include="BrickBehaviorComponent.cpp" />
     <ClCompile Include="CircleColliderComponent.cpp" />
@@ -226,6 +234,7 @@
     <ClCompile Include="RenderComponent.cpp" />
     <ClCompile Include="ServiceLocator.cpp" />
     <ClCompile Include="SpriteRenderComponent.cpp" />
+    <ClCompile Include="TextureService.cpp" />
     <ClCompile Include="TransformComponent.cpp" />
     <ClCompile Include="World.cpp" />
   </ItemGroup>

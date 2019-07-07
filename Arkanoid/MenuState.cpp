@@ -5,6 +5,7 @@
 
 #include "ServiceLocator.h"
 #include "PCAudioService.h"
+#include "PCTextureService.h"
 
 #include <iostream>
 
@@ -36,24 +37,34 @@ void MenuState::enter()
 
         if (!audioService->initialize(sfxFolder, musicFolder, sounds, musics))
         {
-            throw "Error initializing the audio service";
+            throw std::exception("Error initializing the audio service");
         }
 
-        ServiceLocator::provide(audioService);
+        ServiceLocator::provideAudioService(audioService);
 
-        ServiceLocator::getAudio()->playMusic(MusicID::MUSIC_MENU);
+        ServiceLocator::getAudioService()->playMusic(MusicID::MUSIC_MENU);
 
-        std::string filename = mTree.get<std::string>("BACKGROUND");
+        auto textureService = new PCTextureService();
 
-        if (!mBackgroundTexture.loadFromFile(filename))
+        std::string textureFolder = mTree.get<std::string>("TEXTURE_FOLDER");
+        std::vector<TextureIDFilename> textures(
+            {
+                {TextureID::TEXTURE_BACKGROUND, mTree.get<std::string>("BACKGROUND"), sf::IntRect()},
+                {TextureID::TEXTURE_LOGO, mTree.get<std::string>("LOGO_IMAGE"), sf::IntRect()}
+            });
+        
+        if (!textureService->initialize(textureFolder, textures))
         {
-            throw "Error loading background image " + filename;
+            throw std::exception("Error initializing the texture service");
         }
+
+        ServiceLocator::provideTextureService(textureService);
 
         float screenSizeX = mTree.get<float>("SCREEN_WIDTH");
         float screenSizeY = mTree.get<float>("SCREEN_HEIGHT");
 
-        sf::Vector2u texSize = mBackgroundTexture.getSize();
+        mBackgroundTexture = ServiceLocator::getTextureService()->getTexture(TextureID::TEXTURE_BACKGROUND);
+        sf::Vector2u texSize = mBackgroundTexture->getSize();
 
         mBackground[0].position = sf::Vector2f(0.f, 0.f);
         mBackground[1].position = sf::Vector2f(screenSizeX, 0.f);
@@ -65,20 +76,15 @@ void MenuState::enter()
         mBackground[2].texCoords = sf::Vector2f((float)texSize.x, (float)texSize.y);
         mBackground[3].texCoords = sf::Vector2f(0.f, (float)texSize.y);
 
+        sf::Texture* logoTex = ServiceLocator::getTextureService()->getTexture(TextureID::TEXTURE_LOGO);
 
-        filename = mTree.get<std::string>("LOGO_IMAGE");
-        if (!mLogoTexture.loadFromFile(filename))
-        {
-            throw "Error loading background image " + filename;
-        }
+        mLogo.setTexture(*logoTex);
 
-        mLogo.setTexture(mLogoTexture);
-
-        mLogo.setPosition(screenSizeX * 0.5f - mLogoTexture.getSize().x * 0.5f, screenSizeY * 0.5f - mLogoTexture.getSize().y * 0.5f - 100.f);
+        mLogo.setPosition(screenSizeX * 0.5f - logoTex->getSize().x * 0.5f, screenSizeY * 0.5f - logoTex->getSize().y * 0.5f - 100.f);
 
         if (!mFont.loadFromFile("resources/joystix monospace.ttf"))
         {
-            throw "Error loading font";
+            throw std::exception("Error loading font");
         }
 
         mPressEnterText.setFont(mFont);
@@ -122,7 +128,7 @@ void MenuState::update()
 
     mWindow->clear();
 
-    mWindow->draw(mBackground, &mBackgroundTexture);
+    mWindow->draw(mBackground, mBackgroundTexture);
     mWindow->draw(mLogo);
     mWindow->draw(mPressEnterText);
     mWindow->draw(mInstructionText);
@@ -132,5 +138,5 @@ void MenuState::update()
 
 void MenuState::exit()
 {
-    ServiceLocator::getAudio()->stopMusic(MusicID::MUSIC_MENU);
+    ServiceLocator::getAudioService()->stopMusic(MusicID::MUSIC_MENU);
 }

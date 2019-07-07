@@ -17,7 +17,8 @@ enum class PaddleState
     STATE_STICKY,
     STATE_ENLARGED,
     STATE_LASER,
-    STATE_DISRUPTION
+    STATE_DISRUPTION,
+    STATE_DISABLED
 };
 
 /// <summary>
@@ -43,6 +44,7 @@ public:
     bool isSticky() const;
     bool isStarting() const;
     bool isNormal() const;
+    bool isDisabled() const;
 
     void changeState(PaddleState newState);
 
@@ -61,8 +63,16 @@ private:
     float mPaddleFriction;
 
     PaddleState mState;
+    PaddleState mPreviousState;
 
     sf::Sound mPUSound;
+
+    /// <summary>
+    /// To measure timed effects, such as disabled blinking
+    /// </summary>
+    sf::Clock mClock;
+    sf::Time mElapsedEffectTime;
+    sf::Color mPreviousColor;
 };
 
 

@@ -23,7 +23,7 @@ void MessageHandler::receive(Message& msg, SendType sendType, const sf::Time& ti
         mDelayedMessages.push_back(std::make_pair(mClock.getElapsedTime() + timeToFire, msg));
         // keep sorted by order of firing
         mDelayedMessages.sort([](const DelayedMsg& rhs, const DelayedMsg& lhs) {
-            return rhs.first > lhs.first;
+            return rhs.first < lhs.first;
         });
         break;
     case IMMEDIATE:

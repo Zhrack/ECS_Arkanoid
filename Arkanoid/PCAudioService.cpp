@@ -32,7 +32,6 @@ bool PCAudioService::initialize(const std::string& sfxFolder, const std::string&
         fs::path audioPath(sfxFolder);
         if (fs::is_directory(audioPath)) {
 
-            // preallocate all needed elements, this way I can access them by index
             mSoundBuffers.clear();
             mSoundBuffers.insert(mSoundBuffers.end(), sfxFiles.size(), sf::SoundBuffer());
 
@@ -41,7 +40,8 @@ bool PCAudioService::initialize(const std::string& sfxFolder, const std::string&
                 fs::path filePath(sfxFolder + pair.second);
                 if (!fs::is_regular_file(filePath))
                 {
-                    throw "Error opening " + filePath.filename().string();
+                    std::string err = "Error opening " + filePath.filename().string();
+                    throw std::exception(err.c_str());
                 }
 
                 // SoundID is used both as enumerator for outside use and as index for fast retrieval
@@ -49,20 +49,21 @@ bool PCAudioService::initialize(const std::string& sfxFolder, const std::string&
 
                 if (!buffer.loadFromFile(filePath.string()))
                 {
-                    throw "Error loading " + filePath.string();
+                    std::string err = "Error loading " + filePath.string();
+                    throw std::exception(err.c_str());
                 }
             }
         }
         else
         {
-            throw "Invalid SFX path " + audioPath.string();
+            std::string err = "Invalid SFX path " + audioPath.string();
+            throw std::exception(err.c_str());
         }
 
         fs::path musicPath(musicFolder);
 
         if (fs::is_directory(musicPath)) {
 
-            // preallocate all needed elements, this way I can access them by index
             mMusics.clear();
 
             for (auto pair : musicFiles)
@@ -70,7 +71,8 @@ bool PCAudioService::initialize(const std::string& sfxFolder, const std::string&
                 fs::path filePath(musicFolder + pair.second);
                 if (!fs::is_regular_file(filePath))
                 {
-                    throw "Error opening " + filePath.filename().string();
+                    std::string err = "Error opening " + filePath.filename().string();
+                    throw std::exception(err.c_str());
                 }
 
                 // SoundID is used both as enumerator for outside use and as index for fast retrieval
@@ -78,7 +80,8 @@ bool PCAudioService::initialize(const std::string& sfxFolder, const std::string&
 
                 if (!music->openFromFile(filePath.string()))
                 {
-                    throw "Error loading " + filePath.string();
+                    std::string err = "Error loading " + filePath.string();
+                    throw std::exception(err.c_str());
                 }
 
                 mMusics[pair.first] = music;
@@ -86,7 +89,8 @@ bool PCAudioService::initialize(const std::string& sfxFolder, const std::string&
         }
         else
         {
-            throw "Invalid music path " + musicPath.string();
+            std::string err = "Invalid music path " + musicPath.string();
+            throw std::exception(err.c_str());
         }
     }
     catch (const std::exception& e)

@@ -22,6 +22,7 @@ enum MessageType {
     MSG_PU_END_EFFECT,
     MSG_PU_STICKY,
     MSG_PU_DISRUPTION,
+    MSG_PU_BOMBER,
 
     MSG_BALL_LOST,
     MSG_BRICK_DESTROYED,
@@ -47,13 +48,23 @@ struct CollisionData : BaseData
 };
 
 /// <summary>
-/// For MSG_COLLISION messages
+/// For MSG_PU_STICKY messages
 /// </summary>
 struct StickyData : BaseData
 {
     bool start;
 
     virtual ~StickyData() {}
+};
+
+/// <summary>
+/// For MSG_PU_BOMBER messages
+/// </summary>
+struct BomberData : BaseData
+{
+    bool start;
+
+    virtual ~BomberData() {}
 };
 
 #endif // !MESSAGE_TYPES_H

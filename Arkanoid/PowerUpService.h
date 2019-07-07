@@ -11,6 +11,7 @@ enum PUType
 {
     PU_STICKY = 0,
     PU_DISRUPTION,
+    PU_BOMBER,
 
     PU_COUNT
 };
@@ -29,6 +30,7 @@ public:
 private:
     void createStickyPU(const sf::Vector2f & pos);
     void createDisruptionPU(const sf::Vector2f & pos);
+    void createBomberPU(const sf::Vector2f & pos);
 
 private:
     GameState* mGame;

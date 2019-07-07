@@ -17,6 +17,7 @@
 
 #include "PCAudioService.h"
 #include "ServiceLocator.h"
+#include "PCTextureService.h"
 
 #include <iostream>
 #include <thread>
@@ -55,135 +56,155 @@ void GameState::enter()
 {
     std::cout << "GameState::enter" << std::endl;
 
-    // register types
-    using UniquePtrVector = std::vector<BaseComponent*>;
-    for (size_t i = 0; i < CompType::COUNT; ++i)
+    try
     {
-        mCompMap.insert({ CompType(i), UniquePtrVector() });
-    }
-
-    // load sounds
-    auto audioService = new PCAudioService();
-
-    std::string sfxFolder = mTree.get<std::string>("AUDIO_FOLDER");
-    std::string musicFolder = mTree.get<std::string>("MUSIC_FOLDER");
-    std::vector<SoundIDFilename> sounds(
+        // register types
+        using UniquePtrVector = std::vector<BaseComponent*>;
+        for (size_t i = 0; i < CompType::COUNT; ++i)
         {
-            {SoundID::BALL_HIT_BRICK, mTree.get<std::string>("AUDIO_BALL_HIT_BRICK")},
-            {SoundID::BALL_HIT_WALL, mTree.get<std::string>("AUDIO_BALL_HIT_WALL")},
-            {SoundID::POWER_UP_PICKED, mTree.get<std::string>("AUDIO_POWER_UP_PICKED")},
-            {SoundID::BALL_LOST, mTree.get<std::string>("AUDIO_BALL_LOST")},
-        });
-    std::vector<MusicIDFilename> musics(
+            mCompMap.insert({ CompType(i), UniquePtrVector() });
+        }
+
+        // load sounds
+        auto audioService = new PCAudioService();
+
+        std::string sfxFolder = mTree.get<std::string>("AUDIO_FOLDER");
+        std::string musicFolder = mTree.get<std::string>("MUSIC_FOLDER");
+        std::vector<SoundIDFilename> sounds(
+            {
+                {SoundID::BALL_HIT_BRICK, mTree.get<std::string>("AUDIO_BALL_HIT_BRICK")},
+                {SoundID::BALL_HIT_WALL, mTree.get<std::string>("AUDIO_BALL_HIT_WALL")},
+                {SoundID::POWER_UP_PICKED, mTree.get<std::string>("AUDIO_POWER_UP_PICKED")},
+                {SoundID::BALL_LOST, mTree.get<std::string>("AUDIO_BALL_LOST")},
+            });
+        std::vector<MusicIDFilename> musics(
+            {
+                {MusicID::MUSIC_GAME, mTree.get<std::string>("GAME_MUSIC")},
+                {MusicID::MUSIC_WIN, mTree.get<std::string>("WIN_MUSIC")},
+                {MusicID::MUSIC_LOSE, mTree.get<std::string>("LOSE_MUSIC")},
+            });
+
+        if (!audioService->initialize(sfxFolder, musicFolder, sounds, musics))
         {
-            {MusicID::MUSIC_GAME, mTree.get<std::string>("GAME_MUSIC")},
-            {MusicID::MUSIC_WIN, mTree.get<std::string>("WIN_MUSIC")},
-            {MusicID::MUSIC_LOSE, mTree.get<std::string>("LOSE_MUSIC")},
-        });
+            throw std::exception("Error initializing the audio service");
+        }
 
-    if (!audioService->initialize(sfxFolder, musicFolder, sounds, musics))
-    {
-        throw "Error initializing the audio service";
+        ServiceLocator::provideAudioService(audioService);
+
+        ServiceLocator::getAudioService()->playMusic(MusicID::MUSIC_GAME);
+        ServiceLocator::getAudioService()->setLooping(MusicID::MUSIC_GAME, true);
+
+        buildLevel();
+
+        if (!mFont.loadFromFile("resources/joystix monospace.ttf"))
+        {
+            throw std::exception("Error loading font");
+        }
+
+        mRemainingLives = mTree.get<int>("NUM_LIVES");
+        mHighScore = mTree.get<int>("HIGH_SCORE");
+
+        mHighScoreText.setFont(mFont);
+        mHighScoreNumberText.setFont(mFont);
+
+        mCurrentScoreText.setFont(mFont);
+        mCurrentScoreNumberText.setFont(mFont);
+
+        mRemainingLivesText.setFont(mFont);
+        mRemainingLivesNumberText.setFont(mFont);
+
+        mGameOverText.setFont(mFont);
+        mGameOverInstructionsText.setFont(mFont);
+        mGameOverInstructions2Text.setFont(mFont);
+
+        mHighScoreText.setString("High score");
+        mHighScoreNumberText.setString(std::to_string(mHighScore));
+        mCurrentScoreText.setString("Score");
+        mCurrentScoreNumberText.setString(std::to_string(mCurrentScore));
+        mRemainingLivesText.setString("Lives");
+        mRemainingLivesNumberText.setString(std::to_string(mRemainingLives));
+        mGameOverText.setString("GAME OVER!");
+        mGameOverInstructionsText.setString("Enter to restart");
+        mGameOverInstructions2Text.setString("Escape to return to Menu");
+
+        sf::Vector2f textPos(
+            mWalls.getPosition().x + mWalls.getSize().x + 10.f,
+            mWalls.getPosition().y + 200.f);
+
+        mHighScoreText.setPosition(textPos);
+
+        textPos.y += mHighScoreText.getGlobalBounds().height + 5.f;
+        mHighScoreNumberText.setPosition(textPos);
+
+        textPos.y += mHighScoreNumberText.getGlobalBounds().height + 50.f;
+        mCurrentScoreText.setPosition(textPos);
+
+        textPos.y += mCurrentScoreText.getGlobalBounds().height + 5.f;
+        mCurrentScoreNumberText.setPosition(textPos);
+
+        textPos.y = mTree.get<float>("SCREEN_HEIGHT") - mRemainingLivesText.getGlobalBounds().height * 2.f - mRemainingLivesNumberText.getGlobalBounds().height;
+        mRemainingLivesText.setPosition(textPos);
+
+        textPos.y += mRemainingLivesNumberText.getGlobalBounds().height + 5.f;
+        mRemainingLivesNumberText.setPosition(textPos);
+
+        mGameOverText.setPosition(mWalls.getPosition().x + mWalls.getSize().x * 0.5f - mGameOverText.getGlobalBounds().width * 0.5f, mWalls.getPosition().y + 90.f);
+
+        mGameOverInstructionsText.setPosition(mGameOverText.getPosition().x,
+            mWalls.getSize().y * 0.5f + mGameOverText.getGlobalBounds().height + 50.f);
+
+        mGameOverInstructions2Text.setPosition(mGameOverText.getPosition().x,
+            mGameOverInstructionsText.getPosition().y + mGameOverInstructionsText.getGlobalBounds().height + mGameOverInstructions2Text.getGlobalBounds().height + 5.f);
+
+        mHighScoreText.setCharacterSize(20);
+        mHighScoreNumberText.setCharacterSize(20);
+        mCurrentScoreText.setCharacterSize(22);
+        mCurrentScoreNumberText.setCharacterSize(22);
+        mRemainingLivesText.setCharacterSize(20);
+        mRemainingLivesNumberText.setCharacterSize(20);
+
+        mGameOverText.setCharacterSize(40);
+        mGameOverInstructionsText.setCharacterSize(20);
+        mGameOverInstructions2Text.setCharacterSize(20);
+
+        mHighScoreText.setFillColor(sf::Color::Red);
+        mCurrentScoreText.setFillColor(sf::Color::Red);
+        mRemainingLivesText.setFillColor(sf::Color::Red);
+
+        mGameOverText.setFillColor(sf::Color::Magenta);
+        mGameOverInstructionsText.setFillColor(sf::Color::Magenta);
+        mGameOverInstructions2Text.setFillColor(sf::Color::Magenta);
+
+        auto textureService = new PCTextureService();
+
+        std::string textureFolder = mTree.get<std::string>("TEXTURE_FOLDER");
+        std::vector<TextureIDFilename> textures(
+            {
+                {TextureID::TEXTURE_BACKGROUND, mTree.get<std::string>("BACKGROUND"), sf::IntRect()},
+                {TextureID::TEXTURE_LOGO, mTree.get<std::string>("LOGO_IMAGE"), sf::IntRect()},
+                {TextureID::TEXTURE_BOMBER, mTree.get<std::string>("BOMBER_IMAGE"), sf::IntRect(0, 0, 109, 166)}
+            });
+
+        if (!textureService->initialize(textureFolder, textures))
+        {
+            throw std::exception("Error initializing the texture service");
+        }
+
+        ServiceLocator::provideTextureService(textureService);
+
+        std::string filename = mTree.get<std::string>("BACKGROUND");
+
+        sf::Texture* backgroundTex = ServiceLocator::getTextureService()->getTexture(TextureID::TEXTURE_BACKGROUND);
+        mWalls.setTexture(backgroundTex);
+
+        mPreviousTime = mClock.getElapsedTime().asSeconds();
+        mTimeLag = 0.f;
+        mMSPerUpdate = mTree.get<float>("MS_PER_UPDATE");
     }
-
-    ServiceLocator::provide(audioService);
-
-    ServiceLocator::getAudio()->playMusic(MusicID::MUSIC_GAME);
-    ServiceLocator::getAudio()->setLooping(MusicID::MUSIC_GAME, true);
-
-    buildLevel();
-
-    if (!mFont.loadFromFile("resources/joystix monospace.ttf"))
+    catch (const std::exception& e)
     {
-        std::cout << "Error loading font" << std::endl;
+        std::cout << e.what() << std::endl;
     }
-
-    mRemainingLives = mTree.get<int>("NUM_LIVES");
-    mHighScore = mTree.get<int>("HIGH_SCORE");
-
-    mHighScoreText.setFont(mFont);
-    mHighScoreNumberText.setFont(mFont);
-
-    mCurrentScoreText.setFont(mFont);
-    mCurrentScoreNumberText.setFont(mFont);
-
-    mRemainingLivesText.setFont(mFont);
-    mRemainingLivesNumberText.setFont(mFont);
-
-    mGameOverText.setFont(mFont);
-    mGameOverInstructionsText.setFont(mFont);
-    mGameOverInstructions2Text.setFont(mFont);
-
-    mHighScoreText.setString("High score");
-    mHighScoreNumberText.setString(std::to_string(mHighScore));
-    mCurrentScoreText.setString("Score");
-    mCurrentScoreNumberText.setString(std::to_string(mCurrentScore));
-    mRemainingLivesText.setString("Lives");
-    mRemainingLivesNumberText.setString(std::to_string(mRemainingLives));
-    mGameOverText.setString("GAME OVER!");
-    mGameOverInstructionsText.setString("Enter to restart");
-    mGameOverInstructions2Text.setString("Escape to return to Menu");
-
-    sf::Vector2f textPos(
-        mWalls.getPosition().x + mWalls.getSize().x + 10.f,
-        mWalls.getPosition().y + 200.f);
-
-    mHighScoreText.setPosition(textPos);
-
-    textPos.y += mHighScoreText.getGlobalBounds().height + 5.f;
-    mHighScoreNumberText.setPosition(textPos);
-
-    textPos.y += mHighScoreNumberText.getGlobalBounds().height + 50.f;
-    mCurrentScoreText.setPosition(textPos);
-
-    textPos.y += mCurrentScoreText.getGlobalBounds().height + 5.f;
-    mCurrentScoreNumberText.setPosition(textPos);
-
-    textPos.y = mTree.get<float>("SCREEN_HEIGHT") - mRemainingLivesText.getGlobalBounds().height * 2.f - mRemainingLivesNumberText.getGlobalBounds().height;
-    mRemainingLivesText.setPosition(textPos);
-
-    textPos.y += mRemainingLivesNumberText.getGlobalBounds().height + 5.f;
-    mRemainingLivesNumberText.setPosition(textPos);
-
-    mGameOverText.setPosition(mWalls.getPosition().x + mWalls.getSize().x * 0.5f - mGameOverText.getGlobalBounds().width * 0.5f, mWalls.getPosition().y + 90.f);
-
-    mGameOverInstructionsText.setPosition(mGameOverText.getPosition().x,
-        mWalls.getSize().y * 0.5f + mGameOverText.getGlobalBounds().height + 50.f);
-
-    mGameOverInstructions2Text.setPosition(mGameOverText.getPosition().x,
-        mGameOverInstructionsText.getPosition().y + mGameOverInstructionsText.getGlobalBounds().height + mGameOverInstructions2Text.getGlobalBounds().height + 5.f);
-
-    mHighScoreText.setCharacterSize(20);
-    mHighScoreNumberText.setCharacterSize(20);
-    mCurrentScoreText.setCharacterSize(22);
-    mCurrentScoreNumberText.setCharacterSize(22);
-    mRemainingLivesText.setCharacterSize(20);
-    mRemainingLivesNumberText.setCharacterSize(20);
-
-    mGameOverText.setCharacterSize(40);
-    mGameOverInstructionsText.setCharacterSize(20);
-    mGameOverInstructions2Text.setCharacterSize(20);
-
-    mHighScoreText.setFillColor(sf::Color::Red);
-    mCurrentScoreText.setFillColor(sf::Color::Red);
-    mRemainingLivesText.setFillColor(sf::Color::Red);
-
-    mGameOverText.setFillColor(sf::Color::Magenta);
-    mGameOverInstructionsText.setFillColor(sf::Color::Magenta);
-    mGameOverInstructions2Text.setFillColor(sf::Color::Magenta);
-
-    std::string filename = mTree.get<std::string>("BACKGROUND");
-
-    if (!mBackgroundTexture.loadFromFile(filename))
-    {
-        std::cout << "Error loading background image " << filename << std::endl;
-    }
-
-    mWalls.setTexture(&mBackgroundTexture);
-        
-    mPreviousTime = mClock.getElapsedTime().asSeconds();
-    mTimeLag = 0.f;
-    mMSPerUpdate = mTree.get<float>("MS_PER_UPDATE");
 }
 
 void GameState::update()
@@ -256,6 +277,10 @@ void GameState::updateGame(float elapsed)
         }
     }
     auto powerups = getComponentList(CompType::STICKY);
+    auto disruptionList = getComponentList(CompType::DISRUPTION);
+    auto bomberList = getComponentList(CompType::BOMBER);
+    powerups.insert(powerups.end(), disruptionList.begin(), disruptionList.end());
+    powerups.insert(powerups.end(), bomberList.begin(), bomberList.end());
     // append other power ups here...
     for (auto e : powerups)
     {
@@ -402,7 +427,7 @@ void GameState::exit()
         pt::write_json("resources/settings.json", mTree);
     }
 
-    ServiceLocator::getAudio()->stopMusic(MusicID::MUSIC_GAME);
+    ServiceLocator::getAudioService()->stopMusic(MusicID::MUSIC_GAME);
     mWindow->clear();
 
 }
@@ -563,15 +588,15 @@ void GameState::gameOver(bool win)
     {
         mGameStatus = GameStatus::GAME_WIN;
         mGameOverText.setString("You WIN!");
-        ServiceLocator::getAudio()->stopMusic(MusicID::MUSIC_GAME);
-        ServiceLocator::getAudio()->playMusic(MusicID::MUSIC_WIN);
+        ServiceLocator::getAudioService()->stopMusic(MusicID::MUSIC_GAME);
+        ServiceLocator::getAudioService()->playMusic(MusicID::MUSIC_WIN);
     }
     else
     {
         mGameStatus = GameStatus::GAME_LOSE;
         mGameOverText.setString("GAME OVER!");
-        ServiceLocator::getAudio()->stopMusic(MusicID::MUSIC_GAME);
-        ServiceLocator::getAudio()->playMusic(MusicID::MUSIC_LOSE);
+        ServiceLocator::getAudioService()->stopMusic(MusicID::MUSIC_GAME);
+        ServiceLocator::getAudioService()->playMusic(MusicID::MUSIC_LOSE);
     }
 }
 
@@ -590,12 +615,9 @@ void GameState::restartGame()
     mRemainingLives = mTree.get<int>("NUM_LIVES");
     mCurrentScore = 0;
 
-    ServiceLocator::getAudio()->stopMusic(MusicID::MUSIC_GAME);
-    ServiceLocator::getAudio()->playMusic(MusicID::MUSIC_GAME);
-    ServiceLocator::getAudio()->setLooping(MusicID::MUSIC_GAME, true);
-    // TODO mBackgroundMusic.stop();
-    //mBackgroundMusic.play();
-    //mBackgroundMusic.setLoop(true);
+    ServiceLocator::getAudioService()->stopMusic(MusicID::MUSIC_GAME);
+    ServiceLocator::getAudioService()->playMusic(MusicID::MUSIC_GAME);
+    ServiceLocator::getAudioService()->setLooping(MusicID::MUSIC_GAME, true);
 
     buildLevel();
 

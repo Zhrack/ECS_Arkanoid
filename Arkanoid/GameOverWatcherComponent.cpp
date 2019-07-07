@@ -11,7 +11,7 @@ GameOverWatcherComponent::GameOverWatcherComponent(EntityID entityID, GameState*
     auto bricks = mGame->getAllEntitiesByType(EntityType::TAG_BRICK);
     mNumBricks = (int)bricks.size();
 
-    sf::SoundBuffer* buffer = ServiceLocator::getAudio()->getSound(SoundID::BALL_LOST);
+    sf::SoundBuffer* buffer = ServiceLocator::getAudioService()->getSound(SoundID::BALL_LOST);
     mLostBallSound.setBuffer(*buffer);
 }
 
